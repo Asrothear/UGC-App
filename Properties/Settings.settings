@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UGC_App.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">50, 50</Value>
+    </Setting>
+    <Setting Name="FormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="CMDR" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Token" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Send_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://api.ugc-tools.de/api/v1/QLS</Value>
+    </Setting>
+    <Setting Name="State_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://api.ugc-tools.de/api/v1/State</Value>
+    </Setting>
+    <Setting Name="CMD_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://api.ugc-tools.de/api/v1/PluginControll</Value>
+    </Setting>
+    <Setting Name="Tick_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://api.ugc-tools.de/api/v1/Tick</Value>
+    </Setting>
+    <Setting Name="Update_Url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://update.ugc-tools.de</Value>
+    </Setting>
+    <Setting Name="BGS_Only" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Show_All" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Send_Name" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Debug" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Auto_Update" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SlowState" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoStart" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
