@@ -56,6 +56,9 @@
     <Setting Name="CloseMini" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="Version" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0.0.3</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
 

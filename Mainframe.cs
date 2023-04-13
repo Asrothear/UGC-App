@@ -26,7 +26,7 @@ public partial class Mainframe : Form
         notifyIcon.ContextMenuStrip = contextMenuStrip;
         notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
         SetCircles();
-        toolStripStatusLabel_Version.Text = $"Version {Application.ProductVersion}";
+        toolStripStatusLabel_Version.Text = $"Version {Properties.Settings.Default.Version}";
         label_SystemList.SizeChanged += SystemListChanged;
         CenterObjectHorizontally(label_SystemList);
         Height = label_SystemList.Bottom + LabelSpacing + 46;

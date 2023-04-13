@@ -237,5 +237,14 @@ namespace UGC_App.Properties {
                 this["CloseMini"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0.3")]
+        public string Version {
+            get {
+                return ((string)(this["Version"]));
+            }
+        }
     }
 }
