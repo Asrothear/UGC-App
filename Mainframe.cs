@@ -3,21 +3,22 @@ using System.IO.Pipes;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using UGC_App.EDLog;
-using UGC_App.WecClient;
+using UGC_App.WebClient;
 
 namespace UGC_App;
 public partial class Mainframe : Form
 {
-    Konfiguration conf;
+    private Konfiguration conf;
+    private About about;
     const int LabelSpacing = 35;
+    private bool closing = false;
     public Mainframe()
     {
         InitializeComponent();
+        Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
         {
             CreateToolStripMenuItem("Wiederherstellen", RestoreClick),
-            CreateToolStripMenuItem("Fill List", ListFiller),
-            CreateToolStripMenuItem("Toogle Color", ToogleColorClick),
             CreateToolStripMenuItem("Toogle Overlay", ToogleOverlayClick),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click),
@@ -29,6 +30,57 @@ public partial class Mainframe : Form
         label_SystemList.SizeChanged += SystemListChanged;
         CenterObjectHorizontally(label_SystemList);
         Height = label_SystemList.Bottom + LabelSpacing + 46;
+        toolStripMenuItem_Overlay.Click += ToogleOverlayClick;
+        toolStripMenuItem_About.Click += ShowAbout;
+        StartWorker();
+        label_CMDrText = Properties.Settings.Default.CMDR;
+    }
+
+
+    // Option 2: Verwenden Sie eine öffentliche Eigenschaft, um den Label-Text zu aktualisieren
+    internal string label_CMDrText
+    {
+        get { return label_CMDr.Text; }
+        set { label_CMDr.Text = $"CMDr: {value}"; }
+    }
+
+    private void StartWorker()
+    {
+        
+        Task.Run(() =>
+        {
+            while (!IsDisposed && !closing)
+            {
+                if (!JournalHandler.running)
+                {
+                    SetLightActive(redLight, true);
+                    SetLightActive(yellowLight, false);
+                    SetLightActive(greenLight, false);
+                }
+                else
+                {
+                    SetLightActive(redLight, false);
+                }
+                var list = string.Join(", ", StateReceiver.GetState());
+                var tick = string.Join(", ", StateReceiver.GetTick());
+                Invoke(() =>
+                {
+                    label_SystemList.Text = list;
+                    label_Tick.Text = tick;
+                    if (overlayForm == null || overlayForm.IsDisposed) return;
+                    overlayForm.FillList(list, tick);
+                });
+                Thread.Sleep(Properties.Settings.Default.SlowState
+                    ? TimeSpan.FromSeconds(5)
+                    : TimeSpan.FromSeconds(15));
+            }
+        });
+    }
+
+    private void ShowAbout(object? sender, EventArgs e)
+    {
+        if (about == null || about.IsDisposed) about = new();
+        about.ShowDialog(this);
     }
 
     private void SystemListChanged(object? sender, EventArgs e)
@@ -46,13 +98,24 @@ public partial class Mainframe : Form
         Task.Run(() =>
         {
             var list = string.Join(", ", StateReceiver.GetState());
+            var tick = string.Join(", ", StateReceiver.GetTick());
             Invoke(() =>
             {
                 label_SystemList.Text = list;
+                label_Tick.Text = tick;
                 if (overlayForm == null || overlayForm.IsDisposed) return;
-                overlayForm.FillList(list);
+                overlayForm.FillList(list, tick);
             });
         });
+    }
+
+    internal void RefreshListOnKonfigChange()
+    {
+        var list = string.Join(", ", Properties.Settings.Default.Show_All ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Properties.Settings.Default.ListCount)).ToArray());
+        var tick = string.Join(", ", StateReceiver.Tick);
+        label_SystemList.Text = list;
+        if (overlayForm == null || overlayForm.IsDisposed) return;
+        overlayForm.FillList(list, tick);
     }
 
     internal void SetLightActive(PictureBox light, bool active)
@@ -62,7 +125,7 @@ public partial class Mainframe : Form
 
     private void toolStripMenuItem2_Click(object sender, EventArgs e)
     {
-        if (conf == null || conf.IsDisposed) conf = new Konfiguration();
+        if (conf == null || conf.IsDisposed) conf = new Konfiguration(this);
         conf.ShowDialog(this);
     }
     private void ToogleColorClick(object sender, EventArgs e)
@@ -100,8 +163,6 @@ public partial class Mainframe : Form
     {
         if (e.Button == MouseButtons.Left)
         {
-
-            WindowState = FormWindowState.Maximized;
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
             Activate();
@@ -109,6 +170,16 @@ public partial class Mainframe : Form
     }
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
+        if (!Properties.Settings.Default.CloseMini)
+        {
+            closing = true;
+            JournalHandler.running = false;
+            WindowState = FormWindowState.Normal;
+            Properties.Settings.Default.FormSize = this.Size;
+            Properties.Settings.Default.FormLocation = this.Location;
+            Properties.Settings.Default.Save();
+            return;
+        };
         e.Cancel = true;
         WindowState = FormWindowState.Minimized;
         ShowInTaskbar = false;
@@ -116,8 +187,9 @@ public partial class Mainframe : Form
     }
     private void ExitMenuItem_Click(object sender, EventArgs e)
     {
-        notifyIcon.Visible = false;
+        closing = true;
         JournalHandler.running = false;
+        WindowState = FormWindowState.Normal;
         Properties.Settings.Default.FormSize = this.Size;
         Properties.Settings.Default.FormLocation = this.Location;
         Properties.Settings.Default.Save();
@@ -155,5 +227,10 @@ public partial class Mainframe : Form
                 Invoke(RestoreClick);
             }
         }
+    }
+
+    public string GetTickTime()
+    {
+        return label_Tick.Text;
     }
 }

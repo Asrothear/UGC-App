@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>UGC-App</id>
+    <!-- version will be replaced by MSBuild -->
+    <version>0.0.0.0</version>
+    <title>UGC App</title>
+    <authors>Lord Asrothear</authors>
+    <description></description>
+    <requireLicenseAcceptance></requireLicenseAcceptance>
+    <copyright>Copyright 2023</copyright>
+    <dependencies />
+  </metadata>
+  <files>
+    <file src="*.*" target="net7.0" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+  </files>
+</package>

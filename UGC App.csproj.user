@@ -4,6 +4,9 @@
     <_LastSelectedProfileId>D:\Cloud\GitHub\UGC App\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Konfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -12,9 +15,6 @@
     </Compile>
     <Compile Update="Overlay.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="test.cs">
-      <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
 </Project>

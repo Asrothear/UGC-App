@@ -9,10 +9,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>UGC_Logo.ico</ApplicationIcon>
-    <AssemblyVersion>0.0.1</AssemblyVersion>
-    <FileVersion>0.0.1</FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion></FileVersion>
     <IsPackable>false</IsPackable>
-    <Version>0.0.2</Version>
+    <Version>0.0.1</Version>
     <Title>UGC App</Title>
     <Authors>Lord Asrothear</Authors>
     <PackageIcon>Resources\UGC_Logo.png</PackageIcon>
@@ -33,6 +33,10 @@
   <ItemGroup>
     <PackageReference Include="Clowd.Squirrel" Version="2.9.42" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NuGet.CommandLine" Version="6.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -65,5 +69,10 @@
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
-
+<Target Name="BeforeBuild">
+  <Message Text="### BeforeBuild ###" Importance="high" />
+</Target>
+<Target Name="AfterBuild">
+  <Message Text="### AfterBuild ###" Importance="high" />
+</Target>
 </Project>

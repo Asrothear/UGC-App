@@ -21,16 +21,23 @@ namespace UGC_App.EDLog
         internal static void Start(Mainframe parrent)
         {
             if (running) return;
-            parent = parrent;
             running = true;
+            parent = parrent;
             var prefix = "Journal";
             var pollingInterval = TimeSpan.FromSeconds(5);
             SwitchToLatestFile(Path, prefix);
             Debug.WriteLine("Watchdog running...");
             while (running)
             {
+                
+                parent.SetLightActive(parent.yellowLight, true);
+                parent.SetLightActive(parent.greenLight, false);
+                
                 CheckForLatestFile(Path, prefix);
                 CheckForFileChanges();
+                
+                parent.SetLightActive(parent.yellowLight, false);
+                parent.SetLightActive(parent.greenLight, true);
                 Thread.Sleep(pollingInterval);
             }
         }
@@ -45,7 +52,6 @@ namespace UGC_App.EDLog
                 _previousPosition = new FileInfo(_currentFile).Length;
                 _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
                 Debug.WriteLine($"Überwache aktuellste Datei: {_currentFile}");
-                parent.SetLightActive(parent.yellowLight, true);
             }
             else
             {
@@ -65,6 +71,7 @@ namespace UGC_App.EDLog
             if (latestFile != null && latestFile != _currentFile)
             {
                 Debug.WriteLine($"Wechsel zur neuesten Datei: {latestFile}");
+                CheckForFileChanges();
                 _currentFile = latestFile;
                 _previousPosition = 0;
                 _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
@@ -105,8 +112,25 @@ namespace UGC_App.EDLog
             //Todo: Send Json to API
             foreach (var jsonObject in jsonObjects)
             {
-                Debug.WriteLine(jsonObject);
+                Debug.WriteLine(jsonObject.GetValue("event"));
+                if (jsonObject.ContainsKey("event"))
+                {
+                    switch (jsonObject["event"].ToString())
+                    {
+                        case "LoadGame":
+                            if (Properties.Settings.Default.CMDR == ToString(jsonObject["Commander"])) break;
+                            Properties.Settings.Default.CMDR = ToString(jsonObject["Commander"]);
+                            parent.label_CMDrText = Properties.Settings.Default.CMDR;
+                            Properties.Settings.Default.Save();
+                            break;
+                    }
+                }
             }
+        }
+
+        private static string? ToString(JToken? inp)
+        {
+            return inp?.ToString();
         }
         private static List<JObject> ParseJsonObjects(string input)
         {

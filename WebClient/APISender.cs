@@ -1,4 +1,4 @@
-﻿namespace UGC_App.WecClient;
+﻿namespace UGC_App.WebClient;
 
 public class APISender
 {

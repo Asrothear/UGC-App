@@ -7,7 +7,6 @@ partial class Mainframe
 {
     private NotifyIcon notifyIcon;
     private ContextMenuStrip contextMenuStrip;
-    private ToolStripMenuItem exitMenuItem;
     internal PictureBox redLight;
     internal PictureBox yellowLight;
     internal PictureBox greenLight;
@@ -59,10 +58,11 @@ partial class Mainframe
         label_CMDr = new Label();
         label_System = new Label();
         label_Docked = new Label();
-        label_Tick = new Label();
+        label_TickTitle = new Label();
         label_SystemListLabel = new Label();
         label_SystemList = new Label();
         pictureBox1 = new PictureBox();
+        label_Tick = new Label();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
@@ -86,7 +86,7 @@ partial class Mainframe
         // redLight
         // 
         redLight.BackColor = Color.Gray;
-        redLight.Location = new Point(209, 87);
+        redLight.Location = new Point(265, 87);
         redLight.Name = "redLight";
         redLight.Size = new Size(10, 10);
         redLight.TabIndex = 1;
@@ -96,7 +96,7 @@ partial class Mainframe
         // yellowLight
         // 
         yellowLight.BackColor = Color.Gray;
-        yellowLight.Location = new Point(209, 103);
+        yellowLight.Location = new Point(265, 103);
         yellowLight.Name = "yellowLight";
         yellowLight.Size = new Size(10, 10);
         yellowLight.TabIndex = 2;
@@ -106,7 +106,7 @@ partial class Mainframe
         // greenLight
         // 
         greenLight.BackColor = Color.Gray;
-        greenLight.Location = new Point(209, 119);
+        greenLight.Location = new Point(265, 119);
         greenLight.Name = "greenLight";
         greenLight.Size = new Size(10, 10);
         greenLight.TabIndex = 3;
@@ -120,7 +120,7 @@ partial class Mainframe
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
         menuStrip1.RenderMode = ToolStripRenderMode.Professional;
-        menuStrip1.Size = new Size(244, 24);
+        menuStrip1.Size = new Size(287, 24);
         menuStrip1.TabIndex = 4;
         menuStrip1.Text = "menuStrip1";
         // 
@@ -167,7 +167,7 @@ partial class Mainframe
         statusStrip_Main.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel_Status, toolStripStatusLabel_Spacer, toolStripStatusLabel_Version });
         statusStrip_Main.Location = new Point(0, 237);
         statusStrip_Main.Name = "statusStrip_Main";
-        statusStrip_Main.Size = new Size(244, 22);
+        statusStrip_Main.Size = new Size(287, 22);
         statusStrip_Main.SizingGrip = false;
         statusStrip_Main.TabIndex = 5;
         statusStrip_Main.Text = "statusStrip1";
@@ -176,14 +176,14 @@ partial class Mainframe
         // 
         toolStripStatusLabel_Status.AutoSize = false;
         toolStripStatusLabel_Status.Name = "toolStripStatusLabel_Status";
-        toolStripStatusLabel_Status.Size = new Size(100, 17);
+        toolStripStatusLabel_Status.Size = new Size(130, 17);
         toolStripStatusLabel_Status.Text = "Status:";
         toolStripStatusLabel_Status.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // toolStripStatusLabel_Spacer
         // 
         toolStripStatusLabel_Spacer.Name = "toolStripStatusLabel_Spacer";
-        toolStripStatusLabel_Spacer.Size = new Size(57, 17);
+        toolStripStatusLabel_Spacer.Size = new Size(70, 17);
         toolStripStatusLabel_Spacer.Spring = true;
         // 
         // toolStripStatusLabel_Version
@@ -220,14 +220,14 @@ partial class Mainframe
         label_Docked.TabIndex = 8;
         label_Docked.Text = "Angedockt:";
         // 
-        // label_Tick
+        // label_TickTitle
         // 
-        label_Tick.AutoSize = true;
-        label_Tick.Location = new Point(12, 133);
-        label_Tick.Name = "label_Tick";
-        label_Tick.Size = new Size(31, 15);
-        label_Tick.TabIndex = 9;
-        label_Tick.Text = "Tick:";
+        label_TickTitle.AutoSize = true;
+        label_TickTitle.Location = new Point(12, 133);
+        label_TickTitle.Name = "label_TickTitle";
+        label_TickTitle.Size = new Size(31, 15);
+        label_TickTitle.TabIndex = 9;
+        label_TickTitle.Text = "Tick:";
         // 
         // label_SystemListLabel
         // 
@@ -241,7 +241,7 @@ partial class Mainframe
         // label_SystemList
         // 
         label_SystemList.AutoSize = true;
-        label_SystemList.Location = new Point(42, 178);
+        label_SystemList.Location = new Point(67, 193);
         label_SystemList.MaximumSize = new Size(213, 0);
         label_SystemList.Name = "label_SystemList";
         label_SystemList.Size = new Size(49, 15);
@@ -253,22 +253,32 @@ partial class Mainframe
         // 
         pictureBox1.BackColor = Color.Transparent;
         pictureBox1.Image = Properties.Resources.UGC_Logo;
-        pictureBox1.Location = new Point(139, 27);
+        pictureBox1.Location = new Point(187, 27);
         pictureBox1.Name = "pictureBox1";
         pictureBox1.Size = new Size(88, 50);
         pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         pictureBox1.TabIndex = 16;
         pictureBox1.TabStop = false;
         // 
+        // label_Tick
+        // 
+        label_Tick.Location = new Point(58, 133);
+        label_Tick.Name = "label_Tick";
+        label_Tick.Size = new Size(183, 45);
+        label_Tick.TabIndex = 17;
+        label_Tick.Text = "12.04.2023 21:21:05\n(~13.04.2023 00:21:05(+3h)~)";
+        label_Tick.TextAlign = ContentAlignment.TopCenter;
+        // 
         // Mainframe
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(244, 259);
+        ClientSize = new Size(287, 259);
+        Controls.Add(label_TickTitle);
+        Controls.Add(label_Tick);
         Controls.Add(pictureBox1);
         Controls.Add(label_SystemList);
         Controls.Add(label_SystemListLabel);
-        Controls.Add(label_Tick);
         Controls.Add(label_Docked);
         Controls.Add(label_System);
         Controls.Add(label_CMDr);
@@ -311,10 +321,11 @@ partial class Mainframe
     private Label label_CMDr;
     private Label label_System;
     private Label label_Docked;
-    private Label label_Tick;
+    private Label label_TickTitle;
     private Label label_SystemListLabel;
     private Label label_SystemList;
     private PictureBox pictureBox1;
     private ToolStripMenuItem toolStripMenuItem_Overlay;
     private ToolStripStatusLabel toolStripStatusLabel_Spacer;
+    private Label label_Tick;
 }

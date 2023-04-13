@@ -18,16 +18,14 @@ namespace UGC_App
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             CheckSingleInstance();
             SquirrelAwareApp.HandleEvents(
             onInitialInstall: OnAppInstall,
             onAppUninstall: OnAppUninstall,
             onEveryRun: OnAppRun);
-            #if !DEBUG
-                UpdateMyApp(args);
-            #endif
+            await UpdateMyApp(args);
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
@@ -38,7 +36,6 @@ namespace UGC_App
                 mainForm.ShowInTaskbar = false;
             }
             Application.Run(mainForm);
-            _mutex.ReleaseMutex();
         }
 
         private static void CheckSingleInstance()
@@ -67,7 +64,7 @@ namespace UGC_App
 
 
                 NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "UGC App", PipeDirection.Out);
-                pipeClient.Connect();
+                Task.Run(pipeClient.Connect);
                 Application.Exit();
                 Application.ExitThread();
                 Environment.Exit(0);
@@ -94,7 +91,7 @@ namespace UGC_App
         private static async Task UpdateMyApp(string[] args)
         {
             if(!Properties.Settings.Default.Auto_Update) return;
-            using var mgr = new UpdateManager(Properties.Settings.Default.Update_Url);
+            using var mgr = new UpdateManager(Properties.Settings.Default.Update_Url,"UGC-App");
             var newVersion = await mgr.UpdateApp();
 
             // optionally restart the app automatically, or ask the user if/when they want to restart

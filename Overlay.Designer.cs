@@ -80,6 +80,7 @@
             label_TickTime.Size = new Size(86, 15);
             label_TickTime.TabIndex = 3;
             label_TickTime.Text = "Loading Data...";
+            label_TickTime.TextAlign = ContentAlignment.TopCenter;
             // 
             // label_TickTitle
             // 
@@ -94,7 +95,7 @@
             // 
             label_SystemList.AutoSize = true;
             label_SystemList.ForeColor = Color.White;
-            label_SystemList.Location = new Point(25, 110);
+            label_SystemList.Location = new Point(26, 91);
             label_SystemList.MaximumSize = new Size(215, 0);
             label_SystemList.Name = "label_SystemList";
             label_SystemList.Size = new Size(212, 45);
@@ -105,7 +106,7 @@
             // button1
             // 
             button1.BackColor = Color.Transparent;
-            button1.Location = new Point(95, 185);
+            button1.Location = new Point(88, 162);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 0;

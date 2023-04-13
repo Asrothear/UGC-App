@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace UGC_App
 {
-    public partial class test : UserControl
+    public partial class About : Form
     {
-        public test()
+        public About()
         {
             InitializeComponent();
         }

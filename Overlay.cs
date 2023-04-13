@@ -18,6 +18,7 @@ namespace UGC_App
             button1.Top = label_SystemList.Bottom + LabelButtonSpacing;
             label_SystemList.SizeChanged += SystemListReSized;
             label_SystemList.Text = parrent.GetSystemList();
+            label_TickTime.Text = parrent.GetTickTime();
             foreach (Control controls in panel.Controls)
             {
                 if (controls is not Label) continue;
@@ -45,7 +46,7 @@ namespace UGC_App
         private void ButtonClick(object sender, EventArgs e)
         {
             if (isDragging) return;
-            Task.Run(() => { JournalHandler.Start(parent); });
+            
             //JournalHandler.Start(parent);
         }
 
@@ -96,9 +97,10 @@ namespace UGC_App
             }
         }
 
-        public void FillList(string list)
+        public void FillList(string list, string tick)
         {
-            label_SystemList.Text = String.Join(", ", list);
+            label_SystemList.Text = list;
+            label_TickTime.Text = tick;
         }
         internal void UpdateLabelTextColorBasedOnBackgroundBrightness()
         {
