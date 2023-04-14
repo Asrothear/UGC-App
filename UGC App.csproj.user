@@ -7,7 +7,13 @@
     <Compile Update="About.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Design.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Konfiguration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Mainframe %28conflicted copy 2023-04-13 210637%29.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Mainframe.cs">

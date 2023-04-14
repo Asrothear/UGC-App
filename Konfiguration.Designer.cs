@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             button_Save = new Button();
-            button2 = new Button();
+            button_Design = new Button();
             checkBox_CMDr = new CheckBox();
             checkBox_FullList = new CheckBox();
             checkBox_OnlyBGS = new CheckBox();
@@ -57,20 +57,19 @@
             button_Save.Text = "Übernehmen";
             button_Save.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // button_Design
             // 
-            button2.Location = new Point(210, 340);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 1;
-            button2.Text = "button2";
-            button2.UseVisualStyleBackColor = true;
-            button2.Visible = false;
+            button_Design.Location = new Point(12, 340);
+            button_Design.Name = "button_Design";
+            button_Design.Size = new Size(75, 23);
+            button_Design.TabIndex = 1;
+            button_Design.Text = "Design";
+            button_Design.UseVisualStyleBackColor = true;
             // 
             // checkBox_CMDr
             // 
             checkBox_CMDr.AutoSize = true;
-            checkBox_CMDr.Location = new Point(12, 149);
+            checkBox_CMDr.Location = new Point(12, 129);
             checkBox_CMDr.Name = "checkBox_CMDr";
             checkBox_CMDr.Size = new Size(160, 19);
             checkBox_CMDr.TabIndex = 2;
@@ -80,7 +79,7 @@
             // checkBox_FullList
             // 
             checkBox_FullList.AutoSize = true;
-            checkBox_FullList.Location = new Point(12, 174);
+            checkBox_FullList.Location = new Point(12, 154);
             checkBox_FullList.Name = "checkBox_FullList";
             checkBox_FullList.Size = new Size(136, 19);
             checkBox_FullList.TabIndex = 3;
@@ -90,7 +89,7 @@
             // checkBox_OnlyBGS
             // 
             checkBox_OnlyBGS.AutoSize = true;
-            checkBox_OnlyBGS.Location = new Point(12, 199);
+            checkBox_OnlyBGS.Location = new Point(12, 179);
             checkBox_OnlyBGS.Name = "checkBox_OnlyBGS";
             checkBox_OnlyBGS.Size = new Size(158, 19);
             checkBox_OnlyBGS.TabIndex = 4;
@@ -100,7 +99,7 @@
             // checkBox_AutoUpdate
             // 
             checkBox_AutoUpdate.AutoSize = true;
-            checkBox_AutoUpdate.Location = new Point(12, 224);
+            checkBox_AutoUpdate.Location = new Point(12, 204);
             checkBox_AutoUpdate.Name = "checkBox_AutoUpdate";
             checkBox_AutoUpdate.Size = new Size(93, 19);
             checkBox_AutoUpdate.TabIndex = 5;
@@ -131,7 +130,7 @@
             // checkBox_SlowState
             // 
             checkBox_SlowState.AutoSize = true;
-            checkBox_SlowState.Location = new Point(12, 249);
+            checkBox_SlowState.Location = new Point(12, 229);
             checkBox_SlowState.Name = "checkBox_SlowState";
             checkBox_SlowState.Size = new Size(80, 19);
             checkBox_SlowState.TabIndex = 9;
@@ -141,7 +140,7 @@
             // checkBox_Debug
             // 
             checkBox_Debug.AutoSize = true;
-            checkBox_Debug.Location = new Point(12, 325);
+            checkBox_Debug.Location = new Point(12, 305);
             checkBox_Debug.Name = "checkBox_Debug";
             checkBox_Debug.Size = new Size(61, 19);
             checkBox_Debug.TabIndex = 10;
@@ -178,7 +177,7 @@
             // checkBoxy_AutoStart
             // 
             checkBoxy_AutoStart.AutoSize = true;
-            checkBoxy_AutoStart.Location = new Point(12, 274);
+            checkBoxy_AutoStart.Location = new Point(12, 254);
             checkBoxy_AutoStart.Name = "checkBoxy_AutoStart";
             checkBoxy_AutoStart.Size = new Size(136, 19);
             checkBoxy_AutoStart.TabIndex = 14;
@@ -187,7 +186,7 @@
             // 
             // numericUpDown_ListCount
             // 
-            numericUpDown_ListCount.Location = new Point(168, 173);
+            numericUpDown_ListCount.Location = new Point(168, 153);
             numericUpDown_ListCount.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             numericUpDown_ListCount.Name = "numericUpDown_ListCount";
             numericUpDown_ListCount.Size = new Size(36, 23);
@@ -197,7 +196,7 @@
             // checkBox_CloseMini
             // 
             checkBox_CloseMini.AutoSize = true;
-            checkBox_CloseMini.Location = new Point(12, 300);
+            checkBox_CloseMini.Location = new Point(12, 280);
             checkBox_CloseMini.Name = "checkBox_CloseMini";
             checkBox_CloseMini.Size = new Size(153, 19);
             checkBox_CloseMini.TabIndex = 16;
@@ -224,7 +223,7 @@
             Controls.Add(checkBox_OnlyBGS);
             Controls.Add(checkBox_FullList);
             Controls.Add(checkBox_CMDr);
-            Controls.Add(button2);
+            Controls.Add(button_Design);
             Controls.Add(button_Save);
             MaximizeBox = false;
             MdiChildrenMinimizedAnchorBottom = false;
@@ -234,7 +233,7 @@
             ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Konfiguration";
+            Text = "Einstellungen";
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -243,7 +242,7 @@
         #endregion
 
         private Button button_Save;
-        private Button button2;
+        private Button button_Design;
         private CheckBox checkBox_CMDr;
         private CheckBox checkBox_FullList;
         private CheckBox checkBox_OnlyBGS;

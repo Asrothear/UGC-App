@@ -10,6 +10,7 @@ public partial class Mainframe : Form
 {
     private Konfiguration conf;
     private About about;
+    internal Design desg;
     const int LabelSpacing = 35;
     private bool closing = false;
     public Mainframe()
@@ -21,19 +22,22 @@ public partial class Mainframe : Form
             CreateToolStripMenuItem("Wiederherstellen", RestoreClick),
             CreateToolStripMenuItem("Toogle Overlay", ToogleOverlayClick),
             new ToolStripSeparator(),
+            CreateToolStripMenuItem("Über", ShowAbout),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click),
         });
         notifyIcon.ContextMenuStrip = contextMenuStrip;
         notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
-        SetCircles();
-        toolStripStatusLabel_Version.Text = $"Version {Properties.Settings.Default.Version}";
         label_SystemList.SizeChanged += SystemListChanged;
-        CenterObjectHorizontally(label_SystemList);
-        Height = label_SystemList.Bottom + LabelSpacing + 46;
         toolStripMenuItem_Overlay.Click += ToogleOverlayClick;
         toolStripMenuItem_About.Click += ShowAbout;
+        toolStripMenuItem_Settings.Click += ShowKonfig;
+        SetCircles();
         StartWorker();
+        CenterObjectHorizontally(label_SystemList);
+        toolStripStatusLabel_Version.Text = $"Version {Properties.Settings.Default.Version}";
+        Height = label_SystemList.Bottom + LabelSpacing + 46;
         label_CMDrText = Properties.Settings.Default.CMDR;
+        SetDesign(Properties.Settings.Default.Design_Sel);
     }
 
 
@@ -46,7 +50,7 @@ public partial class Mainframe : Form
 
     private void StartWorker()
     {
-        
+
         Task.Run(() =>
         {
             while (!IsDisposed && !closing)
@@ -76,11 +80,22 @@ public partial class Mainframe : Form
             }
         });
     }
+    private void ShowKonfig(object sender, EventArgs e)
+    {
+        if (conf == null || conf.IsDisposed) conf = new Konfiguration(this);
+        conf.ShowDialog(this);
+    }
 
     private void ShowAbout(object? sender, EventArgs e)
     {
         if (about == null || about.IsDisposed) about = new();
         about.ShowDialog(this);
+    }
+
+    internal void ShowDesign()
+    {
+        if (desg == null || desg.IsDisposed) desg = new(this);
+        desg.Show();
     }
 
     private void SystemListChanged(object? sender, EventArgs e)
@@ -92,23 +107,6 @@ public partial class Mainframe : Form
     {
         label.Left = (this.ClientSize.Width - label.Width) / 2;
     }
-
-    private void ListFiller(object? sender, EventArgs e)
-    {
-        Task.Run(() =>
-        {
-            var list = string.Join(", ", StateReceiver.GetState());
-            var tick = string.Join(", ", StateReceiver.GetTick());
-            Invoke(() =>
-            {
-                label_SystemList.Text = list;
-                label_Tick.Text = tick;
-                if (overlayForm == null || overlayForm.IsDisposed) return;
-                overlayForm.FillList(list, tick);
-            });
-        });
-    }
-
     internal void RefreshListOnKonfigChange()
     {
         var list = string.Join(", ", Properties.Settings.Default.Show_All ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Properties.Settings.Default.ListCount)).ToArray());
@@ -121,17 +119,6 @@ public partial class Mainframe : Form
     internal void SetLightActive(PictureBox light, bool active)
     {
         light.BackColor = active ? (Color)light.Tag : Color.Gray;
-    }
-
-    private void toolStripMenuItem2_Click(object sender, EventArgs e)
-    {
-        if (conf == null || conf.IsDisposed) conf = new Konfiguration(this);
-        conf.ShowDialog(this);
-    }
-    private void ToogleColorClick(object sender, EventArgs e)
-    {
-        overlayForm?.UpdateLabelTextColorBasedOnBackgroundBrightness();
-        SetLightActive(redLight, true);
     }
     private void ToogleOverlayClick(object sender, EventArgs e)
     {
@@ -196,6 +183,7 @@ public partial class Mainframe : Form
         Application.Exit();
         Application.ExitThread();
     }
+    
     private void RestoreClick(object sender, EventArgs e)
     {
         RestoreClick();
@@ -232,5 +220,38 @@ public partial class Mainframe : Form
     public string GetTickTime()
     {
         return label_Tick.Text;
+    }
+
+    public void SetDesign(int p0)
+    {
+        if (conf != null && !conf.IsDisposed) conf.SetDesign(p0);
+        if (desg != null && !desg.IsDisposed) desg.SetDesign(p0);
+        switch (p0)
+        {
+            case 0:
+                BackColor = Properties.Settings.Default.Color_Default_Background_Light;
+                foreach (Control control in Controls)
+                {
+                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                }
+                break;
+            case 1:
+                BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
+                foreach (Control control in Controls)
+                {
+                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                }
+                break;
+            case 2:
+                BackColor = Properties.Settings.Default.Color_Main_Background;
+                foreach (Control control in Controls)
+                {
+                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                }
+                break;
+        }
     }
 }

@@ -128,7 +128,7 @@ partial class Mainframe
         // 
         toolStripMenuItem_Menu.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_Overlay, toolStripMenuItem_Settings, toolStripMenuItem_About, toolStripSeparator1, toolStripMenuItem_Exit });
         toolStripMenuItem_Menu.Name = "toolStripMenuItem_Menu";
-        toolStripMenuItem_Menu.Size = new Size(50, 20);
+        toolStripMenuItem_Menu.Size = new Size(50, 23);
         toolStripMenuItem_Menu.Text = "Menu";
         // 
         // toolStripMenuItem_Overlay
@@ -142,7 +142,6 @@ partial class Mainframe
         toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
         toolStripMenuItem_Settings.Size = new Size(152, 22);
         toolStripMenuItem_Settings.Text = "Einstellungen";
-        toolStripMenuItem_Settings.Click += toolStripMenuItem2_Click;
         // 
         // toolStripMenuItem_About
         // 
@@ -183,7 +182,7 @@ partial class Mainframe
         // toolStripStatusLabel_Spacer
         // 
         toolStripStatusLabel_Spacer.Name = "toolStripStatusLabel_Spacer";
-        toolStripStatusLabel_Spacer.Size = new Size(70, 17);
+        toolStripStatusLabel_Spacer.Size = new Size(1, 17);
         toolStripStatusLabel_Spacer.Spring = true;
         // 
         // toolStripStatusLabel_Version
@@ -191,6 +190,7 @@ partial class Mainframe
         toolStripStatusLabel_Version.Name = "toolStripStatusLabel_Version";
         toolStripStatusLabel_Version.Size = new Size(72, 17);
         toolStripStatusLabel_Version.Text = "Version 0.0.1";
+        toolStripStatusLabel_Version.TextAlign = ContentAlignment.MiddleRight;
         // 
         // label_CMDr
         // 

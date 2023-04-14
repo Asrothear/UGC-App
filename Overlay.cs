@@ -46,7 +46,7 @@ namespace UGC_App
         private void ButtonClick(object sender, EventArgs e)
         {
             if (isDragging) return;
-            
+
             //JournalHandler.Start(parent);
         }
 

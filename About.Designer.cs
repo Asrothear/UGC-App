@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             label1 = new Label();
+            label2 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -42,11 +43,21 @@
             label1.Text = "UGC APP\r\nby\r\nLord Asrothrear\r\n© 2023";
             label1.TextAlign = ContentAlignment.TopCenter;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 77);
+            label2.Name = "label2";
+            label2.Size = new Size(150, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Version 0.0.1-alpha+140423";
+            // 
             // About
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(128, 79);
+            ClientSize = new Size(185, 101);
+            Controls.Add(label2);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -59,9 +70,11 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "About";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
         private Label label1;
+        private Label label2;
     }
 }

@@ -12,9 +12,19 @@ namespace UGC_App
 {
     public partial class Konfiguration : Form
     {
+        private Design desg;
         public Konfiguration(Mainframe parrent)
         {
             InitializeComponent();
+            Closing += (sender, args) =>
+            {
+                if(parrent.desg == null || parrent.desg.IsDisposed)return;
+                if (parrent.desg.Visible)
+                {
+                    args.Cancel = true;
+                    MessageBox.Show("Bitte erst das Design Fenster schließen!","Achtung");
+                }
+            };
             Load += (sender, args) =>
             {
                 LoadKonfigs();
@@ -25,6 +35,10 @@ namespace UGC_App
                 parrent.RefreshListOnKonfigChange();
                 Close();
             };
+            button_Design.Click += (sender, args) =>
+            {
+                parrent.ShowDesign();
+            };
             checkBox_FullList.CheckStateChanged += (sender, args) =>
             {
                 if (checkBox_FullList.Checked)
@@ -34,10 +48,16 @@ namespace UGC_App
                 }
                 else
                 {
-                    checkBox_FullList.Text = "Zeige nur x Systeme x=";
+                    checkBox_FullList.Text = "Zeige nur x Systeme    x=";
                     numericUpDown_ListCount.Visible = true;
                 }
             };
+            if (!Properties.Settings.Default.Show_All)
+            {
+                checkBox_FullList.Text = "Zeige nur x Systeme    x=";
+                numericUpDown_ListCount.Visible = true;
+            }
+            SetDesign(Properties.Settings.Default.Design_Sel);
         }
 
         void LoadKonfigs()
@@ -73,6 +93,37 @@ namespace UGC_App
             Properties.Settings.Default.CloseMini = checkBox_CloseMini.Checked;
             Properties.Settings.Default.Save();
             Program.SetStartup(checkBoxy_AutoStart.Checked);
+        }
+
+        public void SetDesign(int p0)
+        {
+            switch (p0)
+            {
+                case 0:
+                    BackColor = Properties.Settings.Default.Color_Default_Background_Light;
+                    foreach (Control control in Controls)
+                    {
+                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                    }
+                    break;
+                case 1:
+                    BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
+                    foreach (Control control in Controls)
+                    {
+                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                    }
+                    break;
+                case 2:
+                    BackColor = Properties.Settings.Default.Color_Main_Background;
+                    foreach (Control control in Controls)
+                    {
+                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                    }
+                    break;
+            }
         }
     }
 }
