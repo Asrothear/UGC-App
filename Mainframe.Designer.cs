@@ -63,6 +63,7 @@ partial class Mainframe
         label_SystemList = new Label();
         pictureBox1 = new PictureBox();
         label_Tick = new Label();
+        toolStripMenuItem_CheckForUpdates = new ToolStripMenuItem();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
@@ -126,38 +127,38 @@ partial class Mainframe
         // 
         // toolStripMenuItem_Menu
         // 
-        toolStripMenuItem_Menu.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_Overlay, toolStripMenuItem_Settings, toolStripMenuItem_About, toolStripSeparator1, toolStripMenuItem_Exit });
+        toolStripMenuItem_Menu.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_Overlay, toolStripMenuItem_Settings, toolStripMenuItem_CheckForUpdates, toolStripMenuItem_About, toolStripSeparator1, toolStripMenuItem_Exit });
         toolStripMenuItem_Menu.Name = "toolStripMenuItem_Menu";
-        toolStripMenuItem_Menu.Size = new Size(50, 23);
+        toolStripMenuItem_Menu.Size = new Size(50, 20);
         toolStripMenuItem_Menu.Text = "Menu";
         // 
         // toolStripMenuItem_Overlay
         // 
         toolStripMenuItem_Overlay.Name = "toolStripMenuItem_Overlay";
-        toolStripMenuItem_Overlay.Size = new Size(152, 22);
+        toolStripMenuItem_Overlay.Size = new Size(180, 22);
         toolStripMenuItem_Overlay.Text = "Toggle Overlay";
         // 
         // toolStripMenuItem_Settings
         // 
         toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-        toolStripMenuItem_Settings.Size = new Size(152, 22);
+        toolStripMenuItem_Settings.Size = new Size(180, 22);
         toolStripMenuItem_Settings.Text = "Einstellungen";
         // 
         // toolStripMenuItem_About
         // 
         toolStripMenuItem_About.Name = "toolStripMenuItem_About";
-        toolStripMenuItem_About.Size = new Size(152, 22);
+        toolStripMenuItem_About.Size = new Size(180, 22);
         toolStripMenuItem_About.Text = "Über";
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(149, 6);
+        toolStripSeparator1.Size = new Size(177, 6);
         // 
         // toolStripMenuItem_Exit
         // 
         toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-        toolStripMenuItem_Exit.Size = new Size(152, 22);
+        toolStripMenuItem_Exit.Size = new Size(180, 22);
         toolStripMenuItem_Exit.Text = "Beenden";
         toolStripMenuItem_Exit.Click += ExitMenuItem_Click;
         // 
@@ -182,7 +183,7 @@ partial class Mainframe
         // toolStripStatusLabel_Spacer
         // 
         toolStripStatusLabel_Spacer.Name = "toolStripStatusLabel_Spacer";
-        toolStripStatusLabel_Spacer.Size = new Size(1, 17);
+        toolStripStatusLabel_Spacer.Size = new Size(70, 17);
         toolStripStatusLabel_Spacer.Spring = true;
         // 
         // toolStripStatusLabel_Version
@@ -269,6 +270,12 @@ partial class Mainframe
         label_Tick.Text = "12.04.2023 21:21:05\n(~13.04.2023 00:21:05(+3h)~)";
         label_Tick.TextAlign = ContentAlignment.TopCenter;
         // 
+        // toolStripMenuItem_CheckForUpdates
+        // 
+        toolStripMenuItem_CheckForUpdates.Name = "toolStripMenuItem_CheckForUpdates";
+        toolStripMenuItem_CheckForUpdates.Size = new Size(180, 22);
+        toolStripMenuItem_CheckForUpdates.Text = "Auf Updates prüfen";
+        // 
         // Mainframe
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -328,4 +335,5 @@ partial class Mainframe
     private ToolStripMenuItem toolStripMenuItem_Overlay;
     private ToolStripStatusLabel toolStripStatusLabel_Spacer;
     private Label label_Tick;
+    private ToolStripMenuItem toolStripMenuItem_CheckForUpdates;
 }

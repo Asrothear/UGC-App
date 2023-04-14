@@ -8,12 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace UGC_App
 {
     public partial class Design : Form
     {
         private Mainframe parent;
+
         public Design(Mainframe pat)
         {
             InitializeComponent();
@@ -31,59 +33,79 @@ namespace UGC_App
                     }
                 }
             }
-
-            ColorPick_MainFrame_Background.BackColor = Properties.Settings.Default.Color_Main_Background;
-            ColorPick_MainFrame_Infos.BackColor = Properties.Settings.Default.Color_Main_Info;
-            ColorPick_MainFrame_Tick.BackColor = Properties.Settings.Default.Color_Main_Tick;
-            ColorPick_MainFrame_Systeme.BackColor = Properties.Settings.Default.Color_Main_Systeme;
-            ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Overlay_Background;
-            ColorPick_Overlay_Tick_Dark.BackColor = Properties.Settings.Default.Color_Overlay_Tick_Dark;
-            ColorPick_Overlay_Tick_Light.BackColor = Properties.Settings.Default.Color_Overlay_Tick_Light;
-            ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Overlay_Systeme_Dark;
-            ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Overlay_Systeme_Light;
             GetSetting();
-            if (checkBox_Override.Checked)
-            {
-                groupBox_Overlay.Enabled = true;
-                ColorPick_Overlay_Background.Enabled = true;
-                ColorPick_Overlay_Tick_Light.Enabled = true;
-                ColorPick_Overlay_Tick_Dark.Enabled = true;
-                ColorPick_Overlay_Systeme_Light.Enabled = true;
-                ColorPick_Overlay_Systeme_Dark.Enabled = true;
-                label_Disclaimer.Visible = true;
-            }
-            else
-            {
-                groupBox_Overlay.Enabled = false;
-                ColorPick_Overlay_Background.Enabled = false;
-                ColorPick_Overlay_Tick_Light.Enabled = false;
-                ColorPick_Overlay_Tick_Dark.Enabled = false;
-                ColorPick_Overlay_Systeme_Light.Enabled = false;
-                ColorPick_Overlay_Systeme_Dark.Enabled = false;
-                label_Disclaimer.Visible = false;
-            }
-
-            checkBox_Override.CheckedChanged += (sender, args) =>
-            {
-                groupBox_Overlay.Enabled = checkBox_Override.Checked;
-                ColorPick_Overlay_Background.Enabled = checkBox_Override.Checked;
-                ColorPick_Overlay_Tick_Light.Enabled = checkBox_Override.Checked;
-                ColorPick_Overlay_Tick_Dark.Enabled = checkBox_Override.Checked;
-                ColorPick_Overlay_Systeme_Light.Enabled = checkBox_Override.Checked;
-                ColorPick_Overlay_Systeme_Dark.Enabled = checkBox_Override.Checked;
-                label_Disclaimer.Visible = checkBox_Override.Checked;
-            };
             radioButton_Light.Click += (sender, args) => { ChangeTheme(0); };
             radioButton_Dark.Click += (sender, args) => { ChangeTheme(1); };
             radioButton_Custom.Click += (sender, args) => { ChangeTheme(2); };
-            SetDesign(Properties.Settings.Default.Design_Sel);
+            parent.SetDesign();
+            checkBox_Override.Click += (sender, args) =>
+            {
+                groupBox_Overlay.Enabled = checkBox_Override.Checked;
+                label_Disclaimer.Visible = checkBox_Override.Checked;
+                ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
+                ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
+                Properties.Settings.Default.Save();
+                GetSetting();
+                parent.SetDesign();
+            };
+            button_ResetToLight.Click += (sender, args) =>
+            {
+                ResetColors(true);
+            };
+            button_ResetToDark.Click += (sender, args) =>
+            {
+                ResetColors(false);
+            };
+        }
+
+        private void ResetColors(bool p0)
+        {
+            ColorPick_MainFrame_Background.BackColor = p0
+                ? Properties.Settings.Default.Color_Default_Background_Light
+                : Properties.Settings.Default.Color_Default_Background_Dark;
+            ColorPick_MainFrame_Infos.BackColor = p0
+                ? Properties.Settings.Default.Color_Default_Label_Light
+                : Properties.Settings.Default.Color_Default_Label_Dark;
+            ColorPick_MainFrame_Tick.BackColor = p0
+                ? Properties.Settings.Default.Color_Default_Label_Light
+                : Properties.Settings.Default.Color_Default_Label_Dark;
+            ColorPick_MainFrame_Systeme.BackColor = p0
+                ? Properties.Settings.Default.Color_Default_Label_Light
+                : Properties.Settings.Default.Color_Default_Label_Dark;
+            ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Default_Chroma;
+            ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
+            ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
+            ColorPick_Overlay_Tick_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
+            ColorPick_Overlay_Tick_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
+            Properties.Settings.Default.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
+            Properties.Settings.Default.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
+            Properties.Settings.Default.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
+            Properties.Settings.Default.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
+            if (checkBox_Override.Checked)
+            {
+
+                Properties.Settings.Default.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
+                Properties.Settings.Default.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
+                Properties.Settings.Default.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
+                Properties.Settings.Default.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
+                Properties.Settings.Default.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
+                Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
+            }
+
+            Properties.Settings.Default.Save();
+            parent.SetDesign();
         }
 
         private void ChangeTheme(int p0)
         {
             Properties.Settings.Default.Design_Sel = p0;
             Properties.Settings.Default.Save();
-            parent.SetDesign(p0);
+            parent.SetDesign();
+            GetSetting();
         }
 
         private void GetSetting()
@@ -92,7 +114,6 @@ namespace UGC_App
             {
                 case 0:
                 case 1:
-
                     radioButton_Light.Checked = true;
                     radioButton_Dark.Checked = false;
                     radioButton_Custom.Checked = false;
@@ -101,10 +122,19 @@ namespace UGC_App
                         radioButton_Light.Checked = false;
                         radioButton_Dark.Checked = true;
                     }
-                    ColorPick_MainFrame_Background.BackColor = Properties.Settings.Default.Color_Default_Background_Light;
-                    ColorPick_MainFrame_Infos.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_MainFrame_Tick.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_MainFrame_Systeme.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
+
+                    ColorPick_MainFrame_Background.BackColor = radioButton_Light.Checked
+                        ? Properties.Settings.Default.Color_Default_Background_Light
+                        : Properties.Settings.Default.Color_Default_Background_Dark;
+                    ColorPick_MainFrame_Infos.BackColor = radioButton_Light.Checked
+                        ? Properties.Settings.Default.Color_Default_Label_Light
+                        : Properties.Settings.Default.Color_Default_Label_Dark;
+                    ColorPick_MainFrame_Tick.BackColor = radioButton_Light.Checked
+                        ? Properties.Settings.Default.Color_Default_Label_Light
+                        : Properties.Settings.Default.Color_Default_Label_Dark;
+                    ColorPick_MainFrame_Systeme.BackColor = radioButton_Light.Checked
+                        ? Properties.Settings.Default.Color_Default_Label_Light
+                        : Properties.Settings.Default.Color_Default_Label_Dark;
                     ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Default_Chroma;
                     ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
                     ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
@@ -119,12 +149,27 @@ namespace UGC_App
                     ColorPick_MainFrame_Infos.BackColor = Properties.Settings.Default.Color_Main_Info;
                     ColorPick_MainFrame_Tick.BackColor = Properties.Settings.Default.Color_Main_Tick;
                     ColorPick_MainFrame_Systeme.BackColor = Properties.Settings.Default.Color_Main_Systeme;
-                    ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Overlay_Background;
-                    ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Overlay_Systeme_Light;
-                    ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Overlay_Systeme_Dark;
-                    ColorPick_Overlay_Tick_Light.BackColor = Properties.Settings.Default.Color_Overlay_Tick_Light;
-                    ColorPick_Overlay_Tick_Dark.BackColor = Properties.Settings.Default.Color_Overlay_Tick_Dark;
+                    ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
+                    ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                    ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                    ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                    ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
                     break;
+            }
+            checkBox_Override.Checked = Properties.Settings.Default.Color_Overlay_Override;
+            ColorPick_MainFrame_Background.Enabled = checkBox_Override.Checked;
+            ColorPick_MainFrame_Infos.Enabled = checkBox_Override.Checked;
+            ColorPick_MainFrame_Tick.Enabled = checkBox_Override.Checked;
+            groupBox_Overlay.Enabled = checkBox_Override.Checked;
+            label_Disclaimer.Visible = checkBox_Override.Checked;
+            checkBox_Override.Visible = radioButton_Custom.Checked;
+            button_ResetToLight.Visible = radioButton_Custom.Checked;
+            button_ResetToDark.Visible = radioButton_Custom.Checked;
+            if (!radioButton_Custom.Checked)
+            {
+                groupBox_Overlay.Enabled = radioButton_Custom.Checked;
+                label_Disclaimer.Visible = radioButton_Custom.Checked;
+                checkBox_Override.Visible = radioButton_Custom.Checked;
             }
         }
 
@@ -133,6 +178,18 @@ namespace UGC_App
             colorDialog1.Color = control.BackColor;
             colorDialog1.ShowDialog(this);
             control.BackColor = colorDialog1.Color;
+            Properties.Settings.Default.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
+            Properties.Settings.Default.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
+            Properties.Settings.Default.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
+            Properties.Settings.Default.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
+            Properties.Settings.Default.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
+            Properties.Settings.Default.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
+            Properties.Settings.Default.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
+            Properties.Settings.Default.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
+            Properties.Settings.Default.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
+            Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
+            Properties.Settings.Default.Save();
+            parent.SetDesign();
         }
 
         public void SetDesign(int p0)
@@ -144,17 +201,24 @@ namespace UGC_App
                     foreach (Control control in Controls)
                     {
                         if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                        if (control is RadioButton) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                        if (control is CheckBox)
+                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                        if (control is RadioButton)
+                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
                         if (control is GroupBox)
                         {
                             control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                            foreach (Control sub in Controls)
+                            foreach (Control sub in control.Controls)
                             {
                                 if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                                if (sub is CheckBox) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                                if (sub is RadioButton) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                                if (sub is GroupBox) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is CheckBox)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is RadioButton)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is GroupBox)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is Button)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
                             }
                         }
                     }
@@ -164,17 +228,24 @@ namespace UGC_App
                     foreach (Control control in Controls)
                     {
                         if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                        if (control is RadioButton) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        if (control is CheckBox)
+                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        if (control is RadioButton)
+                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
                         if (control is GroupBox)
                         {
                             control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                            foreach (Control sub in Controls)
+                            foreach (Control sub in control.Controls)
                             {
                                 if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                                if (sub is CheckBox) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                                if (sub is RadioButton) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                                if (sub is GroupBox) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                if (sub is CheckBox)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                if (sub is RadioButton)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                if (sub is GroupBox)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                if (sub is Button)
+                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
                             }
                         }
                     }
@@ -189,16 +260,18 @@ namespace UGC_App
                         if (control is GroupBox)
                         {
                             control.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                            foreach (Control sub in Controls)
+                            foreach (Control sub in control.Controls)
                             {
                                 if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
                                 if (sub is CheckBox) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
                                 if (sub is RadioButton) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
                                 if (sub is GroupBox) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                                if (sub is Button) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
                             }
                         }
                     }
                     break;
+                
             }
         }
     }

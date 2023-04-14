@@ -33,6 +33,8 @@
             radioButton_Dark = new RadioButton();
             radioButton_Custom = new RadioButton();
             groupBox_MainFrame = new GroupBox();
+            button_ResetToDark = new Button();
+            button_ResetToLight = new Button();
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
@@ -101,6 +103,8 @@
             // 
             // groupBox_MainFrame
             // 
+            groupBox_MainFrame.Controls.Add(button_ResetToDark);
+            groupBox_MainFrame.Controls.Add(button_ResetToLight);
             groupBox_MainFrame.Controls.Add(label4);
             groupBox_MainFrame.Controls.Add(label3);
             groupBox_MainFrame.Controls.Add(label2);
@@ -115,6 +119,26 @@
             groupBox_MainFrame.TabIndex = 3;
             groupBox_MainFrame.TabStop = false;
             groupBox_MainFrame.Text = "Fenster";
+            // 
+            // button_ResetToDark
+            // 
+            button_ResetToDark.Location = new Point(114, 54);
+            button_ResetToDark.Name = "button_ResetToDark";
+            button_ResetToDark.Size = new Size(75, 23);
+            button_ResetToDark.TabIndex = 9;
+            button_ResetToDark.Text = "Reset Dark";
+            button_ResetToDark.UseVisualStyleBackColor = true;
+            button_ResetToDark.Visible = false;
+            // 
+            // button_ResetToLight
+            // 
+            button_ResetToLight.Location = new Point(114, 25);
+            button_ResetToLight.Name = "button_ResetToLight";
+            button_ResetToLight.Size = new Size(75, 23);
+            button_ResetToLight.TabIndex = 8;
+            button_ResetToLight.Text = "Reset Light";
+            button_ResetToLight.UseVisualStyleBackColor = true;
+            button_ResetToLight.Visible = false;
             // 
             // label4
             // 
@@ -198,7 +222,6 @@
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Systeme_Dark);
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Tick_Dark);
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Background);
-            groupBox_Overlay.Enabled = false;
             groupBox_Overlay.Location = new Point(131, 138);
             groupBox_Overlay.Name = "groupBox_Overlay";
             groupBox_Overlay.Size = new Size(195, 103);
@@ -297,16 +320,16 @@
             label_Disclaimer.AutoSize = true;
             label_Disclaimer.Location = new Point(11, 109);
             label_Disclaimer.Name = "label_Disclaimer";
-            label_Disclaimer.Size = new Size(112, 120);
+            label_Disclaimer.Size = new Size(112, 135);
             label_Disclaimer.TabIndex = 6;
-            label_Disclaimer.Text = "Overlay Transparenz\r\ndurchChoma Key\r\ndes Overlay\r\nhintergrundes\r\n\r\nAlle Elemente mit\r\nidentischer Farbe\r\nwerden transparent!";
+            label_Disclaimer.Text = "Overlay Transparenz\r\ndurch Choma-Key\r\ndes Overlay\r\nhintergrundes!\r\n\r\nAlle Elemente mit\r\nidentischer Farbe\r\nim Overlay\r\nwerden transparent!";
             label_Disclaimer.Visible = false;
             // 
             // Design
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(35, 35, 35);
+            BackColor = SystemColors.Control;
             ClientSize = new Size(338, 249);
             Controls.Add(groupBox_Overlay);
             Controls.Add(label_Disclaimer);
@@ -321,7 +344,6 @@
             MdiChildrenMinimizedAnchorBottom = false;
             MinimizeBox = false;
             Name = "Design";
-            ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
             Text = "Design";
             groupBox_MainFrame.ResumeLayout(false);
@@ -367,5 +389,7 @@
         private Label label_Disclaimer;
         private PictureBox ColorPick_Overlay_Tick_Light;
         private PictureBox ColorPick_Overlay_Systeme_Light;
+        private Button button_ResetToDark;
+        private Button button_ResetToLight;
     }
 }

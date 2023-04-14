@@ -15,12 +15,12 @@ namespace UGC_App
         public About()
         {
             InitializeComponent();
+            label2.Text = $"Version {Properties.Settings.Default.Version}{Properties.Settings.Default.Version_Meta}";
             foreach (Control controller in Controls)
             {
                 if (controller is not Label) continue;
                 controller.Left = (ClientSize.Width - controller.Width) / 2;
             }
-            label2.Text = $"{Properties.Settings.Default.Version}{Properties.Settings.Default.Version_Meta}";
         }
 
         public void SetDesign(int p0)

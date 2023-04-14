@@ -9,6 +9,10 @@ namespace UGC_App
         public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
         const int ButtonBottomMargin = 35;
         const int LabelButtonSpacing = 10;
+        private Color SystemeLight = Color.Black;
+        private Color SystemeDark = Color.White;
+        private Color TickLight = Color.Black;
+        private Color TickDark = Color.White;
         public Overlay(Mainframe parrent)
         {
             InitializeComponent();
@@ -126,6 +130,7 @@ namespace UGC_App
                 {
                     g.CopyFromScreen(captureLocation, Point.Empty, captureSize);
                 }
+
                 //Clipboard.SetDataObject(screenCapture, true);
                 int brightnessSum = 0;
                 int count = 0;
@@ -141,20 +146,46 @@ namespace UGC_App
 
                 int averageBrightness = brightnessSum / (count * 3);
 
-                foreach (Control controls in panel.Controls)
+                if (averageBrightness < 128)
                 {
-                    if (controls is not Label) continue;
-                    if (averageBrightness < 128)
-                    {
-                        controls.ForeColor = Color.White;
-                    }
-                    else
-                    {
-                        controls.ForeColor = Color.Black;
-                    }
-
+                    label_TickTitle.ForeColor = TickDark;
+                    label_TickTime.ForeColor = TickDark;
+                    label_SystemTitle.ForeColor = SystemeDark;
+                    label_SystemList.ForeColor = SystemeDark;
                 }
+                else
+                {
+                    label_TickTitle.ForeColor = TickLight;
+                    label_TickTime.ForeColor = TickLight;
+                    label_SystemTitle.ForeColor = SystemeLight;
+                    label_SystemList.ForeColor = SystemeLight;
+                }
+
+
             }
+        }
+        internal void SetDesign(int p0)
+        {
+            switch (p0)
+            {
+                case 0:
+                case 1:
+                    BackColor = Properties.Settings.Default.Color_Default_Chroma;
+                    TickLight = Properties.Settings.Default.Color_Default_Label_Light;
+                    TickDark = Properties.Settings.Default.Color_Default_Label_Dark;
+                    SystemeLight = Properties.Settings.Default.Color_Default_Label_Light;
+                    SystemeDark = Properties.Settings.Default.Color_Default_Label_Dark;
+                    break;
+                case 2:
+                    BackColor = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
+                    TickLight = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                    TickDark = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                    SystemeLight = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
+                    SystemeDark = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                    break;
+            }
+            TransparencyKey = BackColor;
+            UpdateLabelTextColorBasedOnBackgroundBrightness();
         }
     }
 }

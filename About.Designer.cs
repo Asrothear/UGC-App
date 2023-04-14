@@ -35,12 +35,13 @@
             // 
             // label1
             // 
-            label1.Location = new Point(5, 9);
+            label1.AutoSize = true;
+            label1.Location = new Point(33, 9);
             label1.Name = "label1";
             label1.RightToLeft = RightToLeft.No;
-            label1.Size = new Size(119, 61);
+            label1.Size = new Size(104, 60);
             label1.TabIndex = 1;
-            label1.Text = "UGC APP\r\nby\r\nLord Asrothrear\r\n© 2023";
+            label1.Text = "UGC APP by\r\nLord Asrothrear\r\n© 2023\r\ninfo@asrothear.de";
             label1.TextAlign = ContentAlignment.TopCenter;
             // 
             // label2
@@ -56,7 +57,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(185, 101);
+            ClientSize = new Size(209, 101);
             Controls.Add(label2);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;

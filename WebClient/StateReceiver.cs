@@ -72,6 +72,8 @@ public class StateReceiver
         {
             Console.WriteLine($"Error: {response.StatusCode}");
         }
-        return content;
+
+        Tick = content;
+        return Tick;
     }
 }

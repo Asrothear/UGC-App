@@ -2,6 +2,7 @@ using System.Drawing.Drawing2D;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Squirrel;
 using UGC_App.EDLog;
 using UGC_App.WebClient;
 
@@ -11,6 +12,7 @@ public partial class Mainframe : Form
     private Konfiguration conf;
     private About about;
     internal Design desg;
+    private Updater _updater;
     const int LabelSpacing = 35;
     private bool closing = false;
     public Mainframe()
@@ -31,13 +33,30 @@ public partial class Mainframe : Form
         toolStripMenuItem_Overlay.Click += ToogleOverlayClick;
         toolStripMenuItem_About.Click += ShowAbout;
         toolStripMenuItem_Settings.Click += ShowKonfig;
+        toolStripMenuItem_CheckForUpdates.Click += CheckUpdates;
         SetCircles();
         StartWorker();
         CenterObjectHorizontally(label_SystemList);
         toolStripStatusLabel_Version.Text = $"Version {Properties.Settings.Default.Version}";
         Height = label_SystemList.Bottom + LabelSpacing + 46;
         label_CMDrText = Properties.Settings.Default.CMDR;
-        SetDesign(Properties.Settings.Default.Design_Sel);
+        SetDesign();
+    }
+
+    private async void CheckUpdates(object? sender, EventArgs e)
+    {
+        using var mgr = new UpdateManager(Properties.Settings.Default.Update_Url,"UGC-App");
+        var Infos = await mgr.CheckForUpdate();
+        if(Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version)return;
+        DialogResult dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{Infos.CurrentlyInstalledVersion.Version}->{Infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
+        if(dialogResult == DialogResult.Yes)
+        {
+            var newVersion = await mgr.UpdateApp();
+            if (newVersion != null)
+            {
+                UpdateManager.RestartApp(null);
+            }
+        }
     }
 
 
@@ -124,6 +143,7 @@ public partial class Mainframe : Form
     {
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
+        SetDesign();
     }
     private void SetCircles()
     {
@@ -183,7 +203,7 @@ public partial class Mainframe : Form
         Application.Exit();
         Application.ExitThread();
     }
-    
+
     private void RestoreClick(object sender, EventArgs e)
     {
         RestoreClick();
@@ -222,14 +242,17 @@ public partial class Mainframe : Form
         return label_Tick.Text;
     }
 
-    public void SetDesign(int p0)
+    internal void SetDesign()
     {
+        var p0 = Properties.Settings.Default.Design_Sel;
         if (conf != null && !conf.IsDisposed) conf.SetDesign(p0);
         if (desg != null && !desg.IsDisposed) desg.SetDesign(p0);
+        if (overlayForm != null && !overlayForm.IsDisposed) overlayForm.SetDesign(p0);
         switch (p0)
         {
             case 0:
                 BackColor = Properties.Settings.Default.Color_Default_Background_Light;
+                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Default_Background_Light;
                 foreach (Control control in Controls)
                 {
                     if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
@@ -238,6 +261,7 @@ public partial class Mainframe : Form
                 break;
             case 1:
                 BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
+                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
                 foreach (Control control in Controls)
                 {
                     if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
@@ -246,6 +270,7 @@ public partial class Mainframe : Form
                 break;
             case 2:
                 BackColor = Properties.Settings.Default.Color_Main_Background;
+                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Main_Background;
                 foreach (Control control in Controls)
                 {
                     if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
