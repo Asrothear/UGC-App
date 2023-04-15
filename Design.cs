@@ -42,13 +42,13 @@ namespace UGC_App
             {
                 groupBox_Overlay.Enabled = checkBox_Override.Checked;
                 label_Disclaimer.Visible = checkBox_Override.Checked;
-                ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
-                ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
-                ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
-                Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
-                Properties.Settings.Default.Save();
+                ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Background : Config.Instance.Color_Default_Chroma;
+                ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Systeme_Light : Config.Instance.Color_Default_Label_Light;
+                ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Systeme_Dark : Config.Instance.Color_Default_Label_Dark;
+                ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Tick_Light : Config.Instance.Color_Default_Label_Light;
+                ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Tick_Dark : Config.Instance.Color_Default_Label_Dark;
+                Config.Instance.Color_Overlay_Override = checkBox_Override.Checked;
+                Config.Save();
                 GetSetting();
                 parent.SetDesign();
             };
@@ -65,101 +65,102 @@ namespace UGC_App
         private void ResetColors(bool p0)
         {
             ColorPick_MainFrame_Background.BackColor = p0
-                ? Properties.Settings.Default.Color_Default_Background_Light
-                : Properties.Settings.Default.Color_Default_Background_Dark;
+                ? Config.Instance.Color_Default_Background_Light
+                : Config.Instance.Color_Default_Background_Dark;
             ColorPick_MainFrame_Infos.BackColor = p0
-                ? Properties.Settings.Default.Color_Default_Label_Light
-                : Properties.Settings.Default.Color_Default_Label_Dark;
+                ? Config.Instance.Color_Default_Label_Light
+                : Config.Instance.Color_Default_Label_Dark;
             ColorPick_MainFrame_Tick.BackColor = p0
-                ? Properties.Settings.Default.Color_Default_Label_Light
-                : Properties.Settings.Default.Color_Default_Label_Dark;
+                ? Config.Instance.Color_Default_Label_Light
+                : Config.Instance.Color_Default_Label_Dark;
             ColorPick_MainFrame_Systeme.BackColor = p0
-                ? Properties.Settings.Default.Color_Default_Label_Light
-                : Properties.Settings.Default.Color_Default_Label_Dark;
-            ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Default_Chroma;
-            ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-            ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
-            ColorPick_Overlay_Tick_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-            ColorPick_Overlay_Tick_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
-            Properties.Settings.Default.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
-            Properties.Settings.Default.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
-            Properties.Settings.Default.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
-            Properties.Settings.Default.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
+                ? Config.Instance.Color_Default_Label_Light
+                : Config.Instance.Color_Default_Label_Dark;
+            ColorPick_Overlay_Background.BackColor = Config.Instance.Color_Default_Chroma;
+            ColorPick_Overlay_Systeme_Light.BackColor = Config.Instance.Color_Default_Label_Light;
+            ColorPick_Overlay_Systeme_Dark.BackColor = Config.Instance.Color_Default_Label_Dark;
+            ColorPick_Overlay_Tick_Light.BackColor = Config.Instance.Color_Default_Label_Light;
+            ColorPick_Overlay_Tick_Dark.BackColor = Config.Instance.Color_Default_Label_Dark;
+            Config.Instance.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
+            Config.Instance.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
+            Config.Instance.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
+            Config.Instance.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
             if (checkBox_Override.Checked)
             {
 
-                Properties.Settings.Default.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
-                Properties.Settings.Default.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
-                Properties.Settings.Default.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
-                Properties.Settings.Default.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
-                Properties.Settings.Default.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
-                Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
+                Config.Instance.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
+                Config.Instance.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
+                Config.Instance.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
+                Config.Instance.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
+                Config.Instance.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
+                Config.Instance.Color_Overlay_Override = checkBox_Override.Checked;
             }
 
-            Properties.Settings.Default.Save();
+            Config.Save();
             parent.SetDesign();
         }
 
         private void ChangeTheme(int p0)
         {
-            Properties.Settings.Default.Design_Sel = p0;
-            Properties.Settings.Default.Save();
+            Config.Instance.Design_Sel = p0;
+            Config.Save();
             parent.SetDesign();
             GetSetting();
         }
 
         private void GetSetting()
         {
-            switch (Properties.Settings.Default.Design_Sel)
+            switch (Config.Instance.Design_Sel)
             {
                 case 0:
                 case 1:
                     radioButton_Light.Checked = true;
                     radioButton_Dark.Checked = false;
                     radioButton_Custom.Checked = false;
-                    if (Properties.Settings.Default.Design_Sel == 1)
+                    if (Config.Instance.Design_Sel == 1)
                     {
                         radioButton_Light.Checked = false;
                         radioButton_Dark.Checked = true;
                     }
 
                     ColorPick_MainFrame_Background.BackColor = radioButton_Light.Checked
-                        ? Properties.Settings.Default.Color_Default_Background_Light
-                        : Properties.Settings.Default.Color_Default_Background_Dark;
+                        ? Config.Instance.Color_Default_Background_Light
+                        : Config.Instance.Color_Default_Background_Dark;
                     ColorPick_MainFrame_Infos.BackColor = radioButton_Light.Checked
-                        ? Properties.Settings.Default.Color_Default_Label_Light
-                        : Properties.Settings.Default.Color_Default_Label_Dark;
+                        ? Config.Instance.Color_Default_Label_Light
+                        : Config.Instance.Color_Default_Label_Dark;
                     ColorPick_MainFrame_Tick.BackColor = radioButton_Light.Checked
-                        ? Properties.Settings.Default.Color_Default_Label_Light
-                        : Properties.Settings.Default.Color_Default_Label_Dark;
+                        ? Config.Instance.Color_Default_Label_Light
+                        : Config.Instance.Color_Default_Label_Dark;
                     ColorPick_MainFrame_Systeme.BackColor = radioButton_Light.Checked
-                        ? Properties.Settings.Default.Color_Default_Label_Light
-                        : Properties.Settings.Default.Color_Default_Label_Dark;
-                    ColorPick_Overlay_Background.BackColor = Properties.Settings.Default.Color_Default_Chroma;
-                    ColorPick_Overlay_Systeme_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_Overlay_Systeme_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                    ColorPick_Overlay_Tick_Light.BackColor = Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_Overlay_Tick_Dark.BackColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        ? Config.Instance.Color_Default_Label_Light
+                        : Config.Instance.Color_Default_Label_Dark;
+                    ColorPick_Overlay_Background.BackColor = Config.Instance.Color_Default_Chroma;
+                    ColorPick_Overlay_Systeme_Light.BackColor = Config.Instance.Color_Default_Label_Light;
+                    ColorPick_Overlay_Systeme_Dark.BackColor = Config.Instance.Color_Default_Label_Dark;
+                    ColorPick_Overlay_Tick_Light.BackColor = Config.Instance.Color_Default_Label_Light;
+                    ColorPick_Overlay_Tick_Dark.BackColor = Config.Instance.Color_Default_Label_Dark;
                     break;
                 case 2:
                     radioButton_Light.Checked = false;
                     radioButton_Dark.Checked = false;
                     radioButton_Custom.Checked = true;
-                    ColorPick_MainFrame_Background.BackColor = Properties.Settings.Default.Color_Main_Background;
-                    ColorPick_MainFrame_Infos.BackColor = Properties.Settings.Default.Color_Main_Info;
-                    ColorPick_MainFrame_Tick.BackColor = Properties.Settings.Default.Color_Main_Tick;
-                    ColorPick_MainFrame_Systeme.BackColor = Properties.Settings.Default.Color_Main_Systeme;
-                    ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
-                    ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
-                    ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                    ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                    ColorPick_MainFrame_Background.BackColor = Config.Instance.Color_Main_Background;
+                    ColorPick_MainFrame_Infos.BackColor = Config.Instance.Color_Main_Info;
+                    ColorPick_MainFrame_Tick.BackColor = Config.Instance.Color_Main_Tick;
+                    ColorPick_MainFrame_Systeme.BackColor = Config.Instance.Color_Main_Systeme;
+                    ColorPick_Overlay_Background.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Background : Config.Instance.Color_Default_Chroma;
+                    ColorPick_Overlay_Systeme_Light.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Systeme_Light : Config.Instance.Color_Default_Label_Light;
+                    ColorPick_Overlay_Systeme_Dark.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Systeme_Dark : Config.Instance.Color_Default_Label_Dark;
+                    ColorPick_Overlay_Tick_Light.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Tick_Light : Config.Instance.Color_Default_Label_Light;
+                    ColorPick_Overlay_Tick_Dark.BackColor = checkBox_Override.Checked ? Config.Instance.Color_Overlay_Tick_Dark : Config.Instance.Color_Default_Label_Dark;
                     break;
             }
-            checkBox_Override.Checked = Properties.Settings.Default.Color_Overlay_Override;
-            ColorPick_MainFrame_Background.Enabled = checkBox_Override.Checked;
-            ColorPick_MainFrame_Infos.Enabled = checkBox_Override.Checked;
-            ColorPick_MainFrame_Tick.Enabled = checkBox_Override.Checked;
+            checkBox_Override.Checked = Config.Instance.Color_Overlay_Override;
+            ColorPick_MainFrame_Background.Enabled = radioButton_Custom.Checked;
+            ColorPick_MainFrame_Infos.Enabled = radioButton_Custom.Checked;
+            ColorPick_MainFrame_Tick.Enabled = radioButton_Custom.Checked;
+            ColorPick_MainFrame_Systeme.Enabled = radioButton_Custom.Checked;
             groupBox_Overlay.Enabled = checkBox_Override.Checked;
             label_Disclaimer.Visible = checkBox_Override.Checked;
             checkBox_Override.Visible = radioButton_Custom.Checked;
@@ -178,17 +179,17 @@ namespace UGC_App
             colorDialog1.Color = control.BackColor;
             colorDialog1.ShowDialog(this);
             control.BackColor = colorDialog1.Color;
-            Properties.Settings.Default.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
-            Properties.Settings.Default.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
-            Properties.Settings.Default.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
-            Properties.Settings.Default.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
-            Properties.Settings.Default.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
-            Properties.Settings.Default.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
-            Properties.Settings.Default.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
-            Properties.Settings.Default.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
-            Properties.Settings.Default.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
-            Properties.Settings.Default.Color_Overlay_Override = checkBox_Override.Checked;
-            Properties.Settings.Default.Save();
+            Config.Instance.Color_Main_Background = ColorPick_MainFrame_Background.BackColor;
+            Config.Instance.Color_Main_Info = ColorPick_MainFrame_Infos.BackColor;
+            Config.Instance.Color_Main_Tick = ColorPick_MainFrame_Tick.BackColor;
+            Config.Instance.Color_Main_Systeme = ColorPick_MainFrame_Systeme.BackColor;
+            Config.Instance.Color_Overlay_Background = ColorPick_Overlay_Background.BackColor;
+            Config.Instance.Color_Overlay_Systeme_Light = ColorPick_Overlay_Systeme_Light.BackColor;
+            Config.Instance.Color_Overlay_Systeme_Dark = ColorPick_Overlay_Systeme_Dark.BackColor;
+            Config.Instance.Color_Overlay_Tick_Light = ColorPick_Overlay_Tick_Light.BackColor;
+            Config.Instance.Color_Overlay_Tick_Dark = ColorPick_Overlay_Tick_Dark.BackColor;
+            Config.Instance.Color_Overlay_Override = checkBox_Override.Checked;
+            Config.Save();
             parent.SetDesign();
         }
 
@@ -197,76 +198,76 @@ namespace UGC_App
             switch (p0)
             {
                 case 0:
-                    BackColor = Properties.Settings.Default.Color_Default_Background_Light;
+                    BackColor = Config.Instance.Color_Default_Background_Light;
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Light;
                         if (control is CheckBox)
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Light;
                         if (control is RadioButton)
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Light;
                         if (control is GroupBox)
                         {
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Light;
                             foreach (Control sub in control.Controls)
                             {
-                                if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is Label) sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                 if (sub is CheckBox)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                 if (sub is RadioButton)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                 if (sub is GroupBox)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                 if (sub is Button)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                             }
                         }
                     }
                     break;
                 case 1:
-                    BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
+                    BackColor = Config.Instance.Color_Default_Background_Dark;
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                         if (control is CheckBox)
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                         if (control is RadioButton)
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                         if (control is GroupBox)
                         {
-                            control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                            control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                             foreach (Control sub in control.Controls)
                             {
-                                if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                if (sub is Label) sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                 if (sub is CheckBox)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                 if (sub is RadioButton)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                 if (sub is GroupBox)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                 if (sub is Button)
-                                    sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                             }
                         }
                     }
                     break;
                 case 2:
-                    BackColor = Properties.Settings.Default.Color_Main_Background;
+                    BackColor = Config.Instance.Color_Main_Background;
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                        if (control is RadioButton) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Main_Info;
+                        if (control is CheckBox) control.ForeColor = Config.Instance.Color_Main_Info;
+                        if (control is RadioButton) control.ForeColor = Config.Instance.Color_Main_Info;
                         if (control is GroupBox)
                         {
-                            control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                            control.ForeColor = Config.Instance.Color_Main_Info;
                             foreach (Control sub in control.Controls)
                             {
-                                if (sub is Label) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                                if (sub is CheckBox) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                                if (sub is RadioButton) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                                if (sub is GroupBox) sub.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                                if (sub is Button) sub.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                                if (sub is Label) sub.ForeColor = Config.Instance.Color_Main_Info;
+                                if (sub is CheckBox) sub.ForeColor = Config.Instance.Color_Main_Info;
+                                if (sub is RadioButton) sub.ForeColor = Config.Instance.Color_Main_Info;
+                                if (sub is GroupBox) sub.ForeColor = Config.Instance.Color_Main_Info;
+                                if (sub is Button) sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                             }
                         }
                     }

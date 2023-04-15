@@ -9,14 +9,14 @@ public class StateReceiver
     internal static string[] GetState()
     {
         var Client = new HttpClient();
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Properties.Settings.Default.State_Url);
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.State_Url);
         
         request.Headers.Add("version", $"1.0");
         request.Headers.Add("br", $"1");
         request.Headers.Add("branch", $"beta");
-        request.Headers.Add("cmdr", $"{Properties.Settings.Default.Send_Name}");
-        request.Headers.Add("token", $"{Properties.Settings.Default.Token}");
-        request.Headers.Add("onlyBGS", $"{Properties.Settings.Default.BGS_Only}");
+        request.Headers.Add("cmdr", $"{Config.Instance.Send_Name}");
+        request.Headers.Add("token", $"{Config.Instance.Token}");
+        request.Headers.Add("onlyBGS", $"{Config.Instance.BGS_Only}");
         HttpResponseMessage response = new();
         try
         {
@@ -43,13 +43,13 @@ public class StateReceiver
             return rets;
         }
         SystemList = content;
-        return Properties.Settings.Default.Show_All ? SystemList : SystemList.Take(Convert.ToInt32(Properties.Settings.Default.ListCount)).ToArray();
+        return Config.Instance.Show_All ? SystemList : SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray();
     }
     
     internal static string[] GetTick()
     {
         var Client = new HttpClient();
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Properties.Settings.Default.Tick_Url);
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.Tick_Url);
         HttpResponseMessage response = new();
         try
         {

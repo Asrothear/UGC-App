@@ -37,15 +37,15 @@ public partial class Mainframe : Form
         SetCircles();
         StartWorker();
         CenterObjectHorizontally(label_SystemList);
-        toolStripStatusLabel_Version.Text = $"Version {Properties.Settings.Default.Version}";
+        toolStripStatusLabel_Version.Text = $"Version {Config.Instance.Version}";
         Height = label_SystemList.Bottom + LabelSpacing + 46;
-        label_CMDrText = Properties.Settings.Default.CMDR;
+        label_CMDrText = Config.Instance.CMDR;
         SetDesign();
     }
 
     private async void CheckUpdates(object? sender, EventArgs e)
     {
-        using var mgr = new UpdateManager(Properties.Settings.Default.Update_Url,"UGC-App");
+        using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
         var Infos = await mgr.CheckForUpdate();
         if(Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version)return;
         DialogResult dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{Infos.CurrentlyInstalledVersion.Version}->{Infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
@@ -54,7 +54,11 @@ public partial class Mainframe : Form
             var newVersion = await mgr.UpdateApp();
             if (newVersion != null)
             {
-                UpdateManager.RestartApp(null);
+                var upd = await mgr.UpdateApp();
+                if (upd != null)
+                {
+                    UpdateManager.RestartApp(null);
+                }
             }
         }
     }
@@ -93,7 +97,7 @@ public partial class Mainframe : Form
                     if (overlayForm == null || overlayForm.IsDisposed) return;
                     overlayForm.FillList(list, tick);
                 });
-                Thread.Sleep(Properties.Settings.Default.SlowState
+                Thread.Sleep(Config.Instance.SlowState
                     ? TimeSpan.FromSeconds(5)
                     : TimeSpan.FromSeconds(15));
             }
@@ -128,7 +132,7 @@ public partial class Mainframe : Form
     }
     internal void RefreshListOnKonfigChange()
     {
-        var list = string.Join(", ", Properties.Settings.Default.Show_All ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Properties.Settings.Default.ListCount)).ToArray());
+        var list = string.Join(", ", Config.Instance.Show_All ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
         var tick = string.Join(", ", StateReceiver.Tick);
         label_SystemList.Text = list;
         if (overlayForm == null || overlayForm.IsDisposed) return;
@@ -177,14 +181,14 @@ public partial class Mainframe : Form
     }
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
-        if (!Properties.Settings.Default.CloseMini)
+        if (!Config.Instance.CloseMini)
         {
             closing = true;
             JournalHandler.running = false;
             WindowState = FormWindowState.Normal;
-            Properties.Settings.Default.FormSize = this.Size;
-            Properties.Settings.Default.FormLocation = this.Location;
-            Properties.Settings.Default.Save();
+            Config.Instance.FormSize = this.Size;
+            Config.Instance.FormLocation = this.Location;
+            Config.Save();
             return;
         };
         e.Cancel = true;
@@ -197,9 +201,9 @@ public partial class Mainframe : Form
         closing = true;
         JournalHandler.running = false;
         WindowState = FormWindowState.Normal;
-        Properties.Settings.Default.FormSize = this.Size;
-        Properties.Settings.Default.FormLocation = this.Location;
-        Properties.Settings.Default.Save();
+        Config.Instance.FormSize = this.Size;
+        Config.Instance.FormLocation = this.Location;
+        Config.Save();
         Application.Exit();
         Application.ExitThread();
     }
@@ -244,37 +248,37 @@ public partial class Mainframe : Form
 
     internal void SetDesign()
     {
-        var p0 = Properties.Settings.Default.Design_Sel;
+        var p0 = Config.Instance.Design_Sel;
         if (conf != null && !conf.IsDisposed) conf.SetDesign(p0);
         if (desg != null && !desg.IsDisposed) desg.SetDesign(p0);
         if (overlayForm != null && !overlayForm.IsDisposed) overlayForm.SetDesign(p0);
         switch (p0)
         {
             case 0:
-                BackColor = Properties.Settings.Default.Color_Default_Background_Light;
-                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Default_Background_Light;
+                BackColor = Config.Instance.Color_Default_Background_Light;
+                statusStrip_Main.BackColor = Config.Instance.Color_Default_Background_Light;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                    if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Light;
+                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Light;
                 }
                 break;
             case 1:
-                BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
-                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Default_Background_Dark;
+                BackColor = Config.Instance.Color_Default_Background_Dark;
+                statusStrip_Main.BackColor = Config.Instance.Color_Default_Background_Dark;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                    if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                 }
                 break;
             case 2:
-                BackColor = Properties.Settings.Default.Color_Main_Background;
-                statusStrip_Main.BackColor = Properties.Settings.Default.Color_Main_Background;
+                BackColor = Config.Instance.Color_Main_Background;
+                statusStrip_Main.BackColor = Config.Instance.Color_Main_Background;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                    if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                    if (control is Label) control.ForeColor = Config.Instance.Color_Main_Info;
+                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Main_Info;
                 }
                 break;
         }

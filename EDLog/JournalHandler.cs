@@ -118,10 +118,10 @@ namespace UGC_App.EDLog
                     switch (jsonObject["event"].ToString())
                     {
                         case "LoadGame":
-                            if (Properties.Settings.Default.CMDR == ToString(jsonObject["Commander"])) break;
-                            Properties.Settings.Default.CMDR = ToString(jsonObject["Commander"]);
-                            parent.label_CMDrText = Properties.Settings.Default.CMDR;
-                            Properties.Settings.Default.Save();
+                            if (Config.Instance.CMDR == ToString(jsonObject["Commander"])) break;
+                            Config.Instance.CMDR = ToString(jsonObject["Commander"]);
+                            parent.label_CMDrText = Config.Instance.CMDR;
+                            Config.Save();
                             break;
                     }
                 }

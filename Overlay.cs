@@ -170,18 +170,18 @@ namespace UGC_App
             {
                 case 0:
                 case 1:
-                    BackColor = Properties.Settings.Default.Color_Default_Chroma;
-                    TickLight = Properties.Settings.Default.Color_Default_Label_Light;
-                    TickDark = Properties.Settings.Default.Color_Default_Label_Dark;
-                    SystemeLight = Properties.Settings.Default.Color_Default_Label_Light;
-                    SystemeDark = Properties.Settings.Default.Color_Default_Label_Dark;
+                    BackColor = Config.Instance.Color_Default_Chroma;
+                    TickLight = Config.Instance.Color_Default_Label_Light;
+                    TickDark = Config.Instance.Color_Default_Label_Dark;
+                    SystemeLight = Config.Instance.Color_Default_Label_Light;
+                    SystemeDark = Config.Instance.Color_Default_Label_Dark;
                     break;
                 case 2:
-                    BackColor = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Background : Properties.Settings.Default.Color_Default_Chroma;
-                    TickLight = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Tick_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                    TickDark = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Tick_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
-                    SystemeLight = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Systeme_Light : Properties.Settings.Default.Color_Default_Label_Light;
-                    SystemeDark = Properties.Settings.Default.Color_Overlay_Override ? Properties.Settings.Default.Color_Overlay_Systeme_Dark : Properties.Settings.Default.Color_Default_Label_Dark;
+                    BackColor = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Background : Config.Instance.Color_Default_Chroma;
+                    TickLight = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Tick_Light : Config.Instance.Color_Default_Label_Light;
+                    TickDark = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Tick_Dark : Config.Instance.Color_Default_Label_Dark;
+                    SystemeLight = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Systeme_Light : Config.Instance.Color_Default_Label_Light;
+                    SystemeDark = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Systeme_Dark : Config.Instance.Color_Default_Label_Dark;
                     break;
             }
             TransparencyKey = BackColor;

@@ -15,7 +15,7 @@ namespace UGC_App
         public About()
         {
             InitializeComponent();
-            label2.Text = $"Version {Properties.Settings.Default.Version}{Properties.Settings.Default.Version_Meta}";
+            label2.Text = $"Version {Config.Instance.Version}{Config.Instance.Version_Meta}";
             foreach (Control controller in Controls)
             {
                 if (controller is not Label) continue;
@@ -30,22 +30,22 @@ namespace UGC_App
                 case 0:
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Light;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Light;
+                        if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Light;
                     }
                     break;
                 case 1:
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Default_Label_Dark;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                        if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                     }
                     break;
                 case 2:
                     foreach (Control control in Controls)
                     {
-                        if (control is Label) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
-                        if (control is CheckBox) control.ForeColor = Properties.Settings.Default.Color_Main_Info;
+                        if (control is Label) control.ForeColor = Config.Instance.Color_Main_Info;
+                        if (control is CheckBox) control.ForeColor = Config.Instance.Color_Main_Info;
                     }
                     break;
             }

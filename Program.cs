@@ -90,13 +90,13 @@ namespace UGC_App
         }
         private static async Task UpdateMyApp(string[] args)
         {
-            if(!Properties.Settings.Default.Auto_Update) return;
-            using var mgr = new UpdateManager(Properties.Settings.Default.Update_Url,"UGC-App");
+            if(!Config.Instance.Auto_Update) return;
+            using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
             var newVersion = await mgr.UpdateApp();
-
             // optionally restart the app automatically, or ask the user if/when they want to restart
             if (newVersion != null)
             {
+                MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
                 var arg = string.Join(",",args);
                 UpdateManager.RestartApp(null, arg);
             }

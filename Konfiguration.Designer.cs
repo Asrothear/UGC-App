@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             button_Save = new Button();
             button_Design = new Button();
             checkBox_CMDr = new CheckBox();
@@ -39,12 +40,13 @@
             textBox_Token = new TextBox();
             checkBox_SlowState = new CheckBox();
             checkBox_Debug = new CheckBox();
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
+            label_SendUrl = new Label();
+            label_StateUrl = new Label();
+            label_Token = new Label();
             checkBoxy_AutoStart = new CheckBox();
             numericUpDown_ListCount = new NumericUpDown();
             checkBox_CloseMini = new CheckBox();
+            toolTip_Konfig = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
             SuspendLayout();
             // 
@@ -147,32 +149,32 @@
             checkBox_Debug.Text = "Debug";
             checkBox_Debug.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // label_SendUrl
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(12, 35);
-            label1.Name = "label1";
-            label1.Size = new Size(57, 15);
-            label1.TabIndex = 11;
-            label1.Text = "Send URL";
+            label_SendUrl.AutoSize = true;
+            label_SendUrl.Location = new Point(12, 35);
+            label_SendUrl.Name = "label_SendUrl";
+            label_SendUrl.Size = new Size(57, 15);
+            label_SendUrl.TabIndex = 11;
+            label_SendUrl.Text = "Send URL";
             // 
-            // label2
+            // label_StateUrl
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(12, 64);
-            label2.Name = "label2";
-            label2.Size = new Size(57, 15);
-            label2.TabIndex = 12;
-            label2.Text = "State URL";
+            label_StateUrl.AutoSize = true;
+            label_StateUrl.Location = new Point(12, 64);
+            label_StateUrl.Name = "label_StateUrl";
+            label_StateUrl.Size = new Size(57, 15);
+            label_StateUrl.TabIndex = 12;
+            label_StateUrl.Text = "State URL";
             // 
-            // label3
+            // label_Token
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(12, 93);
-            label3.Name = "label3";
-            label3.Size = new Size(38, 15);
-            label3.TabIndex = 13;
-            label3.Text = "Token";
+            label_Token.AutoSize = true;
+            label_Token.Location = new Point(12, 93);
+            label_Token.Name = "label_Token";
+            label_Token.Size = new Size(38, 15);
+            label_Token.TabIndex = 13;
+            label_Token.Text = "Token";
             // 
             // checkBoxy_AutoStart
             // 
@@ -211,9 +213,9 @@
             Controls.Add(checkBox_CloseMini);
             Controls.Add(numericUpDown_ListCount);
             Controls.Add(checkBoxy_AutoStart);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(label_Token);
+            Controls.Add(label_StateUrl);
+            Controls.Add(label_SendUrl);
             Controls.Add(checkBox_Debug);
             Controls.Add(checkBox_SlowState);
             Controls.Add(textBox_Token);
@@ -252,11 +254,12 @@
         private TextBox textBox_Token;
         private CheckBox checkBox_SlowState;
         private CheckBox checkBox_Debug;
-        private Label label1;
-        private Label label2;
-        private Label label3;
+        private Label label_SendUrl;
+        private Label label_StateUrl;
+        private Label label_Token;
         private CheckBox checkBoxy_AutoStart;
         private NumericUpDown numericUpDown_ListCount;
         private CheckBox checkBox_CloseMini;
+        private ToolTip toolTip_Konfig;
     }
 }
