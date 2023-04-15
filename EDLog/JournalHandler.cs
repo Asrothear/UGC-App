@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UGC_App.WebClient;
 
 namespace UGC_App.EDLog
 {
@@ -120,11 +121,37 @@ namespace UGC_App.EDLog
                         case "LoadGame":
                             if (Config.Instance.CMDR == ToString(jsonObject["Commander"])) break;
                             Config.Instance.CMDR = ToString(jsonObject["Commander"]);
-                            parent.label_CMDrText = Config.Instance.CMDR;
-                            Config.Save();
+                            parent.SetCMDrText(Config.Instance.CMDR);
+                            break;
+                        case "Location":
+                            if(Config.Instance.LastSystem == ToString(jsonObject["StarSystem"])) break;
+                            Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
+                            parent.SetSystemText(Config.Instance.LastSystem);
+                            if (Convert.ToBoolean(jsonObject["Docked"]))
+                            {
+                                Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
+                            }
+                            else
+                            {
+                                Config.Instance.LastDocked = "-";
+                            }
+                            parent.SetDockedText(Config.Instance.LastDocked);
+                            break;
+                        case "Docked":
+                            Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
+                            parent.SetDockedText(Config.Instance.LastDocked);
+                            break;
+                        case "UnDocked":
+                            Config.Instance.LastDocked = "-";
+                            parent.SetDockedText(Config.Instance.LastDocked);
+                            break;
+                        case "FSDJump":
                             break;
                     }
+                    Config.Save();
                 }
+                jsonObject["user"] = Config.Instance.CMDR;
+                APISender.SendAPI(jsonObject.ToString(),parent);
             }
         }
 

@@ -32,9 +32,9 @@ public class Config
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
     [DisallowDeviation]
-    public string Version { get; set; } = "0.0.4";
+    public string Version { get; set; } = "0.1.0";
     [DisallowDeviation]
-    public string Version_Meta { get; set; } = "-alpha-150423-5";
+    public string Version_Meta { get; set; } = "-alpha-150423";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
@@ -45,16 +45,13 @@ public class Config
     public Color Color_Overlay_Systeme_Light { get; set; } = Color.Black;
     public Color Color_Overlay_Tick_Dark { get; set; } = Color.White;
     public Color Color_Overlay_Systeme_Dark { get; set; } = Color.White;
-    [DisallowDeviation]
-    public Color Color_Default_Chroma { get; set; } = Color.DarkGoldenrod;
-    [DisallowDeviation]
-    public Color Color_Default_Label_Dark { get; set; } = Color.White;
-    [DisallowDeviation]
-    public Color Color_Default_Label_Light { get; set; } = Color.Black;
-    [DisallowDeviation]
-    public Color Color_Default_Background_Light { get; set; } = Color.FromName("Control");
-    [DisallowDeviation]
-    public Color Color_Default_Background_Dark { get; set; } = Color.FromArgb(60,60,60);
+    internal Color Color_Default_Chroma { get;} = Color.DarkGoldenrod;
+    internal Color Color_Default_Label_Dark { get;} = Color.White;
+    internal Color Color_Default_Label_Light { get;} = Color.Black;
+    internal Color Color_Default_Background_Light { get;} = Color.FromName("Control");
+    internal Color Color_Default_Background_Dark { get;} = Color.FromArgb(60,60,60);
+    public string LastSystem { get; set; }
+    public string LastDocked { get; set; }
     public bool Color_Overlay_Override { get; set; } = false;
 
     private static string ConfigFilePath;

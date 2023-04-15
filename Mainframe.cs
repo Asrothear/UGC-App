@@ -15,6 +15,7 @@ public partial class Mainframe : Form
     private Updater _updater;
     const int LabelSpacing = 35;
     private bool closing = false;
+    private int sends = 0;
     public Mainframe()
     {
         InitializeComponent();
@@ -39,7 +40,9 @@ public partial class Mainframe : Form
         CenterObjectHorizontally(label_SystemList);
         toolStripStatusLabel_Version.Text = $"Version {Config.Instance.Version}";
         Height = label_SystemList.Bottom + LabelSpacing + 46;
-        label_CMDrText = Config.Instance.CMDR;
+        label_CMDr.Text = $"CMDr: {Config.Instance.CMDR}";
+        label_System.Text = $"System: {Config.Instance.LastSystem}";
+        label_Docked.Text = $"Angedockt: {Config.Instance.LastDocked}";
         SetDesign();
     }
 
@@ -54,23 +57,23 @@ public partial class Mainframe : Form
             var newVersion = await mgr.UpdateApp();
             if (newVersion != null)
             {
-                var upd = await mgr.UpdateApp();
-                if (upd != null)
-                {
-                    UpdateManager.RestartApp(null);
-                }
+                MessageBox.Show($"Version {newVersion.Version} Installiert,\nbitte Anwendung neustarten.", "Updater");
             }
         }
     }
 
-
-    // Option 2: Verwenden Sie eine öffentliche Eigenschaft, um den Label-Text zu aktualisieren
-    internal string label_CMDrText
+    internal void SetCMDrText(string text)
     {
-        get { return label_CMDr.Text; }
-        set { label_CMDr.Text = $"CMDr: {value}"; }
+        Invoke(() => { label_CMDr.Text = $"CMDr: {text}"; });
     }
-
+    internal void SetSystemText(string text)
+    {
+        Invoke(() => { label_System.Text = $"System: {text}"; });
+    }
+    internal void SetDockedText(string text)
+    {
+        Invoke(() => { label_Docked.Text = $"Angedockt: {text}"; });
+    }
     private void StartWorker()
     {
 
@@ -96,6 +99,11 @@ public partial class Mainframe : Form
                     label_Tick.Text = tick;
                     if (overlayForm == null || overlayForm.IsDisposed) return;
                     overlayForm.FillList(list, tick);
+                });
+                Invoke(() =>
+                {
+                    Height = label_SystemList.Bottom + LabelSpacing + 46;
+                    CenterObjectHorizontally(label_SystemList);
                 });
                 Thread.Sleep(Config.Instance.SlowState
                     ? TimeSpan.FromSeconds(5)
@@ -282,5 +290,10 @@ public partial class Mainframe : Form
                 }
                 break;
         }
+    }
+
+    public void AddSucess()
+    {
+        toolStripStatusLabel_Spacer.Text = $"Sended: {sends++}";
     }
 }

@@ -26,7 +26,7 @@ namespace UGC_App
                 }
             };
             Load += (sender, args) =>
-            {
+            { 
                 LoadKonfigs();
             };
             button_Save.Click += (sender, args) =>

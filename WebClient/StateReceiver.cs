@@ -11,9 +11,9 @@ public class StateReceiver
         var Client = new HttpClient();
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.State_Url);
         
-        request.Headers.Add("version", $"1.0");
+        request.Headers.Add("version", $"1,0");
         request.Headers.Add("br", $"1");
-        request.Headers.Add("branch", $"beta");
+        request.Headers.Add("branch", $"standalone");
         request.Headers.Add("cmdr", $"{Config.Instance.Send_Name}");
         request.Headers.Add("token", $"{Config.Instance.Token}");
         request.Headers.Add("onlyBGS", $"{Config.Instance.BGS_Only}");
