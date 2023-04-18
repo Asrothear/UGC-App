@@ -1,7 +1,11 @@
+using System;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using Squirrel;
 
 namespace UGC_App
@@ -11,7 +15,7 @@ namespace UGC_App
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
-        private static Mutex _mutex = null;
+        internal static Mutex _mutex = null;
         private const string MutexName = "UGC App";
         
         /// <summary>

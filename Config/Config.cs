@@ -32,9 +32,9 @@ public class Config
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
     [DisallowDeviation]
-    public string Version { get; set; } = "0.1.0";
+    public string Version { get; set; } = "0.1.1";
     [DisallowDeviation]
-    public string Version_Meta { get; set; } = "-alpha-150423";
+    public string Version_Meta { get; set; } = "-alpha-180423";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
@@ -53,6 +53,7 @@ public class Config
     public string LastSystem { get; set; }
     public string LastDocked { get; set; }
     public bool Color_Overlay_Override { get; set; } = false;
+    public bool Use_RichPresence { get; set; } = false;
 
     private static string ConfigFilePath;
     static Config()

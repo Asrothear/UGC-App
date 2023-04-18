@@ -24,8 +24,11 @@ public partial class Mainframe : Form
         {
             CreateToolStripMenuItem("Wiederherstellen", RestoreClick),
             CreateToolStripMenuItem("Toogle Overlay", ToogleOverlayClick),
+            CreateToolStripMenuItem("Einstellungen", ShowKonfig),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("Über", ShowAbout),
+            CreateToolStripMenuItem("auf Updates Prüfen", CheckUpdates),
+            new ToolStripSeparator(),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click),
         });
         notifyIcon.ContextMenuStrip = contextMenuStrip;
@@ -44,20 +47,26 @@ public partial class Mainframe : Form
         label_System.Text = $"System: {Config.Instance.LastSystem}";
         label_Docked.Text = $"Angedockt: {Config.Instance.LastDocked}";
         SetDesign();
+        if(Config.Instance.Use_RichPresence)RichPresence.DiscordHandler.Start();
     }
 
     private async void CheckUpdates(object? sender, EventArgs e)
     {
         using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
         var Infos = await mgr.CheckForUpdate();
-        if(Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version)return;
+        if (Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version &&
+            Infos.CurrentlyInstalledVersion.SHA1 == Infos.FutureReleaseEntry.SHA1)
+        {
+            MessageBox.Show($"Die aktuellste Version ist breits Installiert.", "Updater");
+            return;
+        }
         DialogResult dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{Infos.CurrentlyInstalledVersion.Version}->{Infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
         if(dialogResult == DialogResult.Yes)
         {
             var newVersion = await mgr.UpdateApp();
             if (newVersion != null)
             {
-                MessageBox.Show($"Version {newVersion.Version} Installiert,\nbitte Anwendung neustarten.", "Updater");
+                MessageBox.Show($"Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
             }
         }
     }
@@ -189,6 +198,11 @@ public partial class Mainframe : Form
     }
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
+        if (e.CloseReason == CloseReason.WindowsShutDown)
+        {
+            StopAll();
+        }
+
         if (!Config.Instance.CloseMini)
         {
             closing = true;
@@ -205,6 +219,11 @@ public partial class Mainframe : Form
         Task.Run(StartIPC);
     }
     private void ExitMenuItem_Click(object sender, EventArgs e)
+    {
+        StopAll();
+    }
+
+    private void StopAll()
     {
         closing = true;
         JournalHandler.running = false;
@@ -294,6 +313,7 @@ public partial class Mainframe : Form
 
     public void AddSucess()
     {
+        if (!JournalHandler.running) return;
         toolStripStatusLabel_Spacer.Text = $"Sended: {sends++}";
     }
 }

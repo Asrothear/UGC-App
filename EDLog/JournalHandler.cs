@@ -130,22 +130,35 @@ namespace UGC_App.EDLog
                             if (Convert.ToBoolean(jsonObject["Docked"]))
                             {
                                 Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
+                                RichPresence.DiscordHandler.SetActivity.Docked();
                             }
                             else
                             {
                                 Config.Instance.LastDocked = "-";
+                                RichPresence.DiscordHandler.SetActivity.Location();
                             }
                             parent.SetDockedText(Config.Instance.LastDocked);
                             break;
                         case "Docked":
                             Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
                             parent.SetDockedText(Config.Instance.LastDocked);
+                            RichPresence.DiscordHandler.SetActivity.Docked();
                             break;
-                        case "UnDocked":
+                        case "Undocked":
                             Config.Instance.LastDocked = "-";
                             parent.SetDockedText(Config.Instance.LastDocked);
+                            RichPresence.DiscordHandler.SetActivity.UnDocked();
                             break;
                         case "FSDJump":
+                            break;
+                        case "StartJump":
+                            if (ToString(jsonObject["JumpType"]) == "Supercruise")
+                            {
+                                RichPresence.DiscordHandler.SetActivity.Supercruise();
+                            }
+                            break;
+                        case "SupercruiseExit":
+                            RichPresence.DiscordHandler.SetActivity.SupercruiseExit(ToString(jsonObject["Body"]));
                             break;
                     }
                     Config.Save();

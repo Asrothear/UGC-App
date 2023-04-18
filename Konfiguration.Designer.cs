@@ -47,12 +47,13 @@
             numericUpDown_ListCount = new NumericUpDown();
             checkBox_CloseMini = new CheckBox();
             toolTip_Konfig = new ToolTip(components);
+            checkBox_RichPresence = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
             SuspendLayout();
             // 
             // button_Save
             // 
-            button_Save.Location = new Point(116, 340);
+            button_Save.Location = new Point(116, 381);
             button_Save.Name = "button_Save";
             button_Save.Size = new Size(88, 23);
             button_Save.TabIndex = 0;
@@ -61,7 +62,7 @@
             // 
             // button_Design
             // 
-            button_Design.Location = new Point(12, 340);
+            button_Design.Location = new Point(12, 381);
             button_Design.Name = "button_Design";
             button_Design.Size = new Size(75, 23);
             button_Design.TabIndex = 1;
@@ -205,11 +206,22 @@
             checkBox_CloseMini.Text = "in Infobereich Schließen";
             checkBox_CloseMini.UseVisualStyleBackColor = true;
             // 
+            // checkBox_RichPresence
+            // 
+            checkBox_RichPresence.AutoSize = true;
+            checkBox_RichPresence.Location = new Point(12, 330);
+            checkBox_RichPresence.Name = "checkBox_RichPresence";
+            checkBox_RichPresence.Size = new Size(96, 19);
+            checkBox_RichPresence.TabIndex = 17;
+            checkBox_RichPresence.Text = "RichPresence";
+            checkBox_RichPresence.UseVisualStyleBackColor = true;
+            // 
             // Konfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(292, 375);
+            ClientSize = new Size(292, 416);
+            Controls.Add(checkBox_RichPresence);
             Controls.Add(checkBox_CloseMini);
             Controls.Add(numericUpDown_ListCount);
             Controls.Add(checkBoxy_AutoStart);
@@ -261,5 +273,6 @@
         private NumericUpDown numericUpDown_ListCount;
         private CheckBox checkBox_CloseMini;
         private ToolTip toolTip_Konfig;
+        private CheckBox checkBox_RichPresence;
     }
 }

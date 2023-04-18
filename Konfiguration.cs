@@ -26,7 +26,7 @@ namespace UGC_App
                 }
             };
             Load += (sender, args) =>
-            { 
+            {
                 LoadKonfigs();
             };
             button_Save.Click += (sender, args) =>
@@ -58,10 +58,10 @@ namespace UGC_App
                 numericUpDown_ListCount.Visible = true;
             }
             SetDesign(Config.Instance.Design_Sel);
-            toolTip_Konfig.SetToolTip(label_SendUrl,"Web-Adresse der API zum Senden der Eilte Events");
-            toolTip_Konfig.SetToolTip(textBox_Send,"Web-Adresse der API zum Senden der Eilte Events");
-            toolTip_Konfig.SetToolTip(label_StateUrl,"Web-Adresse der API zum empfangen von Daten");
-            toolTip_Konfig.SetToolTip(textBox_State,"Web-Adresse der API zum empfangen von Daten");
+            toolTip_Konfig.SetToolTip(label_SendUrl, "Web-Adresse der API zum Senden der Eilte Events");
+            toolTip_Konfig.SetToolTip(textBox_Send, "Web-Adresse der API zum Senden der Eilte Events");
+            toolTip_Konfig.SetToolTip(label_StateUrl, "Web-Adresse der API zum empfangen von Daten");
+            toolTip_Konfig.SetToolTip(textBox_State, "Web-Adresse der API zum empfangen von Daten");
         }
 
         void LoadKonfigs()
@@ -78,6 +78,7 @@ namespace UGC_App
             checkBoxy_AutoStart.Checked = Config.Instance.AutoStart;
             numericUpDown_ListCount.Value = Config.Instance.ListCount;
             checkBox_CloseMini.Checked = Config.Instance.CloseMini;
+            checkBox_RichPresence.Checked = Config.Instance.Use_RichPresence;
             Activate();
         }
 
@@ -95,8 +96,10 @@ namespace UGC_App
             Config.Instance.AutoStart = checkBoxy_AutoStart.Checked;
             Config.Instance.ListCount = numericUpDown_ListCount.Value;
             Config.Instance.CloseMini = checkBox_CloseMini.Checked;
+            Config.Instance.Use_RichPresence = checkBox_RichPresence.Checked;
             Config.Save();
             Program.SetStartup(checkBoxy_AutoStart.Checked);
+            if(Config.Instance.Use_RichPresence)RichPresence.DiscordHandler.Start();
         }
 
         public void SetDesign(int p0)
