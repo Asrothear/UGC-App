@@ -19,6 +19,7 @@ namespace UGC_App
         public Design(Mainframe pat)
         {
             InitializeComponent();
+            TopMost = Config.Instance.AlwaysOnTop;
             parent = pat;
             int i = 0;
             foreach (Control grp in Controls)
@@ -272,7 +273,7 @@ namespace UGC_App
                         }
                     }
                     break;
-                
+
             }
         }
     }

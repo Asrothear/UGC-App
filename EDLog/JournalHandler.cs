@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UGC_App.WebClient;
+using UGC_App.WebClient.Schema;
 
 namespace UGC_App.EDLog
 {
@@ -118,50 +119,88 @@ namespace UGC_App.EDLog
                 {
                     switch (jsonObject["event"].ToString())
                     {
+                        case "Fileheader":
+                            Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
+                            Config.Instance.GameBuild= ToString(jsonObject["build"]);
+                            break;
                         case "LoadGame":
                             if (Config.Instance.CMDR == ToString(jsonObject["Commander"])) break;
                             Config.Instance.CMDR = ToString(jsonObject["Commander"]);
+                            Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
+                            Config.Instance.GameBuild = ToString(jsonObject["build"]);
+                            Config.Instance.Horizons = Convert.ToBoolean(jsonObject["Horizons"]);
+                            Config.Instance.Odyssey = Convert.ToBoolean(jsonObject["Odyssey"]);
                             parent.SetCMDrText(Config.Instance.CMDR);
                             break;
                         case "Location":
-                            if(Config.Instance.LastSystem == ToString(jsonObject["StarSystem"])) break;
+                            //if(Config.Instance.LastSystem == ToString(jsonObject["StarSystem"])) break;
                             Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
                             parent.SetSystemText(Config.Instance.LastSystem);
                             if (Convert.ToBoolean(jsonObject["Docked"]))
                             {
                                 Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
-                                RichPresence.DiscordHandler.SetActivity.Docked();
                             }
                             else
                             {
                                 Config.Instance.LastDocked = "-";
-                                RichPresence.DiscordHandler.SetActivity.Location();
                             }
                             parent.SetDockedText(Config.Instance.LastDocked);
+                            EDDN.Send(new Journal(jsonObject), parent);
                             break;
                         case "Docked":
                             Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
                             parent.SetDockedText(Config.Instance.LastDocked);
-                            RichPresence.DiscordHandler.SetActivity.Docked();
+                            EDDN.Send(new Journal(jsonObject), parent);
                             break;
                         case "Undocked":
                             Config.Instance.LastDocked = "-";
                             parent.SetDockedText(Config.Instance.LastDocked);
-                            RichPresence.DiscordHandler.SetActivity.UnDocked();
                             break;
                         case "FSDJump":
+                            Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
+                            Config.Instance.LastDocked = "-";
+                            EDDN.Send(new Journal(jsonObject), parent);
                             break;
-                        case "StartJump":
-                            if (ToString(jsonObject["JumpType"]) == "Supercruise")
-                            {
-                                RichPresence.DiscordHandler.SetActivity.Supercruise();
-                            }
+                        case "ApproachSettlement":
+                            EDDN.Send(new ApproachSettlement(jsonObject), parent);
                             break;
-                        case "SupercruiseExit":
-                            RichPresence.DiscordHandler.SetActivity.SupercruiseExit(ToString(jsonObject["Body"]));
+                        case "CodexEntry":
+                            EDDN.Send(new CodexEntry(jsonObject), parent);
+                            break;
+                        case "Market":
+                            EDDN.Send(new Market(jsonObject), parent);
+                            break;
+                        case "FCMaterials":
+                            EDDN.Send(new FCMaterials(jsonObject), parent);
+                            break;
+                        case "FSSAllBodiesFound":
+                            EDDN.Send(new FSSAllBodiesFound(jsonObject), parent);
+                            break;
+                        case "FSSBodySignals":
+                            EDDN.Send(new FSSBodySignals(jsonObject), parent);
+                            break;
+                        case "FSSDiscoveryScan":
+                            EDDN.Send(new FSSDiscoveryScan(jsonObject), parent);
+                            break;
+                        case "FSSSignalDiscovered":
+                            EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
+                            break;
+                        case "NavBeaconScan":
+                            EDDN.Send(new NavBeaconScan(jsonObject), parent);
+                            break;
+                        case "NavRoute":
+                            EDDN.Send(new NavRoute(jsonObject), parent);
+                            break;
+                        case "Outfitting":
+                            EDDN.Send(new Outfitting(jsonObject), parent);
+                            break;
+                        case "Shipyard":
+                            EDDN.Send(new Shipyard(jsonObject), parent);
                             break;
                     }
                     Config.Save();
+                    parent.SetSystemText(Config.Instance.LastSystem);
+                    parent.SetDockedText(Config.Instance.LastDocked);
                 }
                 jsonObject["user"] = Config.Instance.CMDR;
                 APISender.SendAPI(jsonObject.ToString(),parent);

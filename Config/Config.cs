@@ -32,9 +32,9 @@ public class Config
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
     [DisallowDeviation]
-    public string Version { get; set; } = "0.1.1";
+    public string Version { get; set; } = "0.2.1";
     [DisallowDeviation]
-    public string Version_Meta { get; set; } = "-alpha-180423";
+    public string Version_Meta { get; set; } = "-alpha-230423";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
@@ -53,23 +53,20 @@ public class Config
     public string LastSystem { get; set; }
     public string LastDocked { get; set; }
     public bool Color_Overlay_Override { get; set; } = false;
-    public bool Use_RichPresence { get; set; } = false;
+    public bool AlwaysOnTop { get; set; } = false;
+    public string GameVersion { get; set; }
+    public string GameBuild { get; set; }
+    public bool Odyssey { get; set; }
+    public bool Horizons { get; set; }
+    public bool EDDN { get; set; }
 
     private static string ConfigFilePath;
     static Config()
     {
-        
         var configFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "config");
         if (!Directory.Exists(configFolder))
         {
-            try
-            {
-                Directory.CreateDirectory(configFolder);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Can not create directory: " + configFolder, e);
-            }
+            Directory.CreateDirectory(configFolder);
         }
         ConfigFilePath = Path.Combine(configFolder, "config.json");
         if (!File.Exists(ConfigFilePath))

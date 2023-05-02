@@ -47,7 +47,8 @@ public partial class Mainframe : Form
         label_System.Text = $"System: {Config.Instance.LastSystem}";
         label_Docked.Text = $"Angedockt: {Config.Instance.LastDocked}";
         SetDesign();
-        if(Config.Instance.Use_RichPresence)RichPresence.DiscordHandler.Start();
+        TopMost = Config.Instance.AlwaysOnTop;
+        Program.SetStartup(Config.Instance.AutoStart);
     }
 
     private async void CheckUpdates(object? sender, EventArgs e)
@@ -102,21 +103,26 @@ public partial class Mainframe : Form
                 }
                 var list = string.Join(", ", StateReceiver.GetState());
                 var tick = string.Join(", ", StateReceiver.GetTick());
-                Invoke(() =>
+                try
                 {
-                    label_SystemList.Text = list;
-                    label_Tick.Text = tick;
-                    if (overlayForm == null || overlayForm.IsDisposed) return;
-                    overlayForm.FillList(list, tick);
-                });
-                Invoke(() =>
-                {
-                    Height = label_SystemList.Bottom + LabelSpacing + 46;
-                    CenterObjectHorizontally(label_SystemList);
-                });
+                    Invoke(() =>
+                    {
+                        label_SystemList.Text = list;
+                        label_Tick.Text = tick;
+                        if (overlayForm == null || overlayForm.IsDisposed) return;
+                        overlayForm.FillList(list, tick);
+                    });
+                    Invoke(() =>
+                    {
+                        Height = label_SystemList.Bottom + LabelSpacing + 46;
+                        CenterObjectHorizontally(label_SystemList);
+                    });
+                }catch{}
+
                 Thread.Sleep(Config.Instance.SlowState
                     ? TimeSpan.FromSeconds(5)
                     : TimeSpan.FromSeconds(15));
+                if (IsDisposed || closing) return;
             }
         });
     }
@@ -140,11 +146,13 @@ public partial class Mainframe : Form
 
     private void SystemListChanged(object? sender, EventArgs e)
     {
+        if (IsDisposed || closing) return;
         Height = label_SystemList.Bottom + LabelSpacing + 46;
         CenterObjectHorizontally(label_SystemList);
     }
     private void CenterObjectHorizontally(dynamic label)
     {
+        if (IsDisposed || closing) return;
         label.Left = (this.ClientSize.Width - label.Width) / 2;
     }
     internal void RefreshListOnKonfigChange()
@@ -158,6 +166,7 @@ public partial class Mainframe : Form
 
     internal void SetLightActive(PictureBox light, bool active)
     {
+        if (IsDisposed || closing) return;
         light.BackColor = active ? (Color)light.Tag : Color.Gray;
     }
     private void ToogleOverlayClick(object sender, EventArgs e)
@@ -244,7 +253,8 @@ public partial class Mainframe : Form
     {
         WindowState = FormWindowState.Normal;
         ShowInTaskbar = true;
-        Activate();
+        try
+        {Activate();}catch{}
         pipeServer.Dispose();
         pipeServer = null;
     }
@@ -289,6 +299,13 @@ public partial class Mainframe : Form
                     if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Light;
                     if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Light;
                 }
+                foreach (var item in statusStrip_Main.Items)
+                {
+                    if (item is ToolStripStatusLabel label)
+                    {
+                        label.ForeColor = Config.Instance.Color_Default_Label_Light;
+                    }
+                }
                 break;
             case 1:
                 BackColor = Config.Instance.Color_Default_Background_Dark;
@@ -297,6 +314,14 @@ public partial class Mainframe : Form
                 {
                     if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                     if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                    
+                }
+                foreach (var item in statusStrip_Main.Items)
+                {
+                    if (item is ToolStripStatusLabel label)
+                    {
+                        label.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                    }
                 }
                 break;
             case 2:
@@ -307,13 +332,28 @@ public partial class Mainframe : Form
                     if (control is Label) control.ForeColor = Config.Instance.Color_Main_Info;
                     if (control is CheckBox) control.ForeColor = Config.Instance.Color_Main_Info;
                 }
+                foreach (var item in statusStrip_Main.Items)
+                {
+                    if (item is ToolStripStatusLabel label)
+                    {
+                        label.ForeColor = Config.Instance.Color_Main_Info;
+                    }
+                }
                 break;
         }
     }
 
     public void AddSucess()
     {
-        if (!JournalHandler.running) return;
+        if (IsDisposed || closing || !JournalHandler.running) return;
         toolStripStatusLabel_Spacer.Text = $"Sended: {sends++}";
+    }
+
+    public void SetStatus(HttpResponseMessage response)
+    {
+        Invoke(() =>
+        {
+            toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}";
+        });
     }
 }

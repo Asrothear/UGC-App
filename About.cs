@@ -15,6 +15,7 @@ namespace UGC_App
         public About()
         {
             InitializeComponent();
+            TopMost = Config.Instance.AlwaysOnTop;
             label2.Text = $"Version {Config.Instance.Version}{Config.Instance.Version_Meta}";
             foreach (Control controller in Controls)
             {
