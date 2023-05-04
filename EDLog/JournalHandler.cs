@@ -99,8 +99,6 @@ namespace UGC_App.EDLog
                         _previousPosition = stream.Position;
                     }                    
                 }
-
-                // JSON-Inhalt verarbeiten
                 ProcessJsonContent(jsonContent);
 
                 _lastCheckedTime = lastWriteTime;
@@ -110,8 +108,6 @@ namespace UGC_App.EDLog
         private static void ProcessJsonContent(string jsonContent)
         {
             var jsonObjects = ParseJsonObjects(jsonContent);
-
-            //Todo: Send Json to API
             foreach (var jsonObject in jsonObjects)
             {
                 Debug.WriteLine(jsonObject.GetValue("event"));

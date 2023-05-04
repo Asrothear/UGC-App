@@ -7,7 +7,8 @@ namespace UGC_App.WebClient.Schema
         public Journal(JObject inp)
         {
             Data["$schemaRef"] = "https://eddn.edcd.io/schemas/journal/1";
-            Data["message"] = inp;
+            Merge(inp);
+            FilterEntry(Data);
         }
     }
 }
