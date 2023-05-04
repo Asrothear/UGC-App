@@ -124,7 +124,6 @@ namespace UGC_App.EDLog
                             Config.Instance.GameBuild= ToString(jsonObject["build"]);
                             break;
                         case "LoadGame":
-                            if (Config.Instance.CMDR == ToString(jsonObject["Commander"])) break;
                             Config.Instance.CMDR = ToString(jsonObject["Commander"]);
                             Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
                             Config.Instance.GameBuild = ToString(jsonObject["build"]);
@@ -133,7 +132,6 @@ namespace UGC_App.EDLog
                             parent.SetCMDrText(Config.Instance.CMDR);
                             break;
                         case "Location":
-                            //if(Config.Instance.LastSystem == ToString(jsonObject["StarSystem"])) break;
                             Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
                             parent.SetSystemText(Config.Instance.LastSystem);
                             if (Convert.ToBoolean(jsonObject["Docked"]))
@@ -164,6 +162,7 @@ namespace UGC_App.EDLog
                         case "ApproachSettlement":
                             EDDN.Send(new ApproachSettlement(jsonObject), parent);
                             break;
+                        /*
                         case "CodexEntry":
                             EDDN.Send(new CodexEntry(jsonObject), parent);
                             break;
@@ -196,7 +195,7 @@ namespace UGC_App.EDLog
                             break;
                         case "Shipyard":
                             EDDN.Send(new Shipyard(jsonObject), parent);
-                            break;
+                            break;*/
                     }
                     Config.Save();
                     parent.SetSystemText(Config.Instance.LastSystem);

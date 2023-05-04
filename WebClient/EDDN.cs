@@ -9,7 +9,7 @@ namespace UGC_App.WebClient;
 
 public class EDDN
 {
-    internal static void Send(Journal payload, Mainframe parrent)
+    internal static void Send(dynamic payload, Mainframe parrent)
     {
         if(!Config.Instance.EDDN)return;
         Task.Run(() =>
