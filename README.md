@@ -28,7 +28,7 @@ Application Overlay Preview 1
 ![image](https://user-images.githubusercontent.com/38018660/236258963-46c8c1a4-187c-4dd5-aca2-b13929fe3c4b.png)
 
 
-# The following previews shows how the API and the UGC App can be used to provide specefic Data.
+### The following previews shows how the API and the UGC App can be used to provide specefic Data.
 The UGC App sends all neccesary Data to the API, this Data then can be used to output speceifc informations.
 
 
