@@ -28,6 +28,9 @@ Application Overlay Preview 1
 ![image](https://user-images.githubusercontent.com/38018660/236258963-46c8c1a4-187c-4dd5-aca2-b13929fe3c4b.png)
 
 
+# The following previews shows how the API and the UGC App can be used to provide specefic Data.
+The UGC App sends all neccesary Data to the API, this Data then can be used to output speceifc informations.
+
 
 Bot Example Preview 1
 
@@ -44,3 +47,6 @@ Bot Example Preview 3
 
 ![image](https://user-images.githubusercontent.com/38018660/236260722-10ce407f-a8b3-4227-a250-39f4fca374f9.png)
 
+Bot Example Preview 4
+
+![image](https://user-images.githubusercontent.com/38018660/236260912-eed225bc-4413-413d-8c5b-e13a577e92ae.png)
