@@ -12,13 +12,13 @@ Squdarons could simply:
 - Use Charts for BGS overview
 - Do more awesome stuff that will be possible!
 
-Bot Preview 1
+Bot Example Preview 1
 
-![Bot Preview 1](https://i.ibb.co/S6LNG5b/bot-p1.png)
-
-
+![Bot Example Preview 1](https://i.ibb.co/S6LNG5b/bot-p1.png)
 
 
-Bot Preview 2
 
-![Bot Preview 2](https://i.ibb.co/GRb6qvQ/bot-p2.png)
+
+Bot Example Preview 2
+
+![Bot Example Preview 2](https://i.ibb.co/GRb6qvQ/bot-p2.png)
