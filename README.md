@@ -13,12 +13,12 @@ Squdarons could simply:
 - Use Charts for BGS overview
 - Do more awesome stuff that will be possible!
 
-At the moment the UGC App is used to Output a Route, relative to the CMDr, for BGS relevant Systems.  
-Including an Overlay, to display the major Information in the Mainscreen while Elite Dangerous is runnig.  
+At the moment the UGC App is used to Output a Route, relative to the CMDr, for BGS relevant Systems.
+Including an Overlay, to display the major Information in the Mainscreen while Elite Dangerous is runnig.
 
 Again, at the moment the main functionallity is mainly designed for the UGC, future Plans are common use cases!
-
-
+  
+  
 Application Preview 1
 
 ![image](https://user-images.githubusercontent.com/38018660/236257887-504007fe-7228-45ac-bab0-57d427122eae.png)
