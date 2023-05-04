@@ -14,7 +14,7 @@ public class SchemaFilter
         }
 
         Data["header"]["uploaderID"] = Config.Instance.CMDR;
-        Data["header"]["softwareName"] = "UGC-APP";
+        Data["header"]["softwareName"] = "UGC App";
         Data["header"]["softwareVersion"] = $"{Config.Instance.Version}{Config.Instance.Version_Meta}";
         Data["header"]["gameversion"] = Config.Instance.GameVersion;
         Data["header"]["gamebuild"] = Config.Instance.GameBuild;
@@ -29,7 +29,7 @@ public class SchemaFilter
         FilterEntry(Data);
         RemoveKeysWithSubstring(Data, "_Localised");
     }
-    static void FilterEntry(JObject jsonObject)
+    internal void FilterEntry(JObject jsonObject)
     {
         var items = jsonObject["message"] as JObject;
         if (items != null)
@@ -85,5 +85,24 @@ public class SchemaFilter
                 }
             }
         }
+    }
+
+    internal void Merge(JObject inp)
+    {
+        
+        JObject message = Data["message"] as JObject;
+        if (message != null)
+        {
+            message.Merge(inp, new JsonMergeSettings
+            {
+                MergeArrayHandling = MergeArrayHandling.Merge
+            });
+            Data["message"] = message;
+        }
+        else
+        {
+            Data["message"] = inp;
+        }
+        RemoveKeysWithSubstring(Data, "_Localised");
     }
 }
