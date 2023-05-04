@@ -39,3 +39,8 @@ Bot Example Preview 1
 Bot Example Preview 2
 
 ![Bot Example Preview 2](https://i.ibb.co/GRb6qvQ/bot-p2.png)
+
+Bot Example Preview 3
+
+![image](https://user-images.githubusercontent.com/38018660/236260722-10ce407f-a8b3-4227-a250-39f4fca374f9.png)
+
