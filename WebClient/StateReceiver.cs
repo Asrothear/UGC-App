@@ -11,8 +11,8 @@ public class StateReceiver
         var Client = new HttpClient();
         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.State_Url);
         
-        request.Headers.Add("version", $"1,0");
-        request.Headers.Add("br", $"1");
+        request.Headers.Add("version", Config.Instance.Version);
+        request.Headers.Add("br", Config.Instance.Version_Meta);
         request.Headers.Add("branch", $"standalone");
         request.Headers.Add("cmdr", $"{Config.Instance.Send_Name}");
         request.Headers.Add("token", $"{Config.Instance.Token}");
@@ -75,5 +75,14 @@ public class StateReceiver
 
         Tick = content;
         return Tick;
+    }
+
+    internal static string[] GetSystemData(ulong Adress)
+    {
+        var Client = new HttpClient();
+        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.ugc-tools.de/api/v1/GetSystemData?SystemAdress={Adress}");
+        HttpResponseMessage response = new();
+        response = Client.Send(request);
+        return response.Content.ReadFromJsonAsync<string[]>().Result;
     }
 }

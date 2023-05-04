@@ -32,9 +32,9 @@ public class Config
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
     [DisallowDeviation]
-    public string Version { get; set; } = "0.2.1";
+    public string Version { get; set; } = "0.2.2";
     [DisallowDeviation]
-    public string Version_Meta { get; set; } = "-alpha-230423";
+    public string Version_Meta { get; set; } = "-alpha-030523";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
