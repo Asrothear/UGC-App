@@ -2,7 +2,8 @@
  
 This is the successor of the EDMC Plugin "UGC Plugin"  
 The UGC App is a Standalone Application, cabable of processing every Journal-Entry for Elite Dangerous.  
-This Project is at the moment only in use by the [UGC](united-german-commander.de), all functionallity is mainly designed for their demands.  
+
+This Project is combinded with an API-Service and at the moment only in use by the [UGC](united-german-commander.de), all functionallity is mainly designed for their demands.    
 Nethertheless in the future this Application should be used by every Squadron or Community to benefit from its features.  
 Squdarons could simply:
 - Track their BGS activity
@@ -11,6 +12,19 @@ Squdarons could simply:
 - Use Discord-Bots for Data Viewing
 - Use Charts for BGS overview
 - Do more awesome stuff that will be possible!
+
+At the moment the UGC App is used to Output a Route, relative to the CMDr, for BGS relevant Systems.  
+Including an Overlay, to display the major Information in the Mainscreen while Elite Dangerous is runnig.  
+
+Again, at the moment the main functionallity is mainly designed for the UGC, future Plans are common use cases!
+
+Application Preview 1
+![image](https://user-images.githubusercontent.com/38018660/236257887-504007fe-7228-45ac-bab0-57d427122eae.png)
+
+Application Overlay Preview 1
+![image](https://user-images.githubusercontent.com/38018660/236258963-46c8c1a4-187c-4dd5-aca2-b13929fe3c4b.png)
+
+
 
 Bot Example Preview 1
 
