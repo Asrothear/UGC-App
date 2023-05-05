@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace UGC_App.WebClient.Schema;
 
@@ -87,6 +88,23 @@ public class SchemaFilter
         }
     }
 
+    internal void GetCoords(JObject inp)
+    {
+        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(Datas[1]));
+    }
+    internal void GetStarSystem(JObject inp)
+    {
+        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]["StarSystem"] = Datas[0];
+    }
+    internal void GetSystemMeta(JObject inp)
+    {
+        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]["StarSystem"] = Datas[0];
+        Data["message"]["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(Datas[1]));
+    }
+    
     internal void Merge(JObject inp)
     {
         

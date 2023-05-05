@@ -32,7 +32,7 @@ public class Config
     public bool AutoStart { get; set; } = false;
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; set; } = "0.3.1";
+    [DisallowDeviation] public string Version { get; set; } = "0.3.2";
     [DisallowDeviation] public string Version_Meta { get; set; } = "-alpha-050523";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");

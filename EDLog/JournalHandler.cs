@@ -158,16 +158,16 @@ namespace UGC_App.EDLog
                             EDDN.Send(new ApproachSettlement(jsonObject), parent);
                             break;
                         case "ApproachBody":
+                            //ToDo: Collect safe Location Data for EDDN Tranmission
                             break;
-                        /*
                         case "CodexEntry":
-                            EDDN.Send(new CodexEntry(jsonObject), parent);
+                            //EDDN.Send(new CodexEntry(jsonObject), parent);
                             break;
                         case "Market":
-                            EDDN.Send(new Market(jsonObject), parent);
+                            //EDDN.Send(new Market(jsonObject), parent);
                             break;
                         case "FCMaterials":
-                            EDDN.Send(new FCMaterials(jsonObject), parent);
+                            //EDDN.Send(new FCMaterials(jsonObject), parent);
                             break;
                         case "FSSAllBodiesFound":
                             EDDN.Send(new FSSAllBodiesFound(jsonObject), parent);
@@ -179,20 +179,23 @@ namespace UGC_App.EDLog
                             EDDN.Send(new FSSDiscoveryScan(jsonObject), parent);
                             break;
                         case "FSSSignalDiscovered":
-                            EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
+                            //EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
                             break;
                         case "NavBeaconScan":
                             EDDN.Send(new NavBeaconScan(jsonObject), parent);
                             break;
                         case "NavRoute":
-                            EDDN.Send(new NavRoute(jsonObject), parent);
+                            //EDDN.Send(new NavRoute(jsonObject), parent);
                             break;
                         case "Outfitting":
-                            EDDN.Send(new Outfitting(jsonObject), parent);
+                            //EDDN.Send(new Outfitting(jsonObject), parent);
+                            break;
+                        case "ScanBaryCentre":
+                            EDDN.Send(new ScanBaryCentre(jsonObject), parent);
                             break;
                         case "Shipyard":
-                            EDDN.Send(new Shipyard(jsonObject), parent);
-                            break;*/
+                            //EDDN.Send(new Shipyard(jsonObject), parent);
+                            break;
                     }
                     Config.Save();
                     parent.SetSystemText(Config.Instance.LastSystem);

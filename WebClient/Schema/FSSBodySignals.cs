@@ -6,7 +6,8 @@ public class FSSBodySignals : SchemaFilter
 {
     public FSSBodySignals(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
-        Data["message"] = inp;
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fssbodysignals/1";
+        Merge(inp);
+        GetSystemMeta(inp);
     }
 }

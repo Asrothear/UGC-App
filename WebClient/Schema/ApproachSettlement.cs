@@ -9,8 +9,6 @@ public class ApproachSettlement : SchemaFilter
     {
         Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
         Merge(inp);
-        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]["StarSystem"] = Datas[0];
-        Data["message"]["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(Datas[1]));
+        GetSystemMeta(inp);
     }
 }
