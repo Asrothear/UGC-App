@@ -10,5 +10,10 @@ public class FSSDiscoveryScan : SchemaFilter
         Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fssdiscoveryscan/1";
         Merge(inp);
         GetCoords(inp);
+        var items = Data["message"] as JObject;
+        if (items != null)
+        {
+            items.Remove("Progress");
+        }
     }
 }
