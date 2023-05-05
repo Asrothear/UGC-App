@@ -11,7 +11,7 @@ public class EDDN
 {
     internal static void Send(dynamic payload, Mainframe parrent)
     {
-        if(!Config.Instance.EDDN)return;
+        //if(!Config.Instance.EDDN)return;
         Task.Run(() =>
         {
             var shef = payload.Data["$schemaRef"].ToString();
