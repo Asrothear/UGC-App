@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics;
+using System.Net.Http.Json;
 
 namespace UGC_App.WebClient;
 
@@ -33,11 +34,11 @@ public class StateReceiver
         if (response.IsSuccessStatusCode)
         {
             content = response.Content.ReadFromJsonAsync<string[]>().Result;
-            Console.WriteLine(content);
+            Debug.WriteLine(content);
         }
         else
         {
-            Console.WriteLine($"Error: {response.StatusCode}");
+            Debug.WriteLine($"Error: {response.StatusCode}");
             var rets = new String[1];
             rets[0] = response.Content.ToString();
             return rets;
@@ -66,11 +67,11 @@ public class StateReceiver
         if (response.IsSuccessStatusCode)
         {
             content = response.Content.ReadFromJsonAsync<string[]>().Result;
-            Console.WriteLine(content);
+            Debug.WriteLine(content);
         }
         else
         {
-            Console.WriteLine($"Error: {response.StatusCode}");
+            Debug.WriteLine($"Error: {response.StatusCode}");
         }
 
         Tick = content;

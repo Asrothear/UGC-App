@@ -20,12 +20,6 @@ namespace UGC_App
         internal static Mutex _mutex = null;
         private const string MutexName = "UGC App";
         
-        private static string serviceName = "UGC-App";
-        private static string displayName = "UGC App";
-        
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
@@ -35,12 +29,8 @@ namespace UGC_App
             onAppUninstall: OnAppUninstall,
             onEveryRun: OnAppRun);
             UpdateMyApp(args);
-            
             Application.ThreadException += Application_ThreadException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             var mainForm = new Mainframe();
             if (args.Contains("--autostart"))
@@ -58,7 +48,6 @@ namespace UGC_App
 
             if (!createdNew)
             {
-                // Wenn die Mutex bereits vorhanden ist, bringen Sie die laufende Anwendung in den Vordergrund
                 IntPtr hWnd = IntPtr.Zero;
                 Process currentProcess = Process.GetCurrentProcess();
                 foreach (Process process in Process.GetProcessesByName(currentProcess.ProcessName))
@@ -74,8 +63,6 @@ namespace UGC_App
                 {
                     SetForegroundWindow(hWnd);
                 }
-
-
                 NamedPipeClientStream pipeClient = new NamedPipeClientStream(".", "UGC App", PipeDirection.Out);
                 Task.Run(pipeClient.Connect);
                 Application.Exit();
@@ -106,7 +93,6 @@ namespace UGC_App
             if(!Config.Instance.Auto_Update) return;
             using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
             var newVersion = mgr.UpdateApp().Result;
-            // optionally restart the app automatically, or ask the user if/when they want to restart
             if (newVersion != null)
             {
                 MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
@@ -133,7 +119,7 @@ namespace UGC_App
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Debug.WriteLine(ex);
                 }
             }
             else
@@ -144,85 +130,20 @@ namespace UGC_App
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Debug.WriteLine(ex);
                 }
             }
             runKey.Close();
             key.Close();
         }
-        
-        internal static void RegisterAsService()
-        {
-            string executablePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UGC-App", "UGC App.exe");
-            Process process = new Process();
-            process.StartInfo.FileName = "sc.exe";
-            process.StartInfo.Arguments = string.Format("create \"{0}\" binpath= \"{1}\" DisplayName= \"{2}\" start= auto", serviceName, executablePath, displayName);
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            Console.WriteLine(output);
-        }
-        internal static void StopService()
-        {
-            Process process = new Process();
-            process.StartInfo.FileName = "sc.exe";
-            process.StartInfo.Arguments = string.Format("stop \"{0}\"", serviceName);
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            Console.WriteLine(output);
-        }
-
-        internal static void DeleteService()
-        {
-            Process process = new Process();
-            process.StartInfo.FileName = "sc.exe";
-            process.StartInfo.Arguments = string.Format("delete \"{0}\"", serviceName);
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            Console.WriteLine(output);
-        }
-        internal static void DisableServiceStart()
-        {
-            Process process = new Process();
-            process.StartInfo.FileName = "sc.exe";
-            process.StartInfo.Arguments = string.Format("config \"{0}\" start= disabled", serviceName);
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.Start();
-
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            Console.WriteLine(output);
-        }
-        
-        // Fehlerbehandlungsmethode für das ThreadException-Ereignis
         internal static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             LogException(e.Exception);
         }
-
-        // Fehlerbehandlungsmethode für das UnhandledException-Ereignis
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             LogException((Exception)e.ExceptionObject);
         }
-
-        // Methode zum Protokollieren von Ausnahmen in einer JSON-Datei
         private static void LogException(Exception exception)
         {
             string logFileName = "error_log.json";

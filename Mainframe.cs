@@ -74,19 +74,18 @@ public partial class Mainframe : Form
 
     internal void SetCMDrText(string text)
     {
-        Invoke(() => { label_CMDr.Text = $"CMDr: {text}"; });
+        Invoke(() => label_CMDr.Text = $"CMDr: {text}");
     }
     internal void SetSystemText(string text)
     {
-        Invoke(() => { label_System.Text = $"System: {text}"; });
+        Invoke(() => label_System.Text = $"System: {text}");
     }
     internal void SetDockedText(string text)
     {
-        Invoke(() => { label_Docked.Text = $"Angedockt: {text}"; });
+        Invoke(() => label_Docked.Text = $"Angedockt: {text}");
     }
     private void StartWorker()
     {
-
         Task.Run(() =>
         {
             while (!IsDisposed && !closing)
@@ -121,7 +120,7 @@ public partial class Mainframe : Form
                 catch { }
 
                 Thread.Sleep(Config.Instance.SlowState
-                    ? TimeSpan.FromSeconds(5)
+                    ? TimeSpan.FromSeconds(2)
                     : TimeSpan.FromSeconds(15));
                 if (IsDisposed || closing) return;
             }
@@ -238,8 +237,8 @@ public partial class Mainframe : Form
         closing = true;
         JournalHandler.running = false;
         WindowState = FormWindowState.Normal;
-        Config.Instance.FormSize = this.Size;
-        Config.Instance.FormLocation = this.Location;
+        Config.Instance.FormSize = Size;
+        Config.Instance.FormLocation = Location;
         Config.Save();
         Application.Exit();
         Application.ExitThread();
