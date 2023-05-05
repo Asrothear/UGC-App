@@ -18,7 +18,6 @@ namespace UGC_App.EDLog
         private static long _previousPosition;
         private static DateTime _lastCheckedTime;
         internal static bool running = false;
-        private static string Path = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Saved Games\Frontier Developments\Elite Dangerous\");
 
         internal static void Start(Mainframe parrent)
         {
@@ -27,15 +26,15 @@ namespace UGC_App.EDLog
             parent = parrent;
             var prefix = "Journal";
             var pollingInterval = TimeSpan.FromSeconds(5);
-            SwitchToLatestFile(Path, prefix);
-            Debug.WriteLine("Watchdog running...");
+            SwitchToLatestFile(Config.Instance.PathJournal, prefix);
+            Program.Log("Watchdog running...");
             while (running)
             {
                 
                 parent.SetLightActive(parent.yellowLight, true);
                 parent.SetLightActive(parent.greenLight, false);
                 
-                CheckForLatestFile(Path, prefix);
+                CheckForLatestFile(Config.Instance.PathJournal, prefix);
                 CheckForFileChanges();
                 
                 parent.SetLightActive(parent.yellowLight, false);
@@ -44,7 +43,7 @@ namespace UGC_App.EDLog
             }
         }
 
-        private static void SwitchToLatestFile(string directoryPath, string prefix)
+        internal static void SwitchToLatestFile(string directoryPath, string prefix)
         {
             var latestFile = GetLatestFile(directoryPath, prefix);
 
@@ -53,11 +52,11 @@ namespace UGC_App.EDLog
                 _currentFile = latestFile;
                 _previousPosition = new FileInfo(_currentFile).Length;
                 _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
-                Debug.WriteLine($"Überwache aktuellste Datei: {_currentFile}");
+                Program.Log($"Überwache aktuellste Datei: {_currentFile}");
             }
             else
             {
-                Debug.WriteLine("Keine passende Datei gefunden.");
+                Program.Log("Keine passende Datei gefunden.");
             }
         }
 
@@ -72,7 +71,7 @@ namespace UGC_App.EDLog
 
             if (latestFile != null && latestFile != _currentFile)
             {
-                Debug.WriteLine($"Wechsel zur neuesten Datei: {latestFile}");
+                Program.Log($"Wechsel zur neuesten Datei: {latestFile}");
                 CheckForFileChanges();
                 _currentFile = latestFile;
                 _previousPosition = 0;
@@ -88,7 +87,7 @@ namespace UGC_App.EDLog
 
             if (lastWriteTime > _lastCheckedTime)
             {
-                Debug.WriteLine($"Datei '{_currentFile}' wurde geändert.");
+                Program.Log($"Datei '{_currentFile}' wurde geändert.");
                 string jsonContent;
                 using (var stream = new FileStream(_currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
@@ -110,7 +109,7 @@ namespace UGC_App.EDLog
             var jsonObjects = ParseJsonObjects(jsonContent);
             foreach (var jsonObject in jsonObjects)
             {
-                Debug.WriteLine(jsonObject.GetValue("event"));
+                Program.Log(jsonObject.GetValue("event").ToString());
                 if (jsonObject.ContainsKey("event"))
                 {
                     switch (jsonObject["event"].ToString())
@@ -157,6 +156,8 @@ namespace UGC_App.EDLog
                             break;
                         case "ApproachSettlement":
                             EDDN.Send(new ApproachSettlement(jsonObject), parent);
+                            break;
+                        case "ApproachBody":
                             break;
                         /*
                         case "CodexEntry":

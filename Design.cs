@@ -25,7 +25,7 @@ namespace UGC_App
             foreach (Control grp in Controls)
             {
                 if (grp is not GroupBox) continue;
-                Debug.WriteLine($"Grp {i++}");
+                Program.Log($"Grp {i++}");
                 foreach (Control control in grp.Controls)
                 {
                     if (control is PictureBox)

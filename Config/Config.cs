@@ -10,11 +10,12 @@ public class Config
     public class DisallowDeviationAttribute : Attribute
     {
     }
+
     public static Config Instance { get; private set; }
 
-    
-    public Size FormSize { get; set; } = new Size(50,50);
-    public Point FormLocation { get; set; } = new Point(50,50);
+
+    public Size FormSize { get; set; } = new Size(50, 50);
+    public Point FormLocation { get; set; } = new Point(50, 50);
     public string CMDR { get; set; } = "";
     public string Token { get; set; } = "";
     public string Send_Url { get; set; } = "https://api.ugc-tools.de/api/v1/QLS";
@@ -31,10 +32,8 @@ public class Config
     public bool AutoStart { get; set; } = false;
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation]
-    public string Version { get; set; } = "0.2.2";
-    [DisallowDeviation]
-    public string Version_Meta { get; set; } = "-alpha-030523";
+    [DisallowDeviation] public string Version { get; set; } = "0.3.0";
+    [DisallowDeviation] public string Version_Meta { get; set; } = "-alpha-050523";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
@@ -45,11 +44,11 @@ public class Config
     public Color Color_Overlay_Systeme_Light { get; set; } = Color.Black;
     public Color Color_Overlay_Tick_Dark { get; set; } = Color.White;
     public Color Color_Overlay_Systeme_Dark { get; set; } = Color.White;
-    internal Color Color_Default_Chroma { get;} = Color.DarkGoldenrod;
-    internal Color Color_Default_Label_Dark { get;} = Color.White;
-    internal Color Color_Default_Label_Light { get;} = Color.Black;
-    internal Color Color_Default_Background_Light { get;} = Color.FromName("Control");
-    internal Color Color_Default_Background_Dark { get;} = Color.FromArgb(60,60,60);
+    internal Color Color_Default_Chroma { get; } = Color.DarkGoldenrod;
+    internal Color Color_Default_Label_Dark { get; } = Color.White;
+    internal Color Color_Default_Label_Light { get; } = Color.Black;
+    internal Color Color_Default_Background_Light { get; } = Color.FromName("Control");
+    internal Color Color_Default_Background_Dark { get; } = Color.FromArgb(60, 60, 60);
     public string LastSystem { get; set; }
     public string LastDocked { get; set; }
     public bool Color_Overlay_Override { get; set; } = false;
@@ -60,18 +59,29 @@ public class Config
     public bool Horizons { get; set; }
     public bool EDDN { get; set; }
 
+    public string PathLogs { get; set; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "logs");
+
+    public string PathConfig { get; set; } =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "config");
+    public string PathJournal { get; set; } =
+        Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\Saved Games\Frontier Developments\Elite Dangerous\");
+
     private static string ConfigFilePath;
+
     static Config()
     {
-        var configFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "config");
+        var configFolder = 
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "config");;
         if (!Directory.Exists(configFolder))
         {
             Directory.CreateDirectory(configFolder);
         }
+
         ConfigFilePath = Path.Combine(configFolder, "config.json");
         if (!File.Exists(ConfigFilePath))
         {
-            Instance = new ();
+            Instance = new();
             Save();
         }
         else

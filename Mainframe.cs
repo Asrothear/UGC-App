@@ -53,7 +53,7 @@ public partial class Mainframe : Form
 
     private async void CheckUpdates(object? sender, EventArgs e)
     {
-        using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
+        using var mgr = new UpdateManager(Config.Instance.Update_Url, "UGC-App");
         var Infos = await mgr.CheckForUpdate();
         if (Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version &&
             Infos.CurrentlyInstalledVersion.SHA1 == Infos.FutureReleaseEntry.SHA1)
@@ -62,7 +62,7 @@ public partial class Mainframe : Form
             return;
         }
         DialogResult dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{Infos.CurrentlyInstalledVersion.Version}->{Infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
-        if(dialogResult == DialogResult.Yes)
+        if (dialogResult == DialogResult.Yes)
         {
             var newVersion = await mgr.UpdateApp();
             if (newVersion != null)
@@ -117,7 +117,8 @@ public partial class Mainframe : Form
                         Height = label_SystemList.Bottom + LabelSpacing + 46;
                         CenterObjectHorizontally(label_SystemList);
                     });
-                }catch{}
+                }
+                catch { }
 
                 Thread.Sleep(Config.Instance.SlowState
                     ? TimeSpan.FromSeconds(5)
@@ -254,7 +255,8 @@ public partial class Mainframe : Form
         WindowState = FormWindowState.Normal;
         ShowInTaskbar = true;
         try
-        {Activate();}catch{}
+        { Activate(); }
+        catch { }
         pipeServer.Dispose();
         pipeServer = null;
     }
@@ -314,7 +316,7 @@ public partial class Mainframe : Form
                 {
                     if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
                     if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
-                    
+
                 }
                 foreach (var item in statusStrip_Main.Items)
                 {

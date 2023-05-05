@@ -34,6 +34,7 @@
             toolTip_Konfig = new ToolTip(components);
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            checkBox_EDDN = new CheckBox();
             checkBox_CloseMini = new CheckBox();
             numericUpDown_ListCount = new NumericUpDown();
             checkBoxy_AutoStart = new CheckBox();
@@ -76,8 +77,19 @@
             radioButton_Dark = new RadioButton();
             radioButton_Light = new RadioButton();
             checkBox_AlwaysTop = new CheckBox();
+            tabPage3 = new TabPage();
+            label10 = new Label();
+            label9 = new Label();
+            label7 = new Label();
+            label_path_journal = new Label();
+            label_path_config = new Label();
+            label_path_log = new Label();
+            textBox_path_journal = new TextBox();
+            textBox_path_config = new TextBox();
+            textBox_path_logs = new TextBox();
             colorDialog1 = new ColorDialog();
-            checkBox_EDDN = new CheckBox();
+            folderBrowserDialog1 = new FolderBrowserDialog();
+            openFileDialog1 = new OpenFileDialog();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
@@ -93,11 +105,12 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Tick).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Infos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).BeginInit();
+            tabPage3.SuspendLayout();
             SuspendLayout();
             // 
             // button_Save
             // 
-            button_Save.Location = new Point(118, 381);
+            button_Save.Location = new Point(118, 420);
             button_Save.Name = "button_Save";
             button_Save.Size = new Size(88, 23);
             button_Save.TabIndex = 0;
@@ -117,11 +130,12 @@
             // 
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Location = new Point(0, 1);
+            tabControl1.Controls.Add(tabPage3);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(340, 374);
-            tabControl1.SizeMode = TabSizeMode.FillToRight;
+            tabControl1.Size = new Size(340, 453);
             tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -145,10 +159,20 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(332, 346);
+            tabPage1.Size = new Size(332, 425);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Main";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_EDDN
+            // 
+            checkBox_EDDN.AutoSize = true;
+            checkBox_EDDN.Location = new Point(7, 103);
+            checkBox_EDDN.Name = "checkBox_EDDN";
+            checkBox_EDDN.Size = new Size(114, 19);
+            checkBox_EDDN.TabIndex = 33;
+            checkBox_EDDN.Text = "an EDDN senden";
+            checkBox_EDDN.UseVisualStyleBackColor = true;
             // 
             // checkBox_CloseMini
             // 
@@ -301,7 +325,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(332, 346);
+            tabPage2.Size = new Size(332, 425);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Design";
             tabPage2.UseVisualStyleBackColor = true;
@@ -569,33 +593,123 @@
             checkBox_AlwaysTop.Text = "immer im Vordergrund";
             checkBox_AlwaysTop.UseVisualStyleBackColor = true;
             // 
+            // tabPage3
+            // 
+            tabPage3.Controls.Add(label10);
+            tabPage3.Controls.Add(label9);
+            tabPage3.Controls.Add(label7);
+            tabPage3.Controls.Add(label_path_journal);
+            tabPage3.Controls.Add(label_path_config);
+            tabPage3.Controls.Add(label_path_log);
+            tabPage3.Controls.Add(textBox_path_journal);
+            tabPage3.Controls.Add(textBox_path_config);
+            tabPage3.Controls.Add(textBox_path_logs);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(3);
+            tabPage3.Size = new Size(332, 425);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Pfade";
+            tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            label10.Location = new Point(4, 258);
+            label10.Name = "label10";
+            label10.Size = new Size(325, 75);
+            label10.TabIndex = 8;
+            label10.Text = "Journal:\r\nPfad zum ED Journal.\r\nHieraus werden die Events gelesen.\r\nDieser Pfad sollte nicht geändert werden es sei denn der Nutzer weiß was er macht!!";
+            // 
+            // label9
+            // 
+            label9.Location = new Point(4, 174);
+            label9.Name = "label9";
+            label9.Size = new Size(320, 75);
+            label9.TabIndex = 7;
+            label9.Text = "Config:\r\nPfad zur Config Datei.\r\nDas ändern des Pfades ist nicht möglich, das der Pfad zum laden der Config fest sein muss.";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(4, 90);
+            label7.Name = "label7";
+            label7.Size = new Size(272, 75);
+            label7.TabIndex = 6;
+            label7.Text = "Logs:\r\nPfad zum Error und Debug Log.\r\nBitte bei Problemen mit an den Entwickler senden.\r\nErrors werden immer geloggt.\r\nEin Umstellen dieses Pfades wird nicht empfohlen.";
+            // 
+            // label_path_journal
+            // 
+            label_path_journal.AutoSize = true;
+            label_path_journal.Location = new Point(4, 67);
+            label_path_journal.Name = "label_path_journal";
+            label_path_journal.Size = new Size(45, 15);
+            label_path_journal.TabIndex = 5;
+            label_path_journal.Text = "Journal";
+            // 
+            // label_path_config
+            // 
+            label_path_config.AutoSize = true;
+            label_path_config.Location = new Point(4, 38);
+            label_path_config.Name = "label_path_config";
+            label_path_config.Size = new Size(43, 15);
+            label_path_config.TabIndex = 4;
+            label_path_config.Text = "Config";
+            // 
+            // label_path_log
+            // 
+            label_path_log.AutoSize = true;
+            label_path_log.Location = new Point(4, 9);
+            label_path_log.Name = "label_path_log";
+            label_path_log.Size = new Size(32, 15);
+            label_path_log.TabIndex = 3;
+            label_path_log.Text = "Logs";
+            // 
+            // textBox_path_journal
+            // 
+            textBox_path_journal.Location = new Point(55, 64);
+            textBox_path_journal.Name = "textBox_path_journal";
+            textBox_path_journal.Size = new Size(269, 23);
+            textBox_path_journal.TabIndex = 2;
+            // 
+            // textBox_path_config
+            // 
+            textBox_path_config.Enabled = false;
+            textBox_path_config.Location = new Point(55, 35);
+            textBox_path_config.Name = "textBox_path_config";
+            textBox_path_config.Size = new Size(269, 23);
+            textBox_path_config.TabIndex = 1;
+            // 
+            // textBox_path_logs
+            // 
+            textBox_path_logs.Location = new Point(55, 6);
+            textBox_path_logs.Name = "textBox_path_logs";
+            textBox_path_logs.Size = new Size(269, 23);
+            textBox_path_logs.TabIndex = 0;
+            // 
             // colorDialog1
             // 
             colorDialog1.SolidColorOnly = true;
             // 
-            // checkBox_EDDN
+            // folderBrowserDialog1
             // 
-            checkBox_EDDN.AutoSize = true;
-            checkBox_EDDN.Location = new Point(7, 103);
-            checkBox_EDDN.Name = "checkBox_EDDN";
-            checkBox_EDDN.Size = new Size(114, 19);
-            checkBox_EDDN.TabIndex = 33;
-            checkBox_EDDN.Text = "an EDDN senden";
-            checkBox_EDDN.UseVisualStyleBackColor = true;
+            folderBrowserDialog1.AddToRecent = false;
+            // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
             // 
             // Konfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(340, 416);
-            Controls.Add(tabControl1);
+            ClientSize = new Size(340, 453);
             Controls.Add(button_Save);
+            Controls.Add(tabControl1);
             MaximizeBox = false;
             MdiChildrenMinimizedAnchorBottom = false;
             MinimizeBox = false;
             Name = "Konfiguration";
             ShowIcon = false;
-            ShowInTaskbar = false;
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Einstellungen";
@@ -618,6 +732,8 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Tick).EndInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Infos).EndInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).EndInit();
+            tabPage3.ResumeLayout(false);
+            tabPage3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -672,5 +788,17 @@
         private RadioButton radioButton_Light;
         private ColorDialog colorDialog1;
         private CheckBox checkBox_EDDN;
+        private TabPage tabPage3;
+        private Label label_path_journal;
+        private Label label_path_config;
+        private Label label_path_log;
+        private TextBox textBox_path_journal;
+        private TextBox textBox_path_config;
+        private TextBox textBox_path_logs;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private OpenFileDialog openFileDialog1;
+        private Label label10;
+        private Label label9;
+        private Label label7;
     }
 }

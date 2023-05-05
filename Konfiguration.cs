@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UGC_App.EDLog;
 
 namespace UGC_App
 {
@@ -16,13 +17,13 @@ namespace UGC_App
         private Design desg;
         private Mainframe parent;
         int i = 0;
-
         public Konfiguration(Mainframe parrent)
         {
             parent = parrent;
             InitializeComponent();
             tabControl1.SelectedIndex = 0;
             button_Save.Left = (ClientSize.Width - button_Save.Width) / 2;
+            button_Save.Top = (ClientSize.Height - 30);
             TopMost = Config.Instance.AlwaysOnTop;
             Closing += (sender, args) =>
             {
@@ -77,7 +78,7 @@ namespace UGC_App
             foreach (Control grp in tabPage2.Controls)
             {
                 if (grp is not GroupBox) continue;
-                Debug.WriteLine($"Grp {i++}");
+                Program.Log($"Grp {i++}");
                 foreach (Control control in grp.Controls)
                 {
                     if (control is PictureBox)
@@ -86,6 +87,15 @@ namespace UGC_App
                     }
                 }
             }
+
+            foreach (Control text in tabPage3.Controls)
+            {
+                if (text is TextBox)
+                {
+                    text.DoubleClick += (sender, args) => { OpenFileSelect(text); };
+                }
+            }
+
 
             GetSetting();
             radioButton_Light.Click += (sender, args) => { ChangeTheme(0); };
@@ -120,6 +130,18 @@ namespace UGC_App
             button_ResetToDark.Click += (sender, args) => { ResetColors(false); };
         }
 
+        private void OpenFileSelect(Control text)
+        {
+            folderBrowserDialog1.InitialDirectory = text.Text;
+            var res = folderBrowserDialog1.ShowDialog();
+            if (res == DialogResult.OK) text.Text = folderBrowserDialog1.SelectedPath;
+            if (Config.Instance.PathJournal != textBox_path_journal.Text) JournalHandler.SwitchToLatestFile(textBox_path_journal.Text, "Journal");
+            Config.Instance.PathConfig = textBox_path_config.Text;
+            Config.Instance.PathJournal = textBox_path_journal.Text;
+            Config.Instance.PathLogs = textBox_path_logs.Text;
+            Config.Save();
+        }
+
         void LoadKonfigs()
         {
             tabControl1.SelectedIndex = 0;
@@ -137,6 +159,9 @@ namespace UGC_App
             checkBox_CloseMini.Checked = Config.Instance.CloseMini;
             checkBox_AlwaysTop.Checked = Config.Instance.AlwaysOnTop;
             checkBox_EDDN.Checked = Config.Instance.EDDN;
+            textBox_path_logs.Text = Config.Instance.PathLogs;
+            textBox_path_config.Text = Config.Instance.PathConfig;
+            textBox_path_journal.Text = Config.Instance.PathJournal;
             Activate();
         }
 
@@ -159,6 +184,7 @@ namespace UGC_App
             Config.Save();
             Program.SetStartup(checkBoxy_AutoStart.Checked);
             parent.TopMost = Config.Instance.AlwaysOnTop;
+            TopMost = Config.Instance.AlwaysOnTop;
         }
 
         public void SetDesign(int p0)
@@ -193,7 +219,8 @@ namespace UGC_App
                                             labs.ForeColor = Config.Instance.Color_Default_Label_Light;
                                             foreach (Control sub in labs.Controls)
                                             {
-                                                if (sub is Label) sub.ForeColor = Config.Instance.Color_Default_Label_Light;
+                                                if (sub is Label)
+                                                    sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                                 if (sub is CheckBox)
                                                     sub.ForeColor = Config.Instance.Color_Default_Label_Light;
                                                 if (sub is RadioButton)
@@ -238,7 +265,8 @@ namespace UGC_App
                                             labs.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                             foreach (Control sub in labs.Controls)
                                             {
-                                                if (sub is Label) sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                                                if (sub is Label)
+                                                    sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                                 if (sub is CheckBox)
                                                     sub.ForeColor = Config.Instance.Color_Default_Label_Dark;
                                                 if (sub is RadioButton)

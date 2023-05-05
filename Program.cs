@@ -27,14 +27,14 @@ namespace UGC_App
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             CheckSingleInstance();
             SquirrelAwareApp.HandleEvents(
             onInitialInstall: OnAppInstall,
             onAppUninstall: OnAppUninstall,
             onEveryRun: OnAppRun);
-            await UpdateMyApp(args);
+            UpdateMyApp(args);
             
             Application.ThreadException += Application_ThreadException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -101,11 +101,11 @@ namespace UGC_App
             // show a welcome message when the app is first installed
             if (firstRun) MessageBox.Show("UGC APP erfolgreich Installiert");
         }
-        private static async Task UpdateMyApp(string[] args)
+        private static void UpdateMyApp(string[] args)
         {
             if(!Config.Instance.Auto_Update) return;
             using var mgr = new UpdateManager(Config.Instance.Update_Url,"UGC-App");
-            var newVersion = await mgr.UpdateApp();
+            var newVersion = mgr.UpdateApp().Result;
             // optionally restart the app automatically, or ask the user if/when they want to restart
             if (newVersion != null)
             {
@@ -211,7 +211,7 @@ namespace UGC_App
         }
         
         // Fehlerbehandlungsmethode für das ThreadException-Ereignis
-        private static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        internal static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             LogException(e.Exception);
         }
@@ -227,14 +227,12 @@ namespace UGC_App
         {
             string logFileName = "error_log.json";
     
-            var logDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App","logs");
-            //string logDirectory = @"C:\Your\Log\Folder\Path";
-            Directory.CreateDirectory(logDirectory); // Erstellt den Ordner, falls er nicht existiert
+            var logDirectory = Config.Instance.PathLogs;
+            Directory.CreateDirectory(logDirectory);
             string logFilePath = Path.Combine(logDirectory, logFileName);
 
             string timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture);
 
-            // Erstellen Sie ein ErrorLog-Objekt mit allen benötigten Informationen
             var errorLog = new
             {
                 Timestamp = timestamp,
@@ -244,11 +242,32 @@ namespace UGC_App
                 InnerException = exception.InnerException?.ToString()
             };
 
-            // Lesen Sie die vorhandene JSON-Datei ein, falls vorhanden
             string jsonContent = File.Exists(logFilePath) ? File.ReadAllText(logFilePath) : "[]";
             var errorLogs = JsonConvert.DeserializeObject<List<dynamic>>(jsonContent);
 
-            // Fügen Sie den neuen Fehler hinzu und speichern Sie die aktualisierte JSON-Datei
+            errorLogs.Add(errorLog);
+            jsonContent = JsonConvert.SerializeObject(errorLogs, Formatting.Indented);
+            File.WriteAllText(logFilePath, jsonContent);
+        }
+        internal static void Log(string msg)
+        {
+            string logFileName = "log.json";
+
+            var logDirectory = Config.Instance.PathLogs;
+            Directory.CreateDirectory(logDirectory);
+            string logFilePath = Path.Combine(logDirectory, logFileName);
+            if(!Config.Instance.Debug) return;
+            string timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture);
+
+            var errorLog = new
+            {
+                Timestamp = timestamp,
+                Message = msg
+            };
+            if(!Config.Instance.Debug) return;
+            string jsonContent = File.Exists(logFilePath) ? File.ReadAllText(logFilePath) : "[]";
+            var errorLogs = JsonConvert.DeserializeObject<List<dynamic>>(jsonContent);
+
             errorLogs.Add(errorLog);
             jsonContent = JsonConvert.SerializeObject(errorLogs, Formatting.Indented);
             File.WriteAllText(logFilePath, jsonContent);

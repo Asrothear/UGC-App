@@ -14,12 +14,14 @@ public class EDDN
         if(!Config.Instance.EDDN)return;
         Task.Run(() =>
         {
+            var shef = payload.Data["$schemaRef"].ToString();
+            payload.Data["$schemaRef"] = $"{shef}/test";
             var inp = JsonConvert.SerializeObject(payload.Data, Formatting.Indented);
             var Client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://eddn.edcd.io:4430/upload/");
             request.Content = new StringContent(inp, Encoding.UTF8, "application/json");
             var response = Client.Send(request);
-            Debug.WriteLine(response);
+            Program.Log(response.ToString());
             switch (response.StatusCode)
             {
                 case HttpStatusCode.RequestTimeout:

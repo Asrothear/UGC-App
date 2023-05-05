@@ -10,6 +10,9 @@
     <Compile Update="Design.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Konfiguration %28conflicted copy 2023-05-05 131231%29.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Konfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
