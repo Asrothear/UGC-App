@@ -32,6 +32,8 @@ Application Overlay Preview 1
 The UGC App sends all neccesary Data to the API, this Data then can be used to output speceifc informations.
 
 
+[API Preview Documentation](https://api.ugc-tools.de/swagger/index.html)
+
 Bot Example Preview 1
 
 ![Bot Example Preview 1](https://i.ibb.co/S6LNG5b/bot-p1.png)
