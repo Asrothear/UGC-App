@@ -9,6 +9,7 @@ namespace UGC_App.WebClient.Schema
             Data["$schemaRef"] = "https://eddn.edcd.io/schemas/journal/1";
             Merge(inp);
             FilterEntry(Data);
+            GetCoords(inp);
         }
     }
 }
