@@ -120,8 +120,8 @@ public partial class Mainframe : Form
                 catch { }
 
                 Thread.Sleep(Config.Instance.SlowState
-                    ? TimeSpan.FromSeconds(2)
-                    : TimeSpan.FromSeconds(15));
+                    ? TimeSpan.FromSeconds(15)
+                    : TimeSpan.FromSeconds(2));
                 if (IsDisposed || closing) return;
             }
         });
