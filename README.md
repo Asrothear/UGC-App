@@ -14,7 +14,7 @@ Squdarons could simply:
 - Do more awesome stuff that will be possible!
 
 At the moment the UGC App is used to Output a Route, relative to the CMDr, for BGS relevant Systems.  
-Each System will get removed from the list when the API detects that someone Jumped into it, via EDDN.
+Each System will get removed from the list when the API detects that someone Jumped into it, via EDDN.  
 This is used to have the newest Faction Data after each BGS Tick.  
 Including an Overlay, to display the major Information in the Mainscreen while Elite Dangerous is runnig.
 
