@@ -13,6 +13,13 @@ namespace UGC_App
         private Color SystemeDark = Color.White;
         private Color TickLight = Color.Black;
         private Color TickDark = Color.White;
+        private bool isDragging;
+        private bool isMouseDown;
+        private bool locked;
+        private Point mouseOffset;
+        private Point lastMousePosition;
+        private System.Windows.Forms.Timer mouseTimer;
+
         public Overlay(Mainframe parrent)
         {
             InitializeComponent();
@@ -31,6 +38,13 @@ namespace UGC_App
                 controls.MouseMove += OverlayForm_MouseMove;
                 controls.MouseUp += OverlayForm_MouseUp;
             }
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(10);
+                Invoke(() => { Location = Config.Instance.OverlayLocation; });
+
+            });
         }
 
         private void SystemListReSized(object? sender, EventArgs e)
@@ -78,10 +92,13 @@ namespace UGC_App
         {
             if (e.Button == MouseButtons.Left)
             {
+                locked = false;
                 if (isMouseDown && isDragging) UpdateLabelTextColorBasedOnBackgroundBrightness();
                 isMouseDown = false;
                 isDragging = false;
                 mouseTimer.Stop();
+                Config.Instance.OverlayLocation = Location;
+                Config.Save();
             }
         }
 
@@ -92,10 +109,12 @@ namespace UGC_App
             {
                 mouseTimer.Stop();
                 isDragging = true;
+                locked = true;
                 lastMousePosition = currentMousePosition;
             }
             else
             {
+                locked = false;
                 isDragging = false;
                 mouseTimer.Stop();
             }
@@ -108,6 +127,8 @@ namespace UGC_App
         }
         internal void UpdateLabelTextColorBasedOnBackgroundBrightness()
         {
+            if (locked)return;
+            locked = true;
             Rectangle windowRect = this.Bounds;
             Rectangle virtualScreenRect = SystemInformation.VirtualScreen;
             windowRect.Offset(-virtualScreenRect.Left, -virtualScreenRect.Top);
@@ -115,6 +136,7 @@ namespace UGC_App
             int captureHeight = windowRect.Height;
             if (captureWidth <= 0 || captureHeight <= 0)
             {
+                locked = false;
                 return;
             }
             //Point captureLocation = new Point(windowRect.X - Width / 2, Convert.ToInt32(windowRect.Y - Height / 2.5));
@@ -128,40 +150,50 @@ namespace UGC_App
             {
                 using (Graphics g = Graphics.FromImage(screenCapture))
                 {
-                    g.CopyFromScreen(captureLocation, Point.Empty, captureSize);
+                    try
+                    {
+                        
+                        g.CopyFromScreen(captureLocation, Point.Empty, captureSize);
+                    }catch
+                    {
+                        locked = false;
+                        return;
+                    }
                 }
 
                 //Clipboard.SetDataObject(screenCapture, true);
                 int brightnessSum = 0;
+                float col = 0;
                 int count = 0;
                 for (int x = 0; x < screenCapture.Width; x += 10)
                 {
                     for (int y = 0; y < screenCapture.Height; y += 10)
                     {
                         Color pixelColor = screenCapture.GetPixel(x, y);
+                        col += pixelColor.GetBrightness();
                         brightnessSum += pixelColor.R + pixelColor.G + pixelColor.B;
                         count++;
                     }
                 }
 
                 int averageBrightness = brightnessSum / (count * 3);
-
-                if (averageBrightness < 128)
-                {
+                var cold = (col/count)*100;
+                var colds = Math.Floor(cold);
+                if ((colds)<48)
+                {//Zu dunkel schrift heller
                     label_TickTitle.ForeColor = TickDark;
                     label_TickTime.ForeColor = TickDark;
                     label_SystemTitle.ForeColor = SystemeDark;
                     label_SystemList.ForeColor = SystemeDark;
                 }
-                else
+                else if(colds>49)
                 {
                     label_TickTitle.ForeColor = TickLight;
                     label_TickTime.ForeColor = TickLight;
                     label_SystemTitle.ForeColor = SystemeLight;
                     label_SystemList.ForeColor = SystemeLight;
                 }
-
-
+                locked = false;
             }
         }
         internal void SetDesign(int p0)

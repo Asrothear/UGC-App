@@ -51,6 +51,8 @@
             checkBox_FullList = new CheckBox();
             checkBox_CMDr = new CheckBox();
             tabPage2 = new TabPage();
+            label_AutoKontrast = new Label();
+            numericUpDown_AutoKontrast = new NumericUpDown();
             label_Disclaimer = new Label();
             groupBox_Overlay = new GroupBox();
             ColorPick_Overlay_Tick_Light = new PictureBox();
@@ -94,6 +96,7 @@
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
             tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_AutoKontrast).BeginInit();
             groupBox_Overlay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ColorPick_Overlay_Tick_Light).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_Overlay_Systeme_Light).BeginInit();
@@ -114,7 +117,7 @@
             button_Save.Name = "button_Save";
             button_Save.Size = new Size(88, 23);
             button_Save.TabIndex = 0;
-            button_Save.Text = "Übernehmen";
+            button_Save.Text = "Speichern";
             button_Save.UseVisualStyleBackColor = true;
             // 
             // button_Design
@@ -313,6 +316,8 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(label_AutoKontrast);
+            tabPage2.Controls.Add(numericUpDown_AutoKontrast);
             tabPage2.Controls.Add(label_Disclaimer);
             tabPage2.Controls.Add(groupBox_Overlay);
             tabPage2.Controls.Add(groupBox_MainFrame);
@@ -330,10 +335,30 @@
             tabPage2.Text = "Design";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label_AutoKontrast
+            // 
+            label_AutoKontrast.AutoSize = true;
+            label_AutoKontrast.Location = new Point(9, 33);
+            label_AutoKontrast.Name = "label_AutoKontrast";
+            label_AutoKontrast.Size = new Size(82, 15);
+            label_AutoKontrast.TabIndex = 43;
+            label_AutoKontrast.Text = "Auto-Kontrast";
+            // 
+            // numericUpDown_AutoKontrast
+            // 
+            numericUpDown_AutoKontrast.Location = new Point(97, 31);
+            numericUpDown_AutoKontrast.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numericUpDown_AutoKontrast.Minimum = new decimal(new int[] { 100, 0, 0, 0 });
+            numericUpDown_AutoKontrast.Name = "numericUpDown_AutoKontrast";
+            numericUpDown_AutoKontrast.Size = new Size(75, 23);
+            numericUpDown_AutoKontrast.TabIndex = 42;
+            numericUpDown_AutoKontrast.ThousandsSeparator = true;
+            numericUpDown_AutoKontrast.Value = new decimal(new int[] { 500, 0, 0, 0 });
+            // 
             // label_Disclaimer
             // 
             label_Disclaimer.AutoSize = true;
-            label_Disclaimer.Location = new Point(8, 128);
+            label_Disclaimer.Location = new Point(7, 179);
             label_Disclaimer.Name = "label_Disclaimer";
             label_Disclaimer.Size = new Size(112, 135);
             label_Disclaimer.TabIndex = 41;
@@ -350,7 +375,7 @@
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Systeme_Dark);
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Tick_Dark);
             groupBox_Overlay.Controls.Add(ColorPick_Overlay_Background);
-            groupBox_Overlay.Location = new Point(128, 157);
+            groupBox_Overlay.Location = new Point(127, 208);
             groupBox_Overlay.Name = "groupBox_Overlay";
             groupBox_Overlay.Size = new Size(195, 103);
             groupBox_Overlay.TabIndex = 39;
@@ -441,7 +466,7 @@
             groupBox_MainFrame.Controls.Add(ColorPick_MainFrame_Tick);
             groupBox_MainFrame.Controls.Add(ColorPick_MainFrame_Infos);
             groupBox_MainFrame.Controls.Add(ColorPick_MainFrame_Background);
-            groupBox_MainFrame.Location = new Point(128, 31);
+            groupBox_MainFrame.Location = new Point(127, 82);
             groupBox_MainFrame.Name = "groupBox_MainFrame";
             groupBox_MainFrame.Size = new Size(195, 120);
             groupBox_MainFrame.TabIndex = 38;
@@ -543,7 +568,7 @@
             // checkBox_Override
             // 
             checkBox_Override.AutoSize = true;
-            checkBox_Override.Location = new Point(8, 106);
+            checkBox_Override.Location = new Point(7, 157);
             checkBox_Override.Name = "checkBox_Override";
             checkBox_Override.Size = new Size(114, 19);
             checkBox_Override.TabIndex = 40;
@@ -553,7 +578,7 @@
             // radioButton_Custom
             // 
             radioButton_Custom.AutoSize = true;
-            radioButton_Custom.Location = new Point(9, 81);
+            radioButton_Custom.Location = new Point(8, 132);
             radioButton_Custom.Name = "radioButton_Custom";
             radioButton_Custom.Size = new Size(67, 19);
             radioButton_Custom.TabIndex = 37;
@@ -564,7 +589,7 @@
             // radioButton_Dark
             // 
             radioButton_Dark.AutoSize = true;
-            radioButton_Dark.Location = new Point(9, 56);
+            radioButton_Dark.Location = new Point(8, 107);
             radioButton_Dark.Name = "radioButton_Dark";
             radioButton_Dark.Size = new Size(49, 19);
             radioButton_Dark.TabIndex = 36;
@@ -575,7 +600,7 @@
             // radioButton_Light
             // 
             radioButton_Light.AutoSize = true;
-            radioButton_Light.Location = new Point(9, 31);
+            radioButton_Light.Location = new Point(8, 82);
             radioButton_Light.Name = "radioButton_Light";
             radioButton_Light.Size = new Size(52, 19);
             radioButton_Light.TabIndex = 35;
@@ -719,6 +744,7 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_AutoKontrast).EndInit();
             groupBox_Overlay.ResumeLayout(false);
             groupBox_Overlay.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ColorPick_Overlay_Tick_Light).EndInit();
@@ -800,5 +826,7 @@
         private Label label10;
         private Label label9;
         private Label label7;
+        private Label label_AutoKontrast;
+        private NumericUpDown numericUpDown_AutoKontrast;
     }
 }

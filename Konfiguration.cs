@@ -73,6 +73,9 @@ namespace UGC_App
                 "Die App wird beim schließen im Hintergrund weiter ausgeführt.");
             toolTip_Konfig.SetToolTip(checkBox_Debug, "Erzeugt eine Datei mit Fehlermeldungen um diese zu beheben.");
             toolTip_Konfig.SetToolTip(checkBox_AlwaysTop, "Setzt das Hauptfenster immer in den Vordergrund.");
+            toolTip_Konfig.SetToolTip(label_AutoKontrast, "Stellt die Zeitliche Verzögerung in Millisekunden, für den Wechsel zwischen Dunklem und Hellem Hintergrund, zur Anpassung des Overlaytextes ein.");
+            toolTip_Konfig.SetToolTip(numericUpDown_AutoKontrast, "Stellt die Zeitliche Verzögerung in Millisekunden, für den Wechsel zwischen Dunklem und Hellem Hintergrund, zur Anpassung des Overlaytextes ein.");
+
 
 
             foreach (Control grp in tabPage2.Controls)
@@ -145,6 +148,7 @@ namespace UGC_App
         void LoadKonfigs()
         {
             tabControl1.SelectedIndex = 0;
+            numericUpDown_AutoKontrast.Value = Config.Instance.CheckBackgroundIntervall;
             textBox_Send.Text = Config.Instance.Send_Url;
             textBox_State.Text = Config.Instance.State_Url;
             textBox_Token.Text = Config.Instance.Token;
@@ -181,6 +185,7 @@ namespace UGC_App
             Config.Instance.CloseMini = checkBox_CloseMini.Checked;
             Config.Instance.AlwaysOnTop = checkBox_AlwaysTop.Checked;
             Config.Instance.EDDN = checkBox_EDDN.Checked;
+            Config.Instance.CheckBackgroundIntervall = numericUpDown_AutoKontrast.Value;
             Config.Save();
             Program.SetStartup(checkBoxy_AutoStart.Checked);
             parent.TopMost = Config.Instance.AlwaysOnTop;

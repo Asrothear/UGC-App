@@ -10,11 +10,6 @@
         private Mainframe parent;
         private Panel panel;
         private Button button1;
-        private bool isDragging;
-        private bool isMouseDown;
-        private Point mouseOffset;
-        private Point lastMousePosition;
-        private System.Windows.Forms.Timer mouseTimer;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>

@@ -16,9 +16,11 @@ public partial class Mainframe : Form
     const int LabelSpacing = 35;
     private bool closing = false;
     private int sends = 0;
+
     public Mainframe()
     {
         InitializeComponent();
+        SizeChanged += (sender, args) => FixLayout();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
         {
@@ -49,6 +51,17 @@ public partial class Mainframe : Form
         SetDesign();
         TopMost = Config.Instance.AlwaysOnTop;
         Program.SetStartup(Config.Instance.AutoStart);
+        Task.Run(() =>
+        {
+            Thread.Sleep(10);
+            if (WindowState == FormWindowState.Normal)
+            {
+                Invoke(() =>
+                {
+                    Location = Config.Instance.MainLocation;
+                });
+            }
+        });
     }
 
     private async void CheckUpdates(object? sender, EventArgs e)
@@ -111,11 +124,7 @@ public partial class Mainframe : Form
                         if (overlayForm == null || overlayForm.IsDisposed) return;
                         overlayForm.FillList(list, tick);
                     });
-                    Invoke(() =>
-                    {
-                        Height = label_SystemList.Bottom + LabelSpacing + 46;
-                        CenterObjectHorizontally(label_SystemList);
-                    });
+                    FixLayout();
                 }
                 catch { }
 
@@ -125,6 +134,27 @@ public partial class Mainframe : Form
                 if (IsDisposed || closing) return;
             }
         });
+        Task.Run(() =>
+        {
+            while (!IsDisposed && !closing)
+            {
+                Thread.Sleep(Convert.ToInt32(Config.Instance.CheckBackgroundIntervall));
+                if (overlayForm == null || overlayForm.IsDisposed) continue;
+                overlayForm.UpdateLabelTextColorBasedOnBackgroundBrightness();
+            }
+        });
+    }
+
+    private void FixLayout()
+    {
+        try
+        {
+            Invoke(() =>
+            {
+                Height = label_SystemList.Bottom + LabelSpacing + 46;
+                CenterObjectHorizontally(label_SystemList);
+            });
+        }catch{}
     }
     private void ShowKonfig(object sender, EventArgs e)
     {
@@ -147,8 +177,7 @@ public partial class Mainframe : Form
     private void SystemListChanged(object? sender, EventArgs e)
     {
         if (IsDisposed || closing) return;
-        Height = label_SystemList.Bottom + LabelSpacing + 46;
-        CenterObjectHorizontally(label_SystemList);
+        FixLayout();
     }
     private void CenterObjectHorizontally(dynamic label)
     {
@@ -217,8 +246,10 @@ public partial class Mainframe : Form
             closing = true;
             JournalHandler.running = false;
             WindowState = FormWindowState.Normal;
-            Config.Instance.FormSize = this.Size;
-            Config.Instance.FormLocation = this.Location;
+            if (WindowState == FormWindowState.Normal)
+            {
+                Config.Instance.MainLocation = Location;
+            }
             Config.Save();
             return;
         };
@@ -237,8 +268,14 @@ public partial class Mainframe : Form
         closing = true;
         JournalHandler.running = false;
         WindowState = FormWindowState.Normal;
-        Config.Instance.FormSize = Size;
-        Config.Instance.FormLocation = Location;
+        if (WindowState == FormWindowState.Normal)
+        {
+            Config.Instance.MainLocation = Location;
+        }
+        if (overlayForm is { IsDisposed: false })
+        {
+            Config.Instance.OverlayLocation = overlayForm.Location;
+        }
         Config.Save();
         Application.Exit();
         Application.ExitThread();

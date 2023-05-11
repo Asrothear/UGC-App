@@ -12,10 +12,8 @@ public class Config
     }
 
     public static Config Instance { get; private set; }
-
-
-    public Size FormSize { get; set; } = new Size(50, 50);
-    public Point FormLocation { get; set; } = new Point(50, 50);
+    public Point MainLocation { get; set; } = new Point(50, 50);
+    public Point OverlayLocation { get; set; } = new Point(50, 50);
     public string CMDR { get; set; } = "";
     public string Token { get; set; } = "";
     public string Send_Url { get; set; } = "https://api.ugc-tools.de/api/v1/QLS";
@@ -32,8 +30,8 @@ public class Config
     public bool AutoStart { get; set; } = false;
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; set; } = "0.3.4";
-    [DisallowDeviation] public string Version_Meta { get; set; } = "-alpha-060523";
+    [DisallowDeviation] public string Version { get; set; } = "0.3.5";
+    [DisallowDeviation] public string Version_Meta { get; set; } = "-alpha-110523";
     public int Design_Sel { get; set; } = 0;
     public Color Color_Main_Background { get; set; } = Color.FromName("Control");
     public Color Color_Main_Info { get; set; } = Color.Black;
@@ -49,7 +47,8 @@ public class Config
     internal Color Color_Default_Label_Light { get; } = Color.Black;
     internal Color Color_Default_Background_Light { get; } = Color.FromName("Control");
     internal Color Color_Default_Background_Dark { get; } = Color.FromArgb(60, 60, 60);
-    public string LastSystem { get; set; }
+    internal decimal CheckBackgroundIntervall { get; set; } = 500;
+    internal string LastSystem { get; set; }
     public string LastDocked { get; set; }
     public bool Color_Overlay_Override { get; set; } = false;
     public bool AlwaysOnTop { get; set; } = false;
