@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Konfiguration));
             button_Save = new Button();
-            button_Design = new Button();
             toolTip_Konfig = new ToolTip(components);
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
@@ -89,6 +89,11 @@
             textBox_path_journal = new TextBox();
             textBox_path_config = new TextBox();
             textBox_path_logs = new TextBox();
+            tabPage4 = new TabPage();
+            label11 = new Label();
+            textBox_Support = new TextBox();
+            button_Report_Senden = new Button();
+            label12 = new Label();
             colorDialog1 = new ColorDialog();
             folderBrowserDialog1 = new FolderBrowserDialog();
             openFileDialog1 = new OpenFileDialog();
@@ -109,6 +114,7 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Infos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).BeginInit();
             tabPage3.SuspendLayout();
+            tabPage4.SuspendLayout();
             SuspendLayout();
             // 
             // button_Save
@@ -120,20 +126,12 @@
             button_Save.Text = "Speichern";
             button_Save.UseVisualStyleBackColor = true;
             // 
-            // button_Design
-            // 
-            button_Design.Location = new Point(9, 317);
-            button_Design.Name = "button_Design";
-            button_Design.Size = new Size(98, 23);
-            button_Design.TabIndex = 1;
-            button_Design.Text = "Legacy Design";
-            button_Design.UseVisualStyleBackColor = true;
-            // 
             // tabControl1
             // 
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tabPage4);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
@@ -326,7 +324,6 @@
             tabPage2.Controls.Add(radioButton_Dark);
             tabPage2.Controls.Add(radioButton_Light);
             tabPage2.Controls.Add(checkBox_AlwaysTop);
-            tabPage2.Controls.Add(button_Design);
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -711,6 +708,57 @@
             textBox_path_logs.Size = new Size(269, 23);
             textBox_path_logs.TabIndex = 0;
             // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(label11);
+            tabPage4.Controls.Add(textBox_Support);
+            tabPage4.Controls.Add(button_Report_Senden);
+            tabPage4.Controls.Add(label12);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(3);
+            tabPage4.Size = new Size(332, 425);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "Support";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(6, 3);
+            label11.Name = "label11";
+            label11.Size = new Size(87, 15);
+            label11.TabIndex = 2;
+            label11.Text = "Report Senden:";
+            // 
+            // textBox_Support
+            // 
+            textBox_Support.AcceptsTab = true;
+            textBox_Support.HideSelection = false;
+            textBox_Support.Location = new Point(6, 21);
+            textBox_Support.Multiline = true;
+            textBox_Support.Name = "textBox_Support";
+            textBox_Support.ScrollBars = ScrollBars.Horizontal;
+            textBox_Support.Size = new Size(318, 148);
+            textBox_Support.TabIndex = 1;
+            // 
+            // button_Report_Senden
+            // 
+            button_Report_Senden.Location = new Point(249, 316);
+            button_Report_Senden.Name = "button_Report_Senden";
+            button_Report_Senden.Size = new Size(75, 23);
+            button_Report_Senden.TabIndex = 0;
+            button_Report_Senden.Text = "Senden";
+            button_Report_Senden.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            label12.Location = new Point(8, 175);
+            label12.Name = "label12";
+            label12.Size = new Size(316, 164);
+            label12.TabIndex = 3;
+            label12.Text = resources.GetString("label12.Text");
+            // 
             // colorDialog1
             // 
             colorDialog1.SolidColorOnly = true;
@@ -760,13 +808,14 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).EndInit();
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
+            tabPage4.ResumeLayout(false);
+            tabPage4.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button button_Save;
-        private Button button_Design;
         private ToolTip toolTip_Konfig;
         private TabControl tabControl1;
         private TabPage tabPage1;
@@ -828,5 +877,10 @@
         private Label label7;
         private Label label_AutoKontrast;
         private NumericUpDown numericUpDown_AutoKontrast;
+        private TabPage tabPage4;
+        private Button button_Report_Senden;
+        private Label label11;
+        private TextBox textBox_Support;
+        private Label label12;
     }
 }

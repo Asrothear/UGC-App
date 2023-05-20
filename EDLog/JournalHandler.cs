@@ -1,44 +1,38 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UGC_App.WebClient;
 using UGC_App.WebClient.Schema;
 
 namespace UGC_App.EDLog
 {
-    internal class JournalHandler
+    internal static class JournalHandler
     {
-        private static Mainframe parent;
-        private static string _currentFile;
+        private static Mainframe? _parent;
+        private static string? _currentFile;
         private static long _previousPosition;
         private static DateTime _lastCheckedTime;
-        internal static bool running = false;
+        internal static bool Running;
 
-        internal static void Start(Mainframe parrent)
+        internal static void Start(Mainframe? parrent)
         {
-            if (running) return;
-            running = true;
-            parent = parrent;
+            if (Running) return;
+            Running = true;
+            _parent = parrent;
             var prefix = "Journal";
             var pollingInterval = TimeSpan.FromSeconds(5);
             SwitchToLatestFile(Config.Instance.PathJournal, prefix);
             Program.Log("Watchdog running...");
-            while (running)
+            while (Running)
             {
                 
-                parent.SetLightActive(parent.yellowLight, true);
-                parent.SetLightActive(parent.greenLight, false);
+                _parent?.SetLightActive(_parent.yellowLight, true);
+                _parent?.SetLightActive(_parent.greenLight, false);
                 
                 CheckForLatestFile(Config.Instance.PathJournal, prefix);
                 CheckForFileChanges();
                 
-                parent.SetLightActive(parent.yellowLight, false);
-                parent.SetLightActive(parent.greenLight, true);
+                _parent?.SetLightActive(_parent.yellowLight, false);
+                _parent?.SetLightActive(_parent.greenLight, true);
                 Thread.Sleep(pollingInterval);
             }
         }
@@ -52,11 +46,6 @@ namespace UGC_App.EDLog
                 _currentFile = latestFile;
                 _previousPosition = new FileInfo(_currentFile).Length;
                 _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
-                Program.Log($"Überwache aktuellste Datei: {_currentFile}");
-            }
-            else
-            {
-                Program.Log("Keine passende Datei gefunden.");
             }
         }
 
@@ -82,26 +71,22 @@ namespace UGC_App.EDLog
         private static void CheckForFileChanges()
         {
             if (_currentFile == null) return;
-
             var lastWriteTime = File.GetLastWriteTimeUtc(_currentFile);
 
-            if (lastWriteTime > _lastCheckedTime)
+            if (lastWriteTime <= _lastCheckedTime) return;
+            string jsonContent;
+            using (var stream = new FileStream(_currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                Program.Log($"Datei '{_currentFile}' wurde geändert.");
-                string jsonContent;
-                using (var stream = new FileStream(_currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                stream.Seek(_previousPosition, SeekOrigin.Begin);
+                using (var reader = new StreamReader(stream))
                 {
-                    stream.Seek(_previousPosition, SeekOrigin.Begin);
-                    using (var reader = new StreamReader(stream))
-                    {
-                        jsonContent = reader.ReadToEnd();
-                        _previousPosition = stream.Position;
-                    }                    
-                }
-                ProcessJsonContent(jsonContent);
-
-                _lastCheckedTime = lastWriteTime;
+                    jsonContent = reader.ReadToEnd();
+                    _previousPosition = stream.Position;
+                }                    
             }
+            ProcessJsonContent(jsonContent);
+
+            _lastCheckedTime = lastWriteTime;
         }
 
         private static void ProcessJsonContent(string jsonContent)
@@ -109,53 +94,45 @@ namespace UGC_App.EDLog
             var jsonObjects = ParseJsonObjects(jsonContent);
             foreach (var jsonObject in jsonObjects)
             {
-                Program.Log(jsonObject.GetValue("event").ToString());
-                if (jsonObject.ContainsKey("event"))
+                if (jsonObject != null && jsonObject.TryGetValue("event", out var value))
                 {
-                    switch (jsonObject["event"].ToString())
+                    switch (value.ToString())
                     {
                         case "Fileheader":
                             Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
-                            Config.Instance.GameBuild= ToString(jsonObject["build"]);
+                            Config.Instance.GameBuild = ToString(jsonObject["build"]);
                             break;
                         case "LoadGame":
-                            Config.Instance.CMDR = ToString(jsonObject["Commander"]);
+                            Config.Instance.Cmdr = ToString(jsonObject["Commander"]);
                             Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
                             Config.Instance.GameBuild = ToString(jsonObject["build"]);
                             Config.Instance.Horizons = Convert.ToBoolean(jsonObject["Horizons"]);
                             Config.Instance.Odyssey = Convert.ToBoolean(jsonObject["Odyssey"]);
-                            parent.SetCMDrText(Config.Instance.CMDR);
+                            _parent?.SetCmDrText(Config.Instance.Cmdr);
                             break;
                         case "Location":
                             Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
-                            parent.SetSystemText(Config.Instance.LastSystem);
-                            if (Convert.ToBoolean(jsonObject["Docked"]))
-                            {
-                                Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
-                            }
-                            else
-                            {
-                                Config.Instance.LastDocked = "-";
-                            }
-                            parent.SetDockedText(Config.Instance.LastDocked);
-                            EDDN.Send(new Journal(jsonObject), parent);
+                            _parent?.SetSystemText(Config.Instance.LastSystem);
+                            Config.Instance.LastDocked = Convert.ToBoolean(jsonObject["Docked"]) ? ToString(jsonObject["StationName"]) : "-";
+                            _parent?.SetDockedText(Config.Instance.LastDocked);
+                            Eddn.Send(new Journal(jsonObject), _parent);
                             break;
                         case "Docked":
                             Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
-                            parent.SetDockedText(Config.Instance.LastDocked);
-                            EDDN.Send(new Journal(jsonObject), parent);
+                            _parent?.SetDockedText(Config.Instance.LastDocked);
+                            Eddn.Send(new Journal(jsonObject), _parent);
                             break;
                         case "Undocked":
                             Config.Instance.LastDocked = "-";
-                            parent.SetDockedText(Config.Instance.LastDocked);
+                            _parent?.SetDockedText(Config.Instance.LastDocked);
                             break;
                         case "FSDJump":
                             Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
                             Config.Instance.LastDocked = "-";
-                            EDDN.Send(new Journal(jsonObject), parent);
+                            Eddn.Send(new Journal(jsonObject), _parent);
                             break;
                         case "ApproachSettlement":
-                            EDDN.Send(new ApproachSettlement(jsonObject), parent);
+                            Eddn.Send(new ApproachSettlement(jsonObject), _parent);
                             break;
                         case "ApproachBody":
                             //ToDo: Collect safe Location Data for EDDN Tranmission
@@ -170,19 +147,19 @@ namespace UGC_App.EDLog
                             //EDDN.Send(new FCMaterials(jsonObject), parent);
                             break;
                         case "FSSAllBodiesFound":
-                            EDDN.Send(new FSSAllBodiesFound(jsonObject), parent);
+                            Eddn.Send(new FssAllBodiesFound(jsonObject), _parent);
                             break;
                         case "FSSBodySignals":
-                            EDDN.Send(new FSSBodySignals(jsonObject), parent);
+                            Eddn.Send(new FssBodySignals(jsonObject), _parent);
                             break;
                         case "FSSDiscoveryScan":
-                            EDDN.Send(new FSSDiscoveryScan(jsonObject), parent);
+                            Eddn.Send(new FssDiscoveryScan(jsonObject), _parent);
                             break;
                         case "FSSSignalDiscovered":
                             //EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
                             break;
                         case "NavBeaconScan":
-                            EDDN.Send(new NavBeaconScan(jsonObject), parent);
+                            Eddn.Send(new NavBeaconScan(jsonObject), _parent);
                             break;
                         case "NavRoute":
                             //EDDN.Send(new NavRoute(jsonObject), parent);
@@ -191,18 +168,21 @@ namespace UGC_App.EDLog
                             //EDDN.Send(new Outfitting(jsonObject), parent);
                             break;
                         case "ScanBaryCentre":
-                            EDDN.Send(new ScanBaryCentre(jsonObject), parent);
+                            Eddn.Send(new ScanBaryCentre(jsonObject), _parent);
                             break;
                         case "Shipyard":
                             //EDDN.Send(new Shipyard(jsonObject), parent);
                             break;
                     }
+
                     Config.Save();
-                    parent.SetSystemText(Config.Instance.LastSystem);
-                    parent.SetDockedText(Config.Instance.LastDocked);
+                    _parent?.SetSystemText(Config.Instance.LastSystem);
+                    _parent?.SetDockedText(Config.Instance.LastDocked);
                 }
-                jsonObject["user"] = Config.Instance.CMDR;
-                APISender.SendAPI(jsonObject.ToString(),parent);
+
+                if (jsonObject == null) continue;
+                jsonObject["user"] = Config.Instance.Cmdr;
+                ApiSender.SendApi(jsonObject.ToString(), _parent);
             }
         }
 
@@ -210,17 +190,10 @@ namespace UGC_App.EDLog
         {
             return inp?.ToString();
         }
-        private static List<JObject> ParseJsonObjects(string input)
+        private static List<JObject?> ParseJsonObjects(string input)
         {
-            var jsonObjects = new List<JObject>();
             var lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var line in lines)
-            {
-                var jsonObject = JsonConvert.DeserializeObject<JObject>(line);
-                jsonObjects.Add(jsonObject);
-            }
-            return jsonObjects;
+            return lines.Select(JsonConvert.DeserializeObject<JObject>).Where(jsonObject => jsonObject != null).ToList();
         }
     }
 }

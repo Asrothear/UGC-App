@@ -9,7 +9,6 @@
         //private TransparentPanel panel;
         private Mainframe parent;
         private Panel panel;
-        private Button button1;
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -32,23 +31,30 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Overlay));
             panel = new Panel();
+            greenLight = new PictureBox();
             label_SystemTitle = new Label();
+            yellowLight = new PictureBox();
+            redLight = new PictureBox();
             label_TickTime = new Label();
             label_TickTitle = new Label();
             label_SystemList = new Label();
-            button1 = new Button();
-            mouseTimer = new System.Windows.Forms.Timer(components);
+            _mouseTimer = new System.Windows.Forms.Timer(components);
             panel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
             SuspendLayout();
             // 
             // panel
             // 
             panel.BackColor = Color.Transparent;
+            panel.Controls.Add(greenLight);
             panel.Controls.Add(label_SystemTitle);
+            panel.Controls.Add(yellowLight);
+            panel.Controls.Add(redLight);
             panel.Controls.Add(label_TickTime);
             panel.Controls.Add(label_TickTitle);
             panel.Controls.Add(label_SystemList);
-            panel.Controls.Add(button1);
             panel.Dock = DockStyle.Fill;
             panel.Location = new Point(0, 0);
             panel.Name = "panel";
@@ -57,6 +63,16 @@
             panel.MouseDown += OverlayForm_MouseDown;
             panel.MouseMove += OverlayForm_MouseMove;
             panel.MouseUp += OverlayForm_MouseUp;
+            // 
+            // greenLight
+            // 
+            greenLight.BackColor = Color.Gray;
+            greenLight.Location = new Point(238, 39);
+            greenLight.Name = "greenLight";
+            greenLight.Size = new Size(10, 10);
+            greenLight.TabIndex = 6;
+            greenLight.TabStop = false;
+            greenLight.Tag = Color.Green;
             // 
             // label_SystemTitle
             // 
@@ -67,10 +83,30 @@
             label_SystemTitle.TabIndex = 4;
             label_SystemTitle.Text = "Systeme:";
             // 
+            // yellowLight
+            // 
+            yellowLight.BackColor = Color.Gray;
+            yellowLight.Location = new Point(238, 23);
+            yellowLight.Name = "yellowLight";
+            yellowLight.Size = new Size(10, 10);
+            yellowLight.TabIndex = 5;
+            yellowLight.TabStop = false;
+            yellowLight.Tag = Color.Yellow;
+            // 
+            // redLight
+            // 
+            redLight.BackColor = Color.Gray;
+            redLight.Location = new Point(238, 7);
+            redLight.Name = "redLight";
+            redLight.Size = new Size(10, 10);
+            redLight.TabIndex = 4;
+            redLight.TabStop = false;
+            redLight.Tag = Color.Red;
+            // 
             // label_TickTime
             // 
             label_TickTime.AutoSize = true;
-            label_TickTime.Location = new Point(109, 33);
+            label_TickTime.Location = new Point(82, 34);
             label_TickTime.Name = "label_TickTime";
             label_TickTime.Size = new Size(86, 15);
             label_TickTime.TabIndex = 3;
@@ -80,7 +116,7 @@
             // label_TickTitle
             // 
             label_TickTitle.AutoSize = true;
-            label_TickTitle.Location = new Point(109, 18);
+            label_TickTitle.Location = new Point(103, 18);
             label_TickTitle.Name = "label_TickTitle";
             label_TickTitle.Size = new Size(31, 15);
             label_TickTitle.TabIndex = 2;
@@ -98,25 +134,10 @@
             label_SystemList.Text = "label1 abcd   sdf  sdf  df efghijklmnopq\nlabel2\nlabel3";
             label_SystemList.TextAlign = ContentAlignment.TopCenter;
             // 
-            // button1
+            // _mouseTimer
             // 
-            button1.BackColor = Color.Transparent;
-            button1.Location = new Point(88, 162);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 0;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = false;
-            button1.Visible = false;
-            button1.Click += ButtonClick;
-            button1.MouseDown += OverlayForm_MouseDown;
-            button1.MouseMove += OverlayForm_MouseMove;
-            button1.MouseUp += OverlayForm_MouseUp;
-            // 
-            // mouseTimer
-            // 
-            mouseTimer.Interval = 200;
-            mouseTimer.Tick += MouseTimer_Tick;
+            _mouseTimer.Interval = 200;
+            _mouseTimer.Tick += MouseTimer_Tick;
             // 
             // Overlay
             // 
@@ -141,6 +162,9 @@
             MouseUp += OverlayForm_MouseUp;
             panel.ResumeLayout(false);
             panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)greenLight).EndInit();
+            ((System.ComponentModel.ISupportInitialize)yellowLight).EndInit();
+            ((System.ComponentModel.ISupportInitialize)redLight).EndInit();
             ResumeLayout(false);
         }
 
@@ -148,5 +172,8 @@
         private Label label_SystemTitle;
         private Label label_TickTime;
         private Label label_TickTitle;
+        internal PictureBox greenLight;
+        internal PictureBox yellowLight;
+        internal PictureBox redLight;
     }
 }

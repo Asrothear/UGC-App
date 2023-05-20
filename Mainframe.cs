@@ -1,7 +1,5 @@
 using System.Drawing.Drawing2D;
 using System.IO.Pipes;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Squirrel;
 using UGC_App.EDLog;
 using UGC_App.WebClient;
@@ -9,18 +7,16 @@ using UGC_App.WebClient;
 namespace UGC_App;
 public partial class Mainframe : Form
 {
-    private Konfiguration conf;
-    private About about;
-    internal Design desg;
-    private Updater _updater;
-    const int LabelSpacing = 35;
-    private bool closing = false;
-    private int sends = 0;
+    private Konfiguration? _conf;
+    private About? _about;
+    private const int LabelSpacing = 35;
+    private bool _closing;
+    private int _sends;
 
     public Mainframe()
     {
         InitializeComponent();
-        SizeChanged += (sender, args) => FixLayout();
+        SizeChanged += (_, _) => FixLayout();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
         {
@@ -31,7 +27,7 @@ public partial class Mainframe : Form
             CreateToolStripMenuItem("Über", ShowAbout),
             CreateToolStripMenuItem("auf Updates Prüfen", CheckUpdates),
             new ToolStripSeparator(),
-            CreateToolStripMenuItem("Beenden", ExitMenuItem_Click),
+            CreateToolStripMenuItem("Beenden", ExitMenuItem_Click)
         });
         notifyIcon.ContextMenuStrip = contextMenuStrip;
         notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
@@ -45,7 +41,7 @@ public partial class Mainframe : Form
         CenterObjectHorizontally(label_SystemList);
         toolStripStatusLabel_Version.Text = $"Version {Config.Instance.Version}";
         Height = label_SystemList.Bottom + LabelSpacing + 46;
-        label_CMDr.Text = $"CMDr: {Config.Instance.CMDR}";
+        label_CMDr.Text = $"CMDr: {Config.Instance.Cmdr}";
         label_System.Text = $"System: {Config.Instance.LastSystem}";
         label_Docked.Text = $"Angedockt: {Config.Instance.LastDocked}";
         SetDesign();
@@ -64,36 +60,34 @@ public partial class Mainframe : Form
         });
     }
 
-    private async void CheckUpdates(object? sender, EventArgs e)
+    private static async void CheckUpdates(object? sender, EventArgs e)
     {
-        using var mgr = new UpdateManager(Config.Instance.Update_Url, "UGC-App");
-        var Infos = await mgr.CheckForUpdate();
-        if (Infos.CurrentlyInstalledVersion.Version >= Infos.FutureReleaseEntry.Version &&
-            Infos.CurrentlyInstalledVersion.SHA1 == Infos.FutureReleaseEntry.SHA1)
+        using var mgr = new UpdateManager(Config.Instance.UpdateUrl, "UGC-App");
+        var infos = await mgr.CheckForUpdate();
+        if (infos.CurrentlyInstalledVersion.Version >= infos.FutureReleaseEntry.Version &&
+            infos.CurrentlyInstalledVersion.SHA1 == infos.FutureReleaseEntry.SHA1)
         {
-            MessageBox.Show($"Die aktuellste Version ist breits Installiert.", "Updater");
+            MessageBox.Show("Die aktuellste Version ist breits Installiert.", "Updater");
             return;
         }
-        DialogResult dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{Infos.CurrentlyInstalledVersion.Version}->{Infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
-        if (dialogResult == DialogResult.Yes)
+        var dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{infos.CurrentlyInstalledVersion.Version}->{infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
+        if (dialogResult != DialogResult.Yes) return;
+        var newVersion = await mgr.UpdateApp();
+        if (newVersion != null)
         {
-            var newVersion = await mgr.UpdateApp();
-            if (newVersion != null)
-            {
-                MessageBox.Show($"Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
-            }
+            MessageBox.Show("Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
         }
     }
 
-    internal void SetCMDrText(string text)
+    internal void SetCmDrText(string? text)
     {
         Invoke(() => label_CMDr.Text = $"CMDr: {text}");
     }
-    internal void SetSystemText(string text)
+    internal void SetSystemText(string? text)
     {
         Invoke(() => label_System.Text = $"System: {text}");
     }
-    internal void SetDockedText(string text)
+    internal void SetDockedText(string? text)
     {
         Invoke(() => label_Docked.Text = $"Angedockt: {text}");
     }
@@ -101,9 +95,9 @@ public partial class Mainframe : Form
     {
         Task.Run(() =>
         {
-            while (!IsDisposed && !closing)
+            while (!IsDisposed && !_closing)
             {
-                if (!JournalHandler.running)
+                if (!JournalHandler.Running)
                 {
                     SetLightActive(redLight, true);
                     SetLightActive(yellowLight, false);
@@ -126,17 +120,20 @@ public partial class Mainframe : Form
                     });
                     FixLayout();
                 }
-                catch { }
+                catch
+                {
+                    // ignored
+                }
 
                 Thread.Sleep(Config.Instance.SlowState
                     ? TimeSpan.FromSeconds(15)
                     : TimeSpan.FromSeconds(2));
-                if (IsDisposed || closing) return;
+                if (IsDisposed || _closing) return;
             }
         });
         Task.Run(() =>
         {
-            while (!IsDisposed && !closing)
+            while (!IsDisposed && !_closing)
             {
                 Thread.Sleep(Convert.ToInt32(Config.Instance.CheckBackgroundIntervall));
                 if (overlayForm == null || overlayForm.IsDisposed) continue;
@@ -154,39 +151,37 @@ public partial class Mainframe : Form
                 Height = label_SystemList.Bottom + LabelSpacing + 46;
                 CenterObjectHorizontally(label_SystemList);
             });
-        }catch{}
+        }
+        catch
+        {
+            // ignored
+        }
     }
-    private void ShowKonfig(object sender, EventArgs e)
+    private void ShowKonfig(object? sender, EventArgs e)
     {
-        if (conf == null || conf.IsDisposed) conf = new Konfiguration(this);
-        conf.ShowDialog(this);
+        if (_conf == null || _conf.IsDisposed) _conf = new Konfiguration(this);
+        _conf.ShowDialog(this);
     }
 
     private void ShowAbout(object? sender, EventArgs e)
     {
-        if (about == null || about.IsDisposed) about = new();
-        about.ShowDialog(this);
-    }
-
-    internal void ShowDesign()
-    {
-        if (desg == null || desg.IsDisposed) desg = new(this);
-        desg.Show();
+        if (_about == null || _about.IsDisposed) _about = new About();
+        _about.ShowDialog(this);
     }
 
     private void SystemListChanged(object? sender, EventArgs e)
     {
-        if (IsDisposed || closing) return;
+        if (IsDisposed || _closing) return;
         FixLayout();
     }
     private void CenterObjectHorizontally(dynamic label)
     {
-        if (IsDisposed || closing) return;
-        label.Left = (this.ClientSize.Width - label.Width) / 2;
+        if (IsDisposed || _closing) return;
+        label.Left = (ClientSize.Width - label.Width) / 2;
     }
     internal void RefreshListOnKonfigChange()
     {
-        var list = string.Join(", ", Config.Instance.Show_All ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
+        var list = string.Join(", ", Config.Instance.ShowAll ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
         var tick = string.Join(", ", StateReceiver.Tick);
         label_SystemList.Text = list;
         if (overlayForm == null || overlayForm.IsDisposed) return;
@@ -195,10 +190,12 @@ public partial class Mainframe : Form
 
     internal void SetLightActive(PictureBox light, bool active)
     {
-        if (IsDisposed || closing) return;
-        light.BackColor = active ? (Color)light.Tag : Color.Gray;
+        if (IsDisposed || _closing) return;
+        light.BackColor = active ? (Color)(light.Tag ?? "Color [Magenta]") : Color.Gray;
+        if (overlayForm is { IsDisposed: false }) overlayForm.SetLightActive(light.Tag!.ToString(), active);
+
     }
-    private void ToogleOverlayClick(object sender, EventArgs e)
+    private void ToogleOverlayClick(object? sender, EventArgs e)
     {
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
@@ -206,33 +203,29 @@ public partial class Mainframe : Form
     }
     private void SetCircles()
     {
-        using (GraphicsPath path = new GraphicsPath())
-        {
-            path.AddEllipse(new Rectangle(Point.Empty, redLight.Size));
-            path.AddEllipse(new Rectangle(Point.Empty, yellowLight.Size));
-            path.AddEllipse(new Rectangle(Point.Empty, greenLight.Size));
-            redLight.Region = new Region(path);
-            yellowLight.Region = new Region(path);
-            greenLight.Region = new Region(path);
-        }
+        using var path = new GraphicsPath();
+        path.AddEllipse(new Rectangle(Point.Empty, redLight.Size));
+        path.AddEllipse(new Rectangle(Point.Empty, yellowLight.Size));
+        path.AddEllipse(new Rectangle(Point.Empty, greenLight.Size));
+        redLight.Region = new Region(path);
+        yellowLight.Region = new Region(path);
+        greenLight.Region = new Region(path);
     }
-    private ToolStripMenuItem CreateToolStripMenuItem(string text, EventHandler onClick)
+    private static ToolStripMenuItem CreateToolStripMenuItem(string text, EventHandler onClick)
     {
-        ToolStripMenuItem menuItem = new ToolStripMenuItem
+        var menuItem = new ToolStripMenuItem
         {
             Text = text
         };
         menuItem.Click += onClick;
         return menuItem;
     }
-    private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+    private void NotifyIcon_MouseDoubleClick(object? sender, MouseEventArgs e)
     {
-        if (e.Button == MouseButtons.Left)
-        {
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
-            Activate();
-        }
+        if (e.Button != MouseButtons.Left) return;
+        WindowState = FormWindowState.Normal;
+        ShowInTaskbar = true;
+        Activate();
     }
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
@@ -243,8 +236,8 @@ public partial class Mainframe : Form
 
         if (!Config.Instance.CloseMini)
         {
-            closing = true;
-            JournalHandler.running = false;
+            _closing = true;
+            JournalHandler.Running = false;
             WindowState = FormWindowState.Normal;
             if (WindowState == FormWindowState.Normal)
             {
@@ -252,21 +245,21 @@ public partial class Mainframe : Form
             }
             Config.Save();
             return;
-        };
+        }
         e.Cancel = true;
         WindowState = FormWindowState.Minimized;
         ShowInTaskbar = false;
-        Task.Run(StartIPC);
+        Task.Run(StartIpc);
     }
-    private void ExitMenuItem_Click(object sender, EventArgs e)
+    private void ExitMenuItem_Click(object? sender, EventArgs e)
     {
         StopAll();
     }
 
     private void StopAll()
     {
-        closing = true;
-        JournalHandler.running = false;
+        _closing = true;
+        JournalHandler.Running = false;
         WindowState = FormWindowState.Normal;
         if (WindowState == FormWindowState.Normal)
         {
@@ -281,35 +274,39 @@ public partial class Mainframe : Form
         Application.ExitThread();
     }
 
-    private void RestoreClick(object sender, EventArgs e)
+    private void RestoreClick(object? sender, EventArgs e)
     {
         RestoreClick();
     }
 
-    internal void RestoreClick()
+    private void RestoreClick()
     {
         WindowState = FormWindowState.Normal;
         ShowInTaskbar = true;
         try
         { Activate(); }
-        catch { }
-        pipeServer.Dispose();
-        pipeServer = null;
+        catch
+        {
+            // ignored
+        }
+
+        _pipeServer?.Dispose();
+        _pipeServer = null;
     }
 
     public string GetSystemList()
     {
         return label_SystemList.Text;
     }
-    private NamedPipeServerStream pipeServer;
+    private NamedPipeServerStream? _pipeServer;
 
-    internal void StartIPC()
+    private void StartIpc()
     {
-        if (pipeServer == null) pipeServer = new NamedPipeServerStream("UGC App", PipeDirection.In);
-        pipeServer.WaitForConnection();
-        while (pipeServer != null)
+        _pipeServer ??= new NamedPipeServerStream("UGC App", PipeDirection.In);
+        _pipeServer.WaitForConnection();
+        while (_pipeServer != null)
         {
-            if (pipeServer.IsConnected)
+            if (_pipeServer.IsConnected)
             {
                 Invoke(RestoreClick);
             }
@@ -323,58 +320,71 @@ public partial class Mainframe : Form
 
     internal void SetDesign()
     {
-        var p0 = Config.Instance.Design_Sel;
-        if (conf != null && !conf.IsDisposed) conf.SetDesign(p0);
-        if (desg != null && !desg.IsDisposed) desg.SetDesign(p0);
-        if (overlayForm != null && !overlayForm.IsDisposed) overlayForm.SetDesign(p0);
+        var p0 = Config.Instance.DesignSel;
+        if (_conf is { IsDisposed: false }) _conf.SetDesign(p0);
+        if (overlayForm is { IsDisposed: false }) overlayForm.SetDesign(p0);
         switch (p0)
         {
             case 0:
-                BackColor = Config.Instance.Color_Default_Background_Light;
-                statusStrip_Main.BackColor = Config.Instance.Color_Default_Background_Light;
+                BackColor = Config.Instance.ColorDefaultBackgroundLight;
+                statusStrip_Main.BackColor = Config.Instance.ColorDefaultBackgroundLight;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Light;
-                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Light;
+                    switch (control)
+                    {
+                        case Label:
+                        case CheckBox:
+                            control.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                            break;
+                    }
                 }
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
                     {
-                        label.ForeColor = Config.Instance.Color_Default_Label_Light;
+                        label.ForeColor = Config.Instance.ColorDefaultLabelLight;
                     }
                 }
                 break;
             case 1:
-                BackColor = Config.Instance.Color_Default_Background_Dark;
-                statusStrip_Main.BackColor = Config.Instance.Color_Default_Background_Dark;
+                BackColor = Config.Instance.ColorDefaultBackgroundDark;
+                statusStrip_Main.BackColor = Config.Instance.ColorDefaultBackgroundDark;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
-                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Default_Label_Dark;
-
+                    switch (control)
+                    {
+                        case Label:
+                        case CheckBox:
+                            control.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                            break;
+                    }
                 }
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
                     {
-                        label.ForeColor = Config.Instance.Color_Default_Label_Dark;
+                        label.ForeColor = Config.Instance.ColorDefaultLabelDark;
                     }
                 }
                 break;
             case 2:
-                BackColor = Config.Instance.Color_Main_Background;
-                statusStrip_Main.BackColor = Config.Instance.Color_Main_Background;
+                BackColor = Config.Instance.ColorMainBackground;
+                statusStrip_Main.BackColor = Config.Instance.ColorMainBackground;
                 foreach (Control control in Controls)
                 {
-                    if (control is Label) control.ForeColor = Config.Instance.Color_Main_Info;
-                    if (control is CheckBox) control.ForeColor = Config.Instance.Color_Main_Info;
+                    switch (control)
+                    {
+                        case Label:
+                        case CheckBox:
+                            control.ForeColor = Config.Instance.ColorMainInfo;
+                            break;
+                    }
                 }
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
                     {
-                        label.ForeColor = Config.Instance.Color_Main_Info;
+                        label.ForeColor = Config.Instance.ColorMainInfo;
                     }
                 }
                 break;
@@ -383,8 +393,8 @@ public partial class Mainframe : Form
 
     public void AddSucess()
     {
-        if (IsDisposed || closing || !JournalHandler.running) return;
-        toolStripStatusLabel_Spacer.Text = $"Sended: {sends++}";
+        if (IsDisposed || _closing || !JournalHandler.Running) return;
+        toolStripStatusLabel_Spacer.Text = $"Sended: {_sends++}";
     }
 
     public void SetStatus(HttpResponseMessage response)

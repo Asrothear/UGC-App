@@ -2,9 +2,9 @@
 
 namespace UGC_App.WebClient.Schema;
 
-public class FSSSignalDiscovered : SchemaFilter
+public class FssSignalDiscovered : SchemaFilter
 {
-    public FSSSignalDiscovered(JObject inp)
+    public FssSignalDiscovered(JObject inp)
     {
         Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
         Data["message"] = inp;

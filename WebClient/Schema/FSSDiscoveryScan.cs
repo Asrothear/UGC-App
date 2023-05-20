@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace UGC_App.WebClient.Schema;
 
-public class FSSDiscoveryScan : SchemaFilter
+public class FssDiscoveryScan : SchemaFilter
 {
-    public FSSDiscoveryScan(JObject inp)
+    public FssDiscoveryScan(JObject inp)
     {
         Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fssdiscoveryscan/1";
         Merge(inp);

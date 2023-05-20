@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Clowd.Squirrel" Version="2.9.42" />
+    <PackageReference Include="MailKit" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NuGet.CommandLine" Version="6.5.0">
       <PrivateAssets>all</PrivateAssets>

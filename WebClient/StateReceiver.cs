@@ -5,28 +5,28 @@ namespace UGC_App.WebClient;
 
 public class StateReceiver
 {
-    internal static string[] SystemList = new string[0];
-    internal static string[] Tick = new string[0];
-    internal static string[] GetState()
+    internal static string?[] SystemList = new string?[0];
+    internal static string[]? Tick = new string[0];
+    internal static string?[] GetState()
     {
-        var Client = new HttpClient();
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.State_Url);
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.StateUrl);
         
         request.Headers.Add("version", Config.Instance.Version);
-        request.Headers.Add("br", Config.Instance.Version_Meta);
+        request.Headers.Add("br", Config.Instance.VersionMeta);
         request.Headers.Add("branch", $"standalone");
-        request.Headers.Add("cmdr", $"{Config.Instance.Send_Name}");
+        request.Headers.Add("cmdr", $"{Config.Instance.SendName}");
         request.Headers.Add("token", $"{Config.Instance.Token}");
-        request.Headers.Add("onlyBGS", $"{Config.Instance.BGS_Only}");
+        request.Headers.Add("onlyBGS", $"{Config.Instance.BgsOnly}");
         HttpResponseMessage response = new();
         try
         {
-            response = Client.Send(request);
+            response = client.Send(request);
         }
         catch
         {
             //ToDo: Add Error Handler for any Connection failures
-            var er = new string[1];
+            string?[] er = new string[1];
             er[0] = $"Error: {response.Content}";
             return er;
         }
@@ -39,22 +39,23 @@ public class StateReceiver
         else
         {
             Debug.WriteLine($"Error: {response.StatusCode}");
-            var rets = new String[1];
+            var rets = new string?[1];
             rets[0] = response.Content.ToString();
             return rets;
         }
-        SystemList = content;
-        return Config.Instance.Show_All ? SystemList : SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray();
+
+        if (content != null) SystemList = content;
+        return Config.Instance.ShowAll ? SystemList : SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray();
     }
     
-    internal static string[] GetTick()
+    internal static string[]? GetTick()
     {
-        var Client = new HttpClient();
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.Tick_Url);
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.TickUrl);
         HttpResponseMessage response = new();
         try
         {
-            response = Client.Send(request);
+            response = client.Send(request);
         }
         catch
         {
@@ -78,12 +79,11 @@ public class StateReceiver
         return Tick;
     }
 
-    internal static string[] GetSystemData(ulong Adress)
+    internal static string?[]? GetSystemData(ulong adress)
     {
-        var Client = new HttpClient();
-        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, $"https://api.ugc-tools.de/api/v1/GetSystemData?SystemAdress={Adress}");
-        HttpResponseMessage response = new();
-        response = Client.Send(request);
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.ugc-tools.de/api/v1/GetSystemData?SystemAdress={adress}");
+        var response = client.Send(request);
         return response.Content.ReadFromJsonAsync<string[]>().Result;
     }
 }

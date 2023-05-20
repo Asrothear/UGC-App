@@ -260,7 +260,7 @@ partial class Mainframe
         // 
         pictureBox1.BackColor = Color.Transparent;
         pictureBox1.Image = Properties.Resources.UGC_Logo;
-        pictureBox1.Location = new Point(187, 27);
+        pictureBox1.Location = new Point(199, 27);
         pictureBox1.Name = "pictureBox1";
         pictureBox1.Size = new Size(88, 50);
         pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -273,7 +273,7 @@ partial class Mainframe
         label_Tick.Name = "label_Tick";
         label_Tick.Size = new Size(183, 45);
         label_Tick.TabIndex = 17;
-        label_Tick.Text = "12.04.2023 21:21:05\n(~13.04.2023 00:21:05(+3h)~)";
+        label_Tick.Text = "-Warte auf Daten-";
         label_Tick.TextAlign = ContentAlignment.TopCenter;
         // 
         // Mainframe
@@ -281,11 +281,10 @@ partial class Mainframe
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(287, 259);
+        Controls.Add(label_SystemListLabel);
         Controls.Add(label_TickTitle);
         Controls.Add(label_Tick);
-        Controls.Add(pictureBox1);
         Controls.Add(label_SystemList);
-        Controls.Add(label_SystemListLabel);
         Controls.Add(label_Docked);
         Controls.Add(label_System);
         Controls.Add(label_CMDr);
@@ -294,6 +293,7 @@ partial class Mainframe
         Controls.Add(greenLight);
         Controls.Add(yellowLight);
         Controls.Add(redLight);
+        Controls.Add(pictureBox1);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         Icon = (Icon)resources.GetObject("$this.Icon");
         MainMenuStrip = menuStrip1;

@@ -2,9 +2,9 @@
 
 namespace UGC_App.WebClient.Schema;
 
-public class FSSBodySignals : SchemaFilter
+public class FssBodySignals : SchemaFilter
 {
-    public FSSBodySignals(JObject inp)
+    public FssBodySignals(JObject inp)
     {
         Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fssbodysignals/1";
         Merge(inp);

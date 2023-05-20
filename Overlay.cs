@@ -1,223 +1,219 @@
-﻿using System.Runtime.InteropServices;
-using UGC_App.EDLog;
+﻿using System.Drawing.Drawing2D;
+using Timer = System.Windows.Forms.Timer;
 
-namespace UGC_App
+namespace UGC_App;
+
+public partial class Overlay : Form
 {
-    public partial class Overlay : Form
+    private Color _systemeLight = Color.Black;
+    private Color _systemeDark = Color.White;
+    private Color _tickLight = Color.Black;
+    private Color _tickDark = Color.White;
+    private bool _isDragging;
+    private bool _isMouseDown;
+    private bool _locked;
+    private Point _mouseOffset;
+    private Timer _mouseTimer = new();
+
+    public Overlay(Mainframe parrent)
     {
-        [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hWnd, out Rectangle lpRect);
-        const int ButtonBottomMargin = 35;
-        const int LabelButtonSpacing = 10;
-        private Color SystemeLight = Color.Black;
-        private Color SystemeDark = Color.White;
-        private Color TickLight = Color.Black;
-        private Color TickDark = Color.White;
-        private bool isDragging;
-        private bool isMouseDown;
-        private bool locked;
-        private Point mouseOffset;
-        private Point lastMousePosition;
-        private System.Windows.Forms.Timer mouseTimer;
-
-        public Overlay(Mainframe parrent)
+        InitializeComponent();
+        parent = parrent;
+        Location = parrent.Location;
+        label_SystemList.SizeChanged += SystemListReSized;
+        label_SystemList.Text = parrent.GetSystemList();
+        label_TickTime.Text = parrent.GetTickTime();
+        foreach (Control controls in panel.Controls)
         {
-            InitializeComponent();
-            parent = parrent;
-            Location = parrent.Location;
-            Height = label_SystemList.Bottom + LabelButtonSpacing + button1.Height + ButtonBottomMargin;
-            button1.Top = label_SystemList.Bottom + LabelButtonSpacing;
-            label_SystemList.SizeChanged += SystemListReSized;
-            label_SystemList.Text = parrent.GetSystemList();
-            label_TickTime.Text = parrent.GetTickTime();
-            foreach (Control controls in panel.Controls)
+            if (controls is not Label) continue;
+            CenterLabelHorizontally(controls);
+            controls.MouseDown += OverlayForm_MouseDown;
+            controls.MouseMove += OverlayForm_MouseMove;
+            controls.MouseUp += OverlayForm_MouseUp;
+        }
+
+        Task.Run(() =>
+        {
+            Thread.Sleep(10);
+            Invoke(() => { Location = Config.Instance.OverlayLocation; });
+
+        });
+        SetCircles();
+    }
+
+    private void SystemListReSized(object? sender, EventArgs e)
+    {
+        CenterLabelHorizontally(label_SystemList);
+        UpdateLabelTextColorBasedOnBackgroundBrightness();
+    }
+
+    private void CenterLabelHorizontally(dynamic label)
+    {
+        label.Left = (ClientSize.Width - label.Width) / 2;
+    }
+
+    private void OverlayForm_MouseDown(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left) return;
+        _isMouseDown = true;
+        _mouseOffset = new Point(e.X, e.Y);
+        _mouseTimer.Start();
+    }
+
+    private void OverlayForm_MouseMove(object? sender, MouseEventArgs e)
+    {
+        if (!_isMouseDown || !_isDragging) return;
+        var currentScreenPos = PointToScreen(e.Location);
+        Location = new Point(currentScreenPos.X - _mouseOffset.X, currentScreenPos.Y - _mouseOffset.Y);
+    }
+
+    private void OverlayForm_MouseUp(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left) return;
+        _locked = false;
+        if (_isMouseDown && _isDragging) UpdateLabelTextColorBasedOnBackgroundBrightness();
+        _isMouseDown = false;
+        _isDragging = false;
+        _mouseTimer.Stop();
+        Config.Instance.OverlayLocation = Location;
+        Config.Save();
+    }
+
+    private void MouseTimer_Tick(object sender, EventArgs e)
+    {
+        if (!_isDragging)
+        {
+            _mouseTimer.Stop();
+            _isDragging = true;
+            _locked = true;
+        }
+        else
+        {
+            _locked = false;
+            _isDragging = false;
+            _mouseTimer.Stop();
+        }
+    }
+
+    public void FillList(string list, string tick)
+    {
+        label_SystemList.Text = list;
+        label_TickTime.Text = tick;
+    }
+    internal void UpdateLabelTextColorBasedOnBackgroundBrightness()
+    {
+        if (_locked) return;
+        _locked = true;
+        var windowRect = Bounds;
+        var virtualScreenRect = SystemInformation.VirtualScreen;
+        windowRect.Offset(-virtualScreenRect.Left, -virtualScreenRect.Top);
+        var captureWidth = windowRect.Width;
+        var captureHeight = windowRect.Height;
+        if (captureWidth <= 0 || captureHeight <= 0)
+        {
+            _locked = false;
+            return;
+        }
+        //Point captureLocation = new Point(windowRect.X - Width / 2, Convert.ToInt32(windowRect.Y - Height / 2.5));
+        var captureLocation = new Point(windowRect.X, Convert.ToInt32(windowRect.Y));
+        var captureSize = new Size(Width, Height);
+        captureLocation.X = Math.Max(0, captureLocation.X);
+        captureLocation.Y = Math.Max(0, captureLocation.Y);
+        captureLocation.Offset(virtualScreenRect.Left, virtualScreenRect.Top);
+
+        using var screenCapture = new Bitmap(captureWidth, captureHeight);
+        using (var g = Graphics.FromImage(screenCapture))
+        {
+            try
             {
-                if (controls is not Label) continue;
-                CenterLabelHorizontally(controls);
-                controls.MouseDown += OverlayForm_MouseDown;
-                controls.MouseMove += OverlayForm_MouseMove;
-                controls.MouseUp += OverlayForm_MouseUp;
+                g.CopyFromScreen(captureLocation, Point.Empty, captureSize);
             }
-
-            Task.Run(() =>
+            catch
             {
-                Thread.Sleep(10);
-                Invoke(() => { Location = Config.Instance.OverlayLocation; });
-
-            });
-        }
-
-        private void SystemListReSized(object? sender, EventArgs e)
-        {
-            Height = label_SystemList.Bottom + LabelButtonSpacing + button1.Height + ButtonBottomMargin;
-            button1.Top = label_SystemList.Bottom + LabelButtonSpacing;
-            CenterLabelHorizontally(label_SystemList);
-            UpdateLabelTextColorBasedOnBackgroundBrightness();
-        }
-
-        private void CenterLabelHorizontally(dynamic label)
-        {
-            label.Left = (this.ClientSize.Width - label.Width) / 2;
-        }
-
-
-        private void ButtonClick(object sender, EventArgs e)
-        {
-            if (isDragging) return;
-
-            //JournalHandler.Start(parent);
-        }
-
-        private void OverlayForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                isMouseDown = true;
-                mouseOffset = new Point(e.X, e.Y);
-                lastMousePosition = Cursor.Position;
-                mouseTimer.Start();
-            }
-        }
-
-        private void OverlayForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isMouseDown && isDragging)
-            {
-                Point currentScreenPos = PointToScreen(e.Location);
-                Location = new Point(currentScreenPos.X - mouseOffset.X, currentScreenPos.Y - mouseOffset.Y);
-            }
-        }
-
-        private void OverlayForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                locked = false;
-                if (isMouseDown && isDragging) UpdateLabelTextColorBasedOnBackgroundBrightness();
-                isMouseDown = false;
-                isDragging = false;
-                mouseTimer.Stop();
-                Config.Instance.OverlayLocation = Location;
-                Config.Save();
-            }
-        }
-
-        private void MouseTimer_Tick(object sender, EventArgs e)
-        {
-            Point currentMousePosition = Cursor.Position;
-            if (!isDragging)
-            {
-                mouseTimer.Stop();
-                isDragging = true;
-                locked = true;
-                lastMousePosition = currentMousePosition;
-            }
-            else
-            {
-                locked = false;
-                isDragging = false;
-                mouseTimer.Stop();
-            }
-        }
-
-        public void FillList(string list, string tick)
-        {
-            label_SystemList.Text = list;
-            label_TickTime.Text = tick;
-        }
-        internal void UpdateLabelTextColorBasedOnBackgroundBrightness()
-        {
-            if (locked)return;
-            locked = true;
-            Rectangle windowRect = this.Bounds;
-            Rectangle virtualScreenRect = SystemInformation.VirtualScreen;
-            windowRect.Offset(-virtualScreenRect.Left, -virtualScreenRect.Top);
-            int captureWidth = windowRect.Width;
-            int captureHeight = windowRect.Height;
-            if (captureWidth <= 0 || captureHeight <= 0)
-            {
-                locked = false;
+                _locked = false;
                 return;
             }
-            //Point captureLocation = new Point(windowRect.X - Width / 2, Convert.ToInt32(windowRect.Y - Height / 2.5));
-            Point captureLocation = new Point(windowRect.X, Convert.ToInt32(windowRect.Y));
-            Size captureSize = new Size(Width, Height);
-            captureLocation.X = Math.Max(0, captureLocation.X);
-            captureLocation.Y = Math.Max(0, captureLocation.Y);
-            captureLocation.Offset(virtualScreenRect.Left, virtualScreenRect.Top);
-
-            using (Bitmap screenCapture = new Bitmap(captureWidth, captureHeight))
-            {
-                using (Graphics g = Graphics.FromImage(screenCapture))
-                {
-                    try
-                    {
-                        
-                        g.CopyFromScreen(captureLocation, Point.Empty, captureSize);
-                    }catch
-                    {
-                        locked = false;
-                        return;
-                    }
-                }
-
-                //Clipboard.SetDataObject(screenCapture, true);
-                int brightnessSum = 0;
-                float col = 0;
-                int count = 0;
-                for (int x = 0; x < screenCapture.Width; x += 10)
-                {
-                    for (int y = 0; y < screenCapture.Height; y += 10)
-                    {
-                        Color pixelColor = screenCapture.GetPixel(x, y);
-                        col += pixelColor.GetBrightness();
-                        brightnessSum += pixelColor.R + pixelColor.G + pixelColor.B;
-                        count++;
-                    }
-                }
-
-                int averageBrightness = brightnessSum / (count * 3);
-                var cold = (col/count)*100;
-                var colds = Math.Floor(cold);
-                if ((colds)<48)
-                {//Zu dunkel schrift heller
-                    label_TickTitle.ForeColor = TickDark;
-                    label_TickTime.ForeColor = TickDark;
-                    label_SystemTitle.ForeColor = SystemeDark;
-                    label_SystemList.ForeColor = SystemeDark;
-                }
-                else if(colds>49)
-                {
-                    label_TickTitle.ForeColor = TickLight;
-                    label_TickTime.ForeColor = TickLight;
-                    label_SystemTitle.ForeColor = SystemeLight;
-                    label_SystemList.ForeColor = SystemeLight;
-                }
-                locked = false;
-            }
         }
-        internal void SetDesign(int p0)
+        //Clipboard.SetDataObject(screenCapture, true);
+        float col = 0;
+        var count = 0;
+        for (var x = 0; x < screenCapture.Width; x += 10)
         {
-            switch (p0)
+            for (var y = 0; y < screenCapture.Height; y += 10)
             {
-                case 0:
-                case 1:
-                    BackColor = Config.Instance.Color_Default_Chroma;
-                    TickLight = Config.Instance.Color_Default_Label_Light;
-                    TickDark = Config.Instance.Color_Default_Label_Dark;
-                    SystemeLight = Config.Instance.Color_Default_Label_Light;
-                    SystemeDark = Config.Instance.Color_Default_Label_Dark;
-                    break;
-                case 2:
-                    BackColor = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Background : Config.Instance.Color_Default_Chroma;
-                    TickLight = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Tick_Light : Config.Instance.Color_Default_Label_Light;
-                    TickDark = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Tick_Dark : Config.Instance.Color_Default_Label_Dark;
-                    SystemeLight = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Systeme_Light : Config.Instance.Color_Default_Label_Light;
-                    SystemeDark = Config.Instance.Color_Overlay_Override ? Config.Instance.Color_Overlay_Systeme_Dark : Config.Instance.Color_Default_Label_Dark;
-                    break;
+                var pixelColor = screenCapture.GetPixel(x, y);
+                col += pixelColor.GetBrightness();
+                count++;
             }
-            TransparencyKey = BackColor;
-            UpdateLabelTextColorBasedOnBackgroundBrightness();
         }
+        var cold = col / count * 100;
+        var colds = Math.Floor(cold);
+        switch (colds)
+        {
+            case < 48:
+                label_TickTitle.ForeColor = _tickDark;
+                label_TickTime.ForeColor = _tickDark;
+                label_SystemTitle.ForeColor = _systemeDark;
+                label_SystemList.ForeColor = _systemeDark;
+                break;
+            case > 49:
+                label_TickTitle.ForeColor = _tickLight;
+                label_TickTime.ForeColor = _tickLight;
+                label_SystemTitle.ForeColor = _systemeLight;
+                label_SystemList.ForeColor = _systemeLight;
+                break;
+        }
+        _locked = false;
+    }
+    internal void SetDesign(int p0)
+    {
+        switch (p0)
+        {
+            case 0:
+            case 1:
+                BackColor = Config.Instance.ColorDefaultChroma;
+                _tickLight = Config.Instance.ColorDefaultLabelLight;
+                _tickDark = Config.Instance.ColorDefaultLabelDark;
+                _systemeLight = Config.Instance.ColorDefaultLabelLight;
+                _systemeDark = Config.Instance.ColorDefaultLabelDark;
+                break;
+            case 2:
+                BackColor = Config.Instance.ColorOverlayOverride ? Config.Instance.ColorOverlayBackground : Config.Instance.ColorDefaultChroma;
+                _tickLight = Config.Instance.ColorOverlayOverride ? Config.Instance.ColorOverlayTickLight : Config.Instance.ColorDefaultLabelLight;
+                _tickDark = Config.Instance.ColorOverlayOverride ? Config.Instance.ColorOverlayTickDark : Config.Instance.ColorDefaultLabelDark;
+                _systemeLight = Config.Instance.ColorOverlayOverride ? Config.Instance.ColorOverlaySystemeLight : Config.Instance.ColorDefaultLabelLight;
+                _systemeDark = Config.Instance.ColorOverlayOverride ? Config.Instance.ColorOverlaySystemeDark : Config.Instance.ColorDefaultLabelDark;
+                break;
+        }
+        TransparencyKey = BackColor;
+        UpdateLabelTextColorBasedOnBackgroundBrightness();
+    }
+    private void SetCircles()
+    {
+        using var path = new GraphicsPath();
+        path.AddEllipse(new Rectangle(Point.Empty, redLight.Size));
+        path.AddEllipse(new Rectangle(Point.Empty, yellowLight.Size));
+        path.AddEllipse(new Rectangle(Point.Empty, greenLight.Size));
+        redLight.Region = new Region(path);
+        yellowLight.Region = new Region(path);
+        greenLight.Region = new Region(path);
+    }
+    internal void SetLightActive(string? lightTag, bool active)
+    {
+        var trg = lightTag switch
+        {
+            "Color [Red]" => redLight,
+            "Color [Yellow]" => yellowLight,
+            "Color [Green]" => greenLight,
+            _ => null
+        };
+        if (trg == null) return;
+        SetLightActive(trg, active);
+    }
+
+    private void SetLightActive(Control light, bool active)
+    {
+        if (IsDisposed) return;
+        light.BackColor = active ? (Color)(light.Tag ?? "Color [Magenta]") : Color.Gray;
     }
 }

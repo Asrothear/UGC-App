@@ -60,6 +60,15 @@
   <metadata name="toolTip_Konfig.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label12.Text" xml:space="preserve">
+    <value>Mit dem Klick auf Senden werden alle verfügbaren Logs an den Entwickler gesendet.
+Mit dem Textfeld können weitere Information hinzugefügt werden.
+Es werden Standartmäßig folgende Informationen gesendet:
+- Progamm Version
+- CMDr Name
+- OS Name und Version
+- Spiel Version</value>
+  </data>
   <metadata name="colorDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

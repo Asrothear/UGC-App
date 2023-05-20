@@ -5,35 +5,28 @@ namespace UGC_App.WebClient.Schema;
 
 public class SchemaFilter
 {
-    public JObject Data { get; init; }
-    public SchemaFilter()
+    protected JObject Data { get; init; }
+
+    protected SchemaFilter()
     {
-        if (Data == null) Data = new();
-        if (Data["header"] == null)
-        {
-            Data["header"] = new JObject();
-        }
+        Data ??= new JObject();
+        Data["header"] ??= new JObject();
 
-        Data["header"]["uploaderID"] = Config.Instance.CMDR;
-        Data["header"]["softwareName"] = "UGC App";
-        Data["header"]["softwareVersion"] = $"{Config.Instance.Version}{Config.Instance.Version_Meta}";
-        Data["header"]["gameversion"] = Config.Instance.GameVersion;
-        Data["header"]["gamebuild"] = Config.Instance.GameBuild;
-        if (Data["message"] == null)
-        {
-            Data["message"] = new JObject();
-        }
-
-        Data["message"]["horizons"] = Config.Instance.Horizons;
-        Data["message"]["odyssey"] = Config.Instance.Odyssey;
+        Data["header"]!["uploaderID"] = Config.Instance.Cmdr;
+        Data["header"]!["softwareName"] = "UGC App";
+        Data["header"]!["softwareVersion"] = $"{Config.Instance.Version}{Config.Instance.VersionMeta}";
+        Data["header"]!["gameversion"] = Config.Instance.GameVersion;
+        Data["header"]!["gamebuild"] = Config.Instance.GameBuild;
+        Data["message"] ??= new JObject();
+        Data["message"]!["horizons"] = Config.Instance.Horizons;
+        Data["message"]!["odyssey"] = Config.Instance.Odyssey;
         
         FilterEntry(Data);
         RemoveKeysWithSubstring(Data, "_Localised");
     }
-    internal void FilterEntry(JObject jsonObject)
+    internal static void FilterEntry(JObject jsonObject)
     {
-        var items = jsonObject["message"] as JObject;
-        if (items != null)
+        if (jsonObject["message"] is JObject items)
         {
             items.Remove("ActiveFine");
             items.Remove("BoostUsed");
@@ -48,23 +41,19 @@ public class SchemaFilter
             items.Remove("Traits");
             items.Remove("VoucherAmount");
         }
-        var item = jsonObject["message"]["Factions"];
-        if (item != null)
+        var item = jsonObject["message"]?["Factions"];
+        if (item == null) return;
+        foreach (var ite in item)
         {
-            foreach (var ite in item)
-            {
-                var factionObject = ite.Value<JObject>();
-                if (factionObject != null)
-                {
-                    factionObject.Remove("HappiestSystem");
-                    factionObject.Remove("HomeSystem");
-                    factionObject.Remove("MyReputation");
-                    factionObject.Remove("SquadronFaction");
-                }
-            }
+            var factionObject = ite.Value<JObject>();
+            if (factionObject == null) continue;
+            factionObject.Remove("HappiestSystem");
+            factionObject.Remove("HomeSystem");
+            factionObject.Remove("MyReputation");
+            factionObject.Remove("SquadronFaction");
         }
     }
-    static void RemoveKeysWithSubstring(JObject jsonObject, string substring)
+    private static void RemoveKeysWithSubstring(JObject jsonObject, string substring)
     {
         var properties = jsonObject.Properties().ToList();
 
@@ -80,6 +69,7 @@ public class SchemaFilter
             }
             else if (property.Value.Type == JTokenType.Array)
             {
+                // ReSharper disable once HeapView.BoxingAllocation
                 foreach (var item in property.Value.Children().Where(c => c.Type == JTokenType.Object))
                 {
                     RemoveKeysWithSubstring((JObject)item, substring);
@@ -90,26 +80,24 @@ public class SchemaFilter
 
     internal void GetCoords(JObject inp)
     {
-        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(Datas[1]));
+        var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]!["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(datas?[1]!) ?? Array.Empty<double>());
     }
     internal void GetStarSystem(JObject inp)
     {
-        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]["StarSystem"] = Datas[0];
+        var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]!["StarSystem"] = datas?[0];
     }
     internal void GetSystemMeta(JObject inp)
     {
-        var Datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]["StarSystem"] = Datas[0];
-        Data["message"]["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(Datas[1]));
+        var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        Data["message"]!["StarSystem"] = datas?[0];
+        Data["message"]!["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(datas?[1]!) ?? Array.Empty<double>());
     }
     
     internal void Merge(JObject inp)
     {
-        
-        JObject message = Data["message"] as JObject;
-        if (message != null)
+        if (Data["message"] is JObject message)
         {
             message.Merge(inp, new JsonMergeSettings
             {
