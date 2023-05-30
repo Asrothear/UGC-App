@@ -5,6 +5,7 @@ namespace UGC_App;
 
 public partial class Overlay : Form
 {
+    const int LabelBottomMargin = 35;
     private Color _systemeLight = Color.Black;
     private Color _systemeDark = Color.White;
     private Color _tickLight = Color.Black;
@@ -23,6 +24,7 @@ public partial class Overlay : Form
         label_SystemList.SizeChanged += SystemListReSized;
         label_SystemList.Text = parrent.GetSystemList();
         label_TickTime.Text = parrent.GetTickTime();
+        Height = label_SystemList.Bottom + LabelBottomMargin;
         foreach (Control controls in panel.Controls)
         {
             if (controls is not Label) continue;
@@ -44,6 +46,7 @@ public partial class Overlay : Form
     private void SystemListReSized(object? sender, EventArgs e)
     {
         CenterLabelHorizontally(label_SystemList);
+        Height = label_SystemList.Bottom + LabelBottomMargin;
         UpdateLabelTextColorBasedOnBackgroundBrightness();
     }
 
