@@ -16,12 +16,15 @@ public class ApiSender
             request.Headers.Add("cmdr", $"{Config.Instance.SendName}");
             request.Headers.Add("token", $"{Config.Instance.Token}");
             request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = new();
             try
             {
-                response = client.Send(request);
-                parent.AddSucess();
-            }catch{}
+                client.Send(request);
+                parent?.AddSucess();
+            }
+            catch
+            {
+                // ignored
+            }
         });
     }
 }

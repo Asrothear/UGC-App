@@ -64,6 +64,8 @@ partial class Mainframe
         label_SystemList = new Label();
         pictureBox1 = new PictureBox();
         label_Tick = new Label();
+        anweisungenToolStripMenuItem = new ToolStripMenuItem();
+        dashboardToolStripMenuItem = new ToolStripMenuItem();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
@@ -117,7 +119,7 @@ partial class Mainframe
         // menuStrip1
         // 
         menuStrip1.BackColor = Color.LightGray;
-        menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem_Menu });
+        menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem_Menu, anweisungenToolStripMenuItem });
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
         menuStrip1.RenderMode = ToolStripRenderMode.Professional;
@@ -135,36 +137,36 @@ partial class Mainframe
         // toolStripMenuItem_Overlay
         // 
         toolStripMenuItem_Overlay.Name = "toolStripMenuItem_Overlay";
-        toolStripMenuItem_Overlay.Size = new Size(177, 22);
+        toolStripMenuItem_Overlay.Size = new Size(180, 22);
         toolStripMenuItem_Overlay.Text = "Toggle Overlay";
         // 
         // toolStripMenuItem_Settings
         // 
         toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-        toolStripMenuItem_Settings.Size = new Size(177, 22);
+        toolStripMenuItem_Settings.Size = new Size(180, 22);
         toolStripMenuItem_Settings.Text = "Einstellungen";
         // 
         // toolStripMenuItem_CheckForUpdates
         // 
         toolStripMenuItem_CheckForUpdates.Name = "toolStripMenuItem_CheckForUpdates";
-        toolStripMenuItem_CheckForUpdates.Size = new Size(177, 22);
+        toolStripMenuItem_CheckForUpdates.Size = new Size(180, 22);
         toolStripMenuItem_CheckForUpdates.Text = "Auf Updates prüfen";
         // 
         // toolStripMenuItem_About
         // 
         toolStripMenuItem_About.Name = "toolStripMenuItem_About";
-        toolStripMenuItem_About.Size = new Size(177, 22);
+        toolStripMenuItem_About.Size = new Size(180, 22);
         toolStripMenuItem_About.Text = "Über";
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(174, 6);
+        toolStripSeparator1.Size = new Size(177, 6);
         // 
         // toolStripMenuItem_Exit
         // 
         toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-        toolStripMenuItem_Exit.Size = new Size(177, 22);
+        toolStripMenuItem_Exit.Size = new Size(180, 22);
         toolStripMenuItem_Exit.Text = "Beenden";
         toolStripMenuItem_Exit.Click += ExitMenuItem_Click;
         // 
@@ -276,6 +278,19 @@ partial class Mainframe
         label_Tick.Text = "-Warte auf Daten-";
         label_Tick.TextAlign = ContentAlignment.TopCenter;
         // 
+        // anweisungenToolStripMenuItem
+        // 
+        anweisungenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dashboardToolStripMenuItem });
+        anweisungenToolStripMenuItem.Name = "anweisungenToolStripMenuItem";
+        anweisungenToolStripMenuItem.Size = new Size(91, 20);
+        anweisungenToolStripMenuItem.Text = "Anweisungen";
+        // 
+        // dashboardToolStripMenuItem
+        // 
+        dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
+        dashboardToolStripMenuItem.Size = new Size(180, 22);
+        dashboardToolStripMenuItem.Text = "Dashboard";
+        // 
         // Mainframe
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
@@ -336,4 +351,6 @@ partial class Mainframe
     private ToolStripStatusLabel toolStripStatusLabel_Spacer;
     private Label label_Tick;
     private ToolStripMenuItem toolStripMenuItem_CheckForUpdates;
+    private ToolStripMenuItem anweisungenToolStripMenuItem;
+    private ToolStripMenuItem dashboardToolStripMenuItem;
 }

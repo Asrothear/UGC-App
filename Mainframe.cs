@@ -1,7 +1,10 @@
 using System.Drawing.Drawing2D;
 using System.IO.Pipes;
+using Org.BouncyCastle.Math.EC;
 using Squirrel;
 using UGC_App.EDLog;
+using UGC_App.Order;
+using UGC_App.Order.DashViews;
 using UGC_App.WebClient;
 
 namespace UGC_App;
@@ -9,6 +12,7 @@ public partial class Mainframe : Form
 {
     private Konfiguration? _conf;
     private About? _about;
+    private Dashboard? _Dashboard;
     private const int LabelSpacing = 35;
     private bool _closing;
     private int _sends;
@@ -36,6 +40,7 @@ public partial class Mainframe : Form
         toolStripMenuItem_About.Click += ShowAbout;
         toolStripMenuItem_Settings.Click += ShowKonfig;
         toolStripMenuItem_CheckForUpdates.Click += CheckUpdates;
+        dashboardToolStripMenuItem.Click += ShowOrderDashboard;
         SetCircles();
         StartWorker();
         CenterObjectHorizontally(label_SystemList);
@@ -58,6 +63,14 @@ public partial class Mainframe : Form
                 });
             }
         });
+    }
+
+    private void ShowOrderDashboard(object? sender, EventArgs e)
+    {
+        if (_Dashboard == null || _Dashboard.IsDisposed) _Dashboard = new Dashboard();
+        _Dashboard.Visible = true;
+        _Dashboard.AttachView(new SystemList());
+        //SetDesign();
     }
 
     private static async void CheckUpdates(object? sender, EventArgs e)
@@ -113,6 +126,7 @@ public partial class Mainframe : Form
                 {
                     Invoke(() =>
                     {
+                        if (string.IsNullOrWhiteSpace(Config.Instance.Token)) list = "Kein Token eingetragen";
                         label_SystemList.Text = list;
                         label_Tick.Text = tick;
                         if (overlayForm == null || overlayForm.IsDisposed) return;
@@ -182,7 +196,7 @@ public partial class Mainframe : Form
     internal void RefreshListOnKonfigChange()
     {
         var list = string.Join(", ", Config.Instance.ShowAll ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
-        var tick = string.Join(", ", StateReceiver.Tick);
+        var tick = string.Join(", ", StateReceiver.Tick ?? new[] { "-Warte auf Daten-" });
         label_SystemList.Text = list;
         if (overlayForm == null || overlayForm.IsDisposed) return;
         overlayForm.FillList(list, tick);

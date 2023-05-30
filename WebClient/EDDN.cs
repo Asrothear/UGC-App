@@ -11,9 +11,10 @@ public class Eddn
         //if(!Config.Instance.EDDN)return;
         Task.Run(() =>
         {
-            var shef = payload.Data["$schemaRef"].ToString();
-            if(shef != "https://eddn.edcd.io/schemas/journal/1") payload.Data["$schemaRef"] = $"{shef}/test";
-            var inp = JsonConvert.SerializeObject(payload.Data, Formatting.Indented);
+            if(payload.DontSend)return;
+            string shef = payload.Data["$schemaRef"].ToString();
+            //if(shef != "https://eddn.edcd.io/schemas/journal/1") payload.Data["$schemaRef"] = $"{shef}/test";
+            string inp = JsonConvert.SerializeObject(payload.Data, Formatting.Indented);
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, "https://eddn.edcd.io:4430/upload/");
             request.Content = new StringContent(inp, Encoding.UTF8, "application/json");
@@ -21,20 +22,20 @@ public class Eddn
             switch (response.StatusCode)
             {
                 case HttpStatusCode.RequestTimeout:
-                    parrent.SetStatus(response);
+                    parrent?.SetStatus(response);
                     break;
                 case HttpStatusCode.ServiceUnavailable:
-                    parrent.SetStatus(response);
+                    parrent?.SetStatus(response);
                     break;
                 case HttpStatusCode.BadRequest:
                     Program.Log(response.ToString());
-                    parrent.SetStatus(response);
+                    parrent?.SetStatus(response);
                     break;
                 case HttpStatusCode.RequestEntityTooLarge:
-                    parrent.SetStatus(response);
+                    parrent?.SetStatus(response);
                     break;
                 case HttpStatusCode.OK:
-                    parrent.SetStatus(response);
+                    parrent?.SetStatus(response);
                     break;
             }
         });
