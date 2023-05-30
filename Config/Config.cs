@@ -17,7 +17,8 @@ public class Config
     public string SendUrl { get; set; } = "https://api.ugc-tools.de/api/v1/QLS";
     public string StateUrl { get; set; } = "https://api.ugc-tools.de/api/v1/State";
     // ReSharper disable once UnusedMember.Global
-    public string CmdUrls { get; set; } = "https://api.ugc-tools.de/api/v1/PluginControll";
+    public string CmdUrl { get; set; } = "https://api.ugc-tools.de/api/v1/PluginControll";
+    public string SystemDataUrl { get; set; } = "https://api.ugc-tools.de/api/v1/SystemHistory";
     public string TickUrl { get; private set; } = "https://api.ugc-tools.de/api/v1/Tick";
     public string UpdateUrl { get; private set; } = "https://update.ugc-tools.de";
     public bool BgsOnly { get; set; }
@@ -29,7 +30,7 @@ public class Config
     public bool AutoStart { get; set; }
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; private set; } = "0.3.7";
+    [DisallowDeviation] public string Version { get; private set; } = "0.3.9";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public int DesignSel { get; set; }
     public Color ColorMainBackground { get; set; } = Color.FromName("Control");
@@ -47,7 +48,7 @@ public class Config
     internal Color ColorDefaultBackgroundLight { get; } = Color.FromName("Control");
     internal Color ColorDefaultBackgroundDark { get; } = Color.FromArgb(60, 60, 60);
     internal decimal CheckBackgroundIntervall { get; set; } = 500;
-    internal string? LastSystem { get; set; } = "";
+    public string? LastSystem { get; set; } = "";
     public string? LastDocked { get; set; } = "";
     public bool ColorOverlayOverride { get; set; }
     public bool AlwaysOnTop { get; set; }
