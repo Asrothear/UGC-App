@@ -5,9 +5,10 @@ namespace UGC_App.WebClient.Schema;
 
 public class SchemaFilter
 {
-    protected JObject Data { get; init; }
+    internal bool DontSend { get; private set; }
+    internal JObject Data { get; private set; }
 
-    protected SchemaFilter()
+    internal SchemaFilter()
     {
         Data ??= new JObject();
         Data["header"] ??= new JObject();
@@ -81,18 +82,23 @@ public class SchemaFilter
     internal void GetCoords(JObject inp)
     {
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]!["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(datas?[1]!) ?? Array.Empty<double>());
+        var pos = JsonConvert.DeserializeObject<double[]>(datas[1]);
+        if (pos == null) DontSend = true;
+        Data["message"]!["StarPos"] = JToken.FromObject(pos ?? Array.Empty<double>());
     }
     internal void GetStarSystem(JObject inp)
     {
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        if (string.IsNullOrWhiteSpace(datas[0])) DontSend = true;
         Data["message"]!["StarSystem"] = datas?[0];
     }
     internal void GetSystemMeta(JObject inp)
     {
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]!["StarSystem"] = datas?[0];
-        Data["message"]!["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(datas?[1]!) ?? Array.Empty<double>());
+        Data["message"]!["StarSystem"] = datas[0];
+        var pos = JsonConvert.DeserializeObject<double[]>(datas[1]);
+        if (pos == null || string.IsNullOrWhiteSpace(datas[0])) DontSend = true;
+        Data["message"]!["StarPos"] = JToken.FromObject(pos ?? Array.Empty<double>());
     }
     
     internal void Merge(JObject inp)

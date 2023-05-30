@@ -5,9 +5,9 @@ namespace UGC_App.WebClient;
 
 public class StateReceiver
 {
-    internal static string?[] SystemList = new string?[0];
-    internal static string[]? Tick = new string[0];
-    internal static string?[] GetState()
+    internal static string[] SystemList = new string?[0];
+    internal static string[] Tick = new string[0];
+    internal static string[] GetState()
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.StateUrl);
@@ -23,11 +23,12 @@ public class StateReceiver
         {
             response = client.Send(request);
         }
-        catch
+        catch(Exception ex)
         {
             //ToDo: Add Error Handler for any Connection failures
-            string?[] er = new string[1];
-            er[0] = $"Error: {response.Content}";
+            Debug.WriteLine(ex);
+            string[] er = new string[1];
+            er[0] = $"{ex.Message}";
             return er;
         }
         var content = new string[0];
@@ -38,9 +39,9 @@ public class StateReceiver
         }
         else
         {
-            Debug.WriteLine($"Error: {response.StatusCode}");
-            var rets = new string?[1];
-            rets[0] = response.Content.ToString();
+            Debug.WriteLine($"{(int)response.StatusCode} {response.ReasonPhrase}");
+            var rets = new string[1];
+            rets[0] = $"{(int)response.StatusCode} {response.ReasonPhrase}";
             return rets;
         }
 
@@ -48,7 +49,7 @@ public class StateReceiver
         return Config.Instance.ShowAll ? SystemList : SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray();
     }
     
-    internal static string[]? GetTick()
+    internal static string[] GetTick()
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.TickUrl);
@@ -61,7 +62,7 @@ public class StateReceiver
         {
             //ToDo: Add Error Handler for any Connection failures
             var er = new string[1];
-            er[0] = $"Error: {response.Content}";
+            er[0] = $"{(int)response.StatusCode} {response.ReasonPhrase}";
             return er;
         }
         var content = new string[0];
@@ -72,18 +73,17 @@ public class StateReceiver
         }
         else
         {
-            Debug.WriteLine($"Error: {response.StatusCode}");
+            Debug.WriteLine($"{(int)response.StatusCode} {response.ReasonPhrase}");
         }
-
-        Tick = content;
+        if (content != null) Tick = content;
         return Tick;
     }
 
-    internal static string?[]? GetSystemData(ulong adress)
+    internal static string[] GetSystemData(ulong adress)
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.ugc-tools.de/api/v1/GetSystemData?SystemAdress={adress}");
         var response = client.Send(request);
-        return response.Content.ReadFromJsonAsync<string[]>().Result;
+        return response.Content.ReadFromJsonAsync<string[]>().Result ?? new []{"","0,0,0"};
     }
 }
