@@ -67,9 +67,13 @@ public partial class Mainframe : Form
 
     private void ShowOrderDashboard(object? sender, EventArgs e)
     {
+        var def = Cursor.Current;
+        Cursor.Current = Cursors.WaitCursor;
         if (_Dashboard == null || _Dashboard.IsDisposed) _Dashboard = new Dashboard();
         _Dashboard.Visible = true;
+        _Dashboard.Activate();
         _Dashboard.AttachView(new SystemList());
+        Cursor.Current = def;
         //SetDesign();
     }
 

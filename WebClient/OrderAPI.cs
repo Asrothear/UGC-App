@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using UGC_App.Order.DashViews;
+using UGC_App.Order.Model;
 
 namespace UGC_App.WebClient;
 
@@ -21,7 +22,7 @@ public class OrderAPI
         }
         return  content;
     }
-    internal static dynamic GetSystemHistory(string address)
+    internal static SystemHistoryData GetSystemHistory(string address)
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, $"{Config.Instance.SystemDataUrl}/{address}");
@@ -31,14 +32,7 @@ public class OrderAPI
         
         if (response.IsSuccessStatusCode)
         {
-            try
-            {
-                content = response.Content.ReadFromJsonAsync<dynamic>().Result;
-            }
-            catch 
-            {
-                content = response.Content.ReadAsStringAsync().Result;
-            }
+                content = response.Content.ReadFromJsonAsync<SystemHistoryData>().Result;
         }
         return  content;
     }
