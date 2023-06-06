@@ -87,7 +87,7 @@ internal static class Program
         using var mgr = new UpdateManager(Config.Instance.UpdateUrl,"UGC-App");
         var newVersion = mgr.UpdateApp().Result;
         if (newVersion == null) return;
-        MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
+        //MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
         var arg = string.Join(",",args);
         UpdateManager.RestartApp(null, arg);
     }

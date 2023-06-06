@@ -1,11 +1,15 @@
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.IO.Pipes;
+using System.Media;
+using System.Text.RegularExpressions;
 using Org.BouncyCastle.Math.EC;
 using Squirrel;
 using UGC_App.EDLog;
 using UGC_App.Order;
 using UGC_App.Order.DashViews;
 using UGC_App.WebClient;
+using NonInvasiveKeyboardHookLibrary;
 
 namespace UGC_App;
 public partial class Mainframe : Form
@@ -16,10 +20,12 @@ public partial class Mainframe : Form
     private const int LabelSpacing = 35;
     private bool _closing;
     private int _sends;
+    KeyboardHookManager keyboardHookManager = new ();
 
     public Mainframe()
     {
         InitializeComponent();
+        keyboardHookManager.Start();
         SizeChanged += (_, _) => FixLayout();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
@@ -57,14 +63,31 @@ public partial class Mainframe : Form
             Thread.Sleep(10);
             if (WindowState == FormWindowState.Normal)
             {
-                Invoke(() =>
-                {
-                    Location = Config.Instance.MainLocation;
-                });
+                Invoke(() => { Location = Config.Instance.MainLocation; });
             }
         });
+        keyboardHookManager.RegisterHotkey(
+            new[]
+            {
+                NonInvasiveKeyboardHookLibrary.ModifierKeys.Control, NonInvasiveKeyboardHookLibrary.ModifierKeys.Alt
+            }, (int)Keys.C, FisrtToClip );
+
     }
 
+    private void FisrtToClip()
+    {
+        Regex regex = new Regex(@"(.*?)(?:\s*:\s*\d+(?:\.\d+)?\s*ly)?$");
+        var text = label_SystemList.Text.Split(",").First();
+        if(string.IsNullOrWhiteSpace(text) || text == "Alles Aktuell!") return;
+        SystemSounds.Asterisk.Play();
+        Match match = regex.Match(text);
+        if (match.Success)
+        {
+            string result = match.Groups[1].Value;
+            
+            Invoke(()=>Clipboard.SetText(result.Replace("\u00A0", " ")));
+        }
+    }
     private void ShowOrderDashboard(object? sender, EventArgs e)
     {
         var def = Cursor.Current;

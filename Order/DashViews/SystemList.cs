@@ -11,16 +11,29 @@ namespace UGC_App.Order.DashViews
         {
             InitializeComponent();
             KeyPress += KeyDetect;
+            seinToolStripMenuItem.Click += Refresh;
+            if (Parent != null) Parent.KeyPress += KeyDetect;
             dataGridView_SystemList.CellDoubleClick += CheckEdit;
+            ReloadTable();
+        }
+
+        private void Refresh(object? sender, EventArgs e)
+        {
+            ReloadTable();
+        }
+
+        private void ReloadTable()
+        {
             var table = new DataTable();
             table.Columns.Add("System", typeof(string));
             table.Columns.Add("Address", typeof(string));
-            table.Columns.Add("stand BGS zahlen", typeof(string));
+            table.Columns.Add("stand BGS zahlen (UTC)", typeof(string));
             table.Columns.Add("Anweisungen", typeof(string));
-            //dataGridView_SystemList.Columns["Adress"].Visible = false;
-            foreach (var systemData in OrderAPI.GetSystemList())
+            var lister = OrderAPI.GetSystemList();
+            if (lister == null) return;
+            foreach (var systemData in lister)
             {
-                table.Rows.Add(systemData.GetProperty("starSystem"), systemData.GetProperty("systemAddress"), systemData.GetProperty("lastBGSData"), "Keine gefunden" );
+                table.Rows.Add(systemData.GetProperty("starSystem"), systemData.GetProperty("systemAddress"), systemData.GetProperty("lastBGSData"), "Keine gefunden");
             }
             dataGridView_SystemList.DataSource = table;
             dataGridView_SystemList.Columns["Address"].Visible = false;
@@ -32,7 +45,7 @@ namespace UGC_App.Order.DashViews
         {
             if (e.KeyChar == (int)Keys.F5)
             {
-                
+                ReloadTable();
             }
         }
 
@@ -47,7 +60,7 @@ namespace UGC_App.Order.DashViews
             var def = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             var edit = new SystemEditor(systemAddress);
-            if(edit is { IsDisposed: false }){edit.ShowDialog(this);}
+            if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
             Cursor.Current = def;
         }
     }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            label_Name = new Label();
             label2 = new Label();
             label3 = new Label();
             textBox_StarSystem = new TextBox();
@@ -46,27 +46,28 @@
             label7 = new Label();
             label8 = new Label();
             label9 = new Label();
-            dataGridView1 = new DataGridView();
-            dataGridView2 = new DataGridView();
             dataGridView_Factions = new DataGridView();
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
-            dataGridView4 = new DataGridView();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            groupBox1 = new GroupBox();
+            dataGridView_BgsHistory = new DataGridView();
+            dataGridView_Orders = new DataGridView();
+            dataGridView2 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Factions).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_BgsHistory).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_Orders).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // label_Name
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(28, 29);
-            label1.Name = "label1";
-            label1.Size = new Size(39, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Name";
+            label_Name.AutoSize = true;
+            label_Name.Location = new Point(28, 29);
+            label_Name.Name = "label_Name";
+            label_Name.Size = new Size(39, 15);
+            label_Name.TabIndex = 0;
+            label_Name.Text = "Name";
             // 
             // label2
             // 
@@ -221,90 +222,142 @@
             label9.TabIndex = 12;
             label9.Text = "Population";
             // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 148);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowTemplate.Height = 25;
-            dataGridView1.Size = new Size(391, 98);
-            dataGridView1.TabIndex = 18;
-            // 
-            // dataGridView2
-            // 
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(409, 148);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.RowTemplate.Height = 25;
-            dataGridView2.Size = new Size(391, 98);
-            dataGridView2.TabIndex = 19;
-            // 
             // dataGridView_Factions
             // 
             dataGridView_Factions.AllowUserToAddRows = false;
             dataGridView_Factions.AllowUserToDeleteRows = false;
-            dataGridView_Factions.AllowUserToOrderColumns = true;
             dataGridView_Factions.AllowUserToResizeColumns = false;
             dataGridView_Factions.AllowUserToResizeRows = false;
-            dataGridView_Factions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView_Factions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView_Factions.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridView_Factions.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView_Factions.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView_Factions.Location = new Point(12, 272);
+            dataGridView_Factions.Location = new Point(12, 340);
             dataGridView_Factions.Name = "dataGridView_Factions";
             dataGridView_Factions.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridView_Factions.RowTemplate.Height = 25;
-            dataGridView_Factions.Size = new Size(788, 165);
+            dataGridView_Factions.ScrollBars = ScrollBars.None;
+            dataGridView_Factions.ShowCellErrors = false;
+            dataGridView_Factions.ShowEditingIcon = false;
+            dataGridView_Factions.ShowRowErrors = false;
+            dataGridView_Factions.Size = new Size(1062, 158);
             dataGridView_Factions.TabIndex = 20;
             // 
             // button1
             // 
-            button1.Location = new Point(727, 28);
+            button1.Enabled = false;
+            button1.Location = new Point(1001, 25);
             button1.Name = "button1";
             button1.Size = new Size(73, 21);
             button1.TabIndex = 21;
-            button1.Text = "button1";
+            button1.Text = "Refresh";
             button1.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
-            button2.Location = new Point(727, 55);
+            button2.Enabled = false;
+            button2.Location = new Point(1001, 52);
             button2.Name = "button2";
             button2.Size = new Size(73, 21);
             button2.TabIndex = 22;
-            button2.Text = "button2";
+            button2.Text = "Edit Mode";
             button2.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            button3.Location = new Point(727, 82);
+            button3.Enabled = false;
+            button3.Location = new Point(1001, 79);
             button3.Name = "button3";
             button3.Size = new Size(73, 21);
             button3.TabIndex = 23;
-            button3.Text = "button3";
+            button3.Text = "Save";
             button3.UseVisualStyleBackColor = true;
             // 
-            // dataGridView4
+            // groupBox1
             // 
-            dataGridView4.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView4.Location = new Point(12, 465);
-            dataGridView4.Name = "dataGridView4";
-            dataGridView4.RowTemplate.Height = 25;
-            dataGridView4.Size = new Size(788, 165);
-            dataGridView4.TabIndex = 24;
+            groupBox1.Location = new Point(715, 12);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(272, 117);
+            groupBox1.TabIndex = 25;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "BGS Warnings/Alerts";
+            // 
+            // dataGridView_BgsHistory
+            // 
+            dataGridView_BgsHistory.AllowUserToAddRows = false;
+            dataGridView_BgsHistory.AllowUserToDeleteRows = false;
+            dataGridView_BgsHistory.AllowUserToResizeColumns = false;
+            dataGridView_BgsHistory.AllowUserToResizeRows = false;
+            dataGridView_BgsHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView_BgsHistory.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView_BgsHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView_BgsHistory.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView_BgsHistory.Location = new Point(12, 504);
+            dataGridView_BgsHistory.Name = "dataGridView_BgsHistory";
+            dataGridView_BgsHistory.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView_BgsHistory.RowTemplate.Height = 25;
+            dataGridView_BgsHistory.ScrollBars = ScrollBars.None;
+            dataGridView_BgsHistory.ShowCellErrors = false;
+            dataGridView_BgsHistory.ShowEditingIcon = false;
+            dataGridView_BgsHistory.ShowRowErrors = false;
+            dataGridView_BgsHistory.Size = new Size(1062, 158);
+            dataGridView_BgsHistory.TabIndex = 26;
+            // 
+            // dataGridView_Orders
+            // 
+            dataGridView_Orders.AllowUserToAddRows = false;
+            dataGridView_Orders.AllowUserToDeleteRows = false;
+            dataGridView_Orders.AllowUserToResizeColumns = false;
+            dataGridView_Orders.AllowUserToResizeRows = false;
+            dataGridView_Orders.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView_Orders.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView_Orders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView_Orders.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView_Orders.Location = new Point(12, 176);
+            dataGridView_Orders.Name = "dataGridView_Orders";
+            dataGridView_Orders.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView_Orders.RowTemplate.Height = 25;
+            dataGridView_Orders.ScrollBars = ScrollBars.None;
+            dataGridView_Orders.ShowCellErrors = false;
+            dataGridView_Orders.ShowEditingIcon = false;
+            dataGridView_Orders.ShowRowErrors = false;
+            dataGridView_Orders.Size = new Size(528, 158);
+            dataGridView_Orders.TabIndex = 27;
+            // 
+            // dataGridView2
+            // 
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.AllowUserToDeleteRows = false;
+            dataGridView2.AllowUserToResizeColumns = false;
+            dataGridView2.AllowUserToResizeRows = false;
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView2.Location = new Point(546, 176);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView2.RowTemplate.Height = 25;
+            dataGridView2.ScrollBars = ScrollBars.None;
+            dataGridView2.ShowCellErrors = false;
+            dataGridView2.ShowEditingIcon = false;
+            dataGridView2.ShowRowErrors = false;
+            dataGridView2.Size = new Size(528, 158);
+            dataGridView2.TabIndex = 28;
             // 
             // SystemEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(812, 651);
-            Controls.Add(dataGridView4);
+            ClientSize = new Size(1086, 674);
+            Controls.Add(dataGridView2);
+            Controls.Add(dataGridView_Orders);
+            Controls.Add(dataGridView_BgsHistory);
+            Controls.Add(groupBox1);
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(dataGridView_Factions);
-            Controls.Add(dataGridView2);
-            Controls.Add(dataGridView1);
             Controls.Add(textBox_Factions);
             Controls.Add(textBox_Allegiance);
             Controls.Add(textBox_Population);
@@ -322,20 +375,20 @@
             Controls.Add(textBox_StarSystem);
             Controls.Add(label3);
             Controls.Add(label2);
-            Controls.Add(label1);
+            Controls.Add(label_Name);
             Name = "SystemEditor";
             Text = "SystemEditor";
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Factions).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_BgsHistory).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_Orders).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label label1;
+        private Label label_Name;
         private Label label2;
         private Label label3;
         private TextBox textBox_StarSystem;
@@ -353,12 +406,13 @@
         private Label label7;
         private Label label8;
         private Label label9;
-        private DataGridView dataGridView1;
-        private DataGridView dataGridView2;
         private DataGridView dataGridView_Factions;
         private Button button1;
         private Button button2;
         private Button button3;
-        private DataGridView dataGridView4;
+        private GroupBox groupBox1;
+        private DataGridView dataGridView_BgsHistory;
+        private DataGridView dataGridView_Orders;
+        private DataGridView dataGridView2;
     }
 }

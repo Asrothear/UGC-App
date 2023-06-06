@@ -13,13 +13,7 @@ public class SystemHistoryData
     public string systemSecondEconomy { get; set; }
     public string systemSecurity { get; set; }
     public string lastBGSData { get; set; }
-    public HistoryO systemHistory { get; set; } = new();
-
-    public class HistoryO
-    {
-        public ulong systemAddress { get; set; }
-        public HashSet<HisoryModel> history { get; set; } = new();
-    }
+    public HashSet<HisoryModel> systemHistory { get; set; } = new();
     public class HisoryModel
     {
         public string timestamp { get; set; } = "";

@@ -30,10 +30,6 @@
         {
             dataGridView_SystemList = new DataGridView();
             menuStrip1 = new MenuStrip();
-            hierToolStripMenuItem = new ToolStripMenuItem();
-            enToolStripMenuItem = new ToolStripMenuItem();
-            menuToolStripMenuItem = new ToolStripMenuItem();
-            punkteToolStripMenuItem = new ToolStripMenuItem();
             seinToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView_SystemList).BeginInit();
             menuStrip1.SuspendLayout();
@@ -60,42 +56,18 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { hierToolStripMenuItem, enToolStripMenuItem, menuToolStripMenuItem, punkteToolStripMenuItem, seinToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { seinToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(500, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
             // 
-            // hierToolStripMenuItem
-            // 
-            hierToolStripMenuItem.Name = "hierToolStripMenuItem";
-            hierToolStripMenuItem.Size = new Size(41, 20);
-            hierToolStripMenuItem.Text = "Hier";
-            // 
-            // enToolStripMenuItem
-            // 
-            enToolStripMenuItem.Name = "enToolStripMenuItem";
-            enToolStripMenuItem.Size = new Size(63, 20);
-            enToolStripMenuItem.Text = "könnten";
-            // 
-            // menuToolStripMenuItem
-            // 
-            menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            menuToolStripMenuItem.Size = new Size(50, 20);
-            menuToolStripMenuItem.Text = "menu";
-            // 
-            // punkteToolStripMenuItem
-            // 
-            punkteToolStripMenuItem.Name = "punkteToolStripMenuItem";
-            punkteToolStripMenuItem.Size = new Size(56, 20);
-            punkteToolStripMenuItem.Text = "punkte";
-            // 
             // seinToolStripMenuItem
             // 
             seinToolStripMenuItem.Name = "seinToolStripMenuItem";
-            seinToolStripMenuItem.Size = new Size(40, 20);
-            seinToolStripMenuItem.Text = "sein";
+            seinToolStripMenuItem.Size = new Size(58, 20);
+            seinToolStripMenuItem.Text = "Refresh";
             // 
             // SystemList
             // 
@@ -117,10 +89,6 @@
         #endregion
         internal DataGridView dataGridView_SystemList;
         internal MenuStrip menuStrip1;
-        private ToolStripMenuItem hierToolStripMenuItem;
-        private ToolStripMenuItem enToolStripMenuItem;
-        private ToolStripMenuItem menuToolStripMenuItem;
-        private ToolStripMenuItem punkteToolStripMenuItem;
         private ToolStripMenuItem seinToolStripMenuItem;
     }
 }

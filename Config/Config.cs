@@ -19,6 +19,7 @@ public class Config
     // ReSharper disable once UnusedMember.Global
     public string CmdUrl { get; set; } = "https://api.ugc-tools.de/api/v1/PluginControll";
     public string SystemDataUrl { get; set; } = "https://api.ugc-tools.de/api/v1/SystemHistory";
+    public string SystemOrdersUrl { get; set; } = "https://api.ugc-tools.de/api/v1/OrdersList";
     public string TickUrl { get; private set; } = "https://api.ugc-tools.de/api/v1/Tick";
     public string UpdateUrl { get; private set; } = "https://update.ugc-tools.de";
     public bool BgsOnly { get; set; }
@@ -30,7 +31,7 @@ public class Config
     public bool AutoStart { get; set; }
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; private set; } = "0.3.9";
+    [DisallowDeviation] public string Version { get; private set; } = "0.4.3";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public int DesignSel { get; set; }
     public Color ColorMainBackground { get; set; } = Color.FromName("Control");

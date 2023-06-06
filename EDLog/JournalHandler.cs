@@ -61,15 +61,16 @@ namespace UGC_App.EDLog
             if (latestFile != null && latestFile != _currentFile)
             {
                 Program.Log($"Wechsel zur neuesten Datei: {latestFile}");
-                CheckForFileChanges();
+                CheckForFileChanges(true);
                 _currentFile = latestFile;
                 _previousPosition = 0;
                 _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
             }
         }
 
-        private static void CheckForFileChanges()
+        private static void CheckForFileChanges(bool swit = false)
         {
+            if(swit)Program.Log($"Final Check before switching");
             if (_currentFile == null) return;
             var lastWriteTime = File.GetLastWriteTimeUtc(_currentFile);
 
@@ -87,6 +88,7 @@ namespace UGC_App.EDLog
             ProcessJsonContent(jsonContent);
 
             _lastCheckedTime = lastWriteTime;
+            if(swit)Program.Log($"Final end, now switching");
         }
 
         private static void ProcessJsonContent(string jsonContent)
