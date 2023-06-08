@@ -19,8 +19,14 @@
     <Compile Update="Order\Dashboard.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Order\DashViews\OrderList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Order\DashViews\SystemList.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Order\OrderEditor.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Update="Order\SystemEditor.cs">
       <SubType>Form</SubType>

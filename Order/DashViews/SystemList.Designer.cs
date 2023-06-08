@@ -30,9 +30,7 @@
         {
             dataGridView_SystemList = new DataGridView();
             menuStrip1 = new MenuStrip();
-            seinToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView_SystemList).BeginInit();
-            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView_SystemList
@@ -42,7 +40,7 @@
             dataGridView_SystemList.AllowUserToResizeColumns = false;
             dataGridView_SystemList.AllowUserToResizeRows = false;
             dataGridView_SystemList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView_SystemList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView_SystemList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView_SystemList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView_SystemList.Dock = DockStyle.Fill;
             dataGridView_SystemList.EditMode = DataGridViewEditMode.EditProgrammatically;
@@ -51,23 +49,20 @@
             dataGridView_SystemList.Name = "dataGridView_SystemList";
             dataGridView_SystemList.RowTemplate.Height = 25;
             dataGridView_SystemList.ScrollBars = ScrollBars.Vertical;
-            dataGridView_SystemList.Size = new Size(500, 587);
+            dataGridView_SystemList.ShowCellErrors = false;
+            dataGridView_SystemList.ShowCellToolTips = false;
+            dataGridView_SystemList.ShowEditingIcon = false;
+            dataGridView_SystemList.ShowRowErrors = false;
+            dataGridView_SystemList.Size = new Size(450, 626);
             dataGridView_SystemList.TabIndex = 0;
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { seinToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(500, 24);
+            menuStrip1.Size = new Size(450, 24);
             menuStrip1.TabIndex = 1;
             menuStrip1.Text = "menuStrip1";
-            // 
-            // seinToolStripMenuItem
-            // 
-            seinToolStripMenuItem.Name = "seinToolStripMenuItem";
-            seinToolStripMenuItem.Size = new Size(58, 20);
-            seinToolStripMenuItem.Text = "Refresh";
             // 
             // SystemList
             // 
@@ -76,19 +71,16 @@
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(dataGridView_SystemList);
             Controls.Add(menuStrip1);
-            MinimumSize = new Size(500, 500);
+            MinimumSize = new Size(300, 200);
             Name = "SystemList";
-            Size = new Size(500, 611);
+            Size = new Size(450, 650);
             ((System.ComponentModel.ISupportInitialize)dataGridView_SystemList).EndInit();
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
         internal DataGridView dataGridView_SystemList;
-        internal MenuStrip menuStrip1;
-        private ToolStripMenuItem seinToolStripMenuItem;
+        private MenuStrip menuStrip1;
     }
 }

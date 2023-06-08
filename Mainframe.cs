@@ -20,7 +20,7 @@ public partial class Mainframe : Form
     private const int LabelSpacing = 35;
     private bool _closing;
     private int _sends;
-    KeyboardHookManager keyboardHookManager = new ();
+    KeyboardHookManager keyboardHookManager = new();
 
     public Mainframe()
     {
@@ -70,7 +70,7 @@ public partial class Mainframe : Form
             new[]
             {
                 NonInvasiveKeyboardHookLibrary.ModifierKeys.Control, NonInvasiveKeyboardHookLibrary.ModifierKeys.Alt
-            }, (int)Keys.C, FisrtToClip );
+            }, (int)Keys.C, FisrtToClip);
 
     }
 
@@ -78,14 +78,14 @@ public partial class Mainframe : Form
     {
         Regex regex = new Regex(@"(.*?)(?:\s*:\s*\d+(?:\.\d+)?\s*ly)?$");
         var text = label_SystemList.Text.Split(",").First();
-        if(string.IsNullOrWhiteSpace(text) || text == "Alles Aktuell!") return;
+        if (string.IsNullOrWhiteSpace(text) || text == "Alles Aktuell!") return;
         SystemSounds.Asterisk.Play();
         Match match = regex.Match(text);
         if (match.Success)
         {
             string result = match.Groups[1].Value;
-            
-            Invoke(()=>Clipboard.SetText(result.Replace("\u00A0", " ")));
+
+            Invoke(() => Clipboard.SetText(result.Replace("\u00A0", " ")));
         }
     }
     private void ShowOrderDashboard(object? sender, EventArgs e)
@@ -93,14 +93,14 @@ public partial class Mainframe : Form
         var def = Cursor.Current;
         Cursor.Current = Cursors.WaitCursor;
         if (_Dashboard == null || _Dashboard.IsDisposed) _Dashboard = new Dashboard();
-        _Dashboard.Visible = true;
+        _Dashboard.Show(this);
         _Dashboard.Activate();
-        _Dashboard.AttachView(new SystemList());
+        _Dashboard.AttachView(new OrderList());
         Cursor.Current = def;
         //SetDesign();
     }
 
-    private static async void CheckUpdates(object? sender, EventArgs e)
+    private async void CheckUpdates(object? sender, EventArgs e)
     {
         using var mgr = new UpdateManager(Config.Instance.UpdateUrl, "UGC-App");
         var infos = await mgr.CheckForUpdate();
@@ -110,6 +110,7 @@ public partial class Mainframe : Form
             MessageBox.Show("Die aktuellste Version ist breits Installiert.", "Updater");
             return;
         }
+        TopMost = false;
         var dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{infos.CurrentlyInstalledVersion.Version}->{infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
         if (dialogResult != DialogResult.Yes) return;
         var newVersion = await mgr.UpdateApp();
@@ -375,6 +376,7 @@ public partial class Mainframe : Form
                     {
                         case Label:
                         case CheckBox:
+                        case GroupBox:
                             control.ForeColor = Config.Instance.ColorDefaultLabelLight;
                             break;
                     }
@@ -396,6 +398,7 @@ public partial class Mainframe : Form
                     {
                         case Label:
                         case CheckBox:
+                        case GroupBox:
                             control.ForeColor = Config.Instance.ColorDefaultLabelDark;
                             break;
                     }
@@ -417,6 +420,7 @@ public partial class Mainframe : Form
                     {
                         case Label:
                         case CheckBox:
+                        case GroupBox:
                             control.ForeColor = Config.Instance.ColorMainInfo;
                             break;
                     }

@@ -1,8 +1,9 @@
 ﻿namespace UGC_App.Order.Model;
 
-public class OrderList
+public class Orders
 {
-    public ulong? SystemAddress { get; set; }
+    public ulong SystemAddress { get; set; }
+    public string StarSystem { get; set; }
     public string Faction { get; set; }
     public string Type { get; set; }
     public int Priority { get; set; }

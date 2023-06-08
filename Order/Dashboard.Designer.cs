@@ -29,7 +29,32 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
+            menuStrip1 = new MenuStrip();
+            refreshToolStripMenuItem = new ToolStripMenuItem();
+            ansichtWechselnToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, ansichtWechselnToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(595, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // refreshToolStripMenuItem
+            // 
+            refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            refreshToolStripMenuItem.Size = new Size(58, 20);
+            refreshToolStripMenuItem.Text = "Refresh";
+            // 
+            // ansichtWechselnToolStripMenuItem
+            // 
+            ansichtWechselnToolStripMenuItem.Name = "ansichtWechselnToolStripMenuItem";
+            ansichtWechselnToolStripMenuItem.Size = new Size(111, 20);
+            ansichtWechselnToolStripMenuItem.Text = "Ansicht wechseln";
             // 
             // Dashboard
             // 
@@ -37,14 +62,25 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(595, 450);
+            Controls.Add(menuStrip1);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
+            MinimumSize = new Size(300, 200);
             Name = "Dashboard";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Dashboard";
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem refreshToolStripMenuItem;
+        private ToolStripMenuItem ansichtWechselnToolStripMenuItem;
     }
 }

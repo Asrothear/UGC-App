@@ -52,6 +52,8 @@ partial class Mainframe
         toolStripMenuItem_About = new ToolStripMenuItem();
         toolStripSeparator1 = new ToolStripSeparator();
         toolStripMenuItem_Exit = new ToolStripMenuItem();
+        anweisungenToolStripMenuItem = new ToolStripMenuItem();
+        dashboardToolStripMenuItem = new ToolStripMenuItem();
         statusStrip_Main = new StatusStrip();
         toolStripStatusLabel_Status = new ToolStripStatusLabel();
         toolStripStatusLabel_Spacer = new ToolStripStatusLabel();
@@ -64,14 +66,15 @@ partial class Mainframe
         label_SystemList = new Label();
         pictureBox1 = new PictureBox();
         label_Tick = new Label();
-        anweisungenToolStripMenuItem = new ToolStripMenuItem();
-        dashboardToolStripMenuItem = new ToolStripMenuItem();
+        groupBox_Orders = new GroupBox();
+        label1 = new Label();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
         menuStrip1.SuspendLayout();
         statusStrip_Main.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+        groupBox_Orders.SuspendLayout();
         SuspendLayout();
         // 
         // notifyIcon
@@ -137,43 +140,56 @@ partial class Mainframe
         // toolStripMenuItem_Overlay
         // 
         toolStripMenuItem_Overlay.Name = "toolStripMenuItem_Overlay";
-        toolStripMenuItem_Overlay.Size = new Size(180, 22);
+        toolStripMenuItem_Overlay.Size = new Size(177, 22);
         toolStripMenuItem_Overlay.Text = "Toggle Overlay";
         // 
         // toolStripMenuItem_Settings
         // 
         toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-        toolStripMenuItem_Settings.Size = new Size(180, 22);
+        toolStripMenuItem_Settings.Size = new Size(177, 22);
         toolStripMenuItem_Settings.Text = "Einstellungen";
         // 
         // toolStripMenuItem_CheckForUpdates
         // 
         toolStripMenuItem_CheckForUpdates.Name = "toolStripMenuItem_CheckForUpdates";
-        toolStripMenuItem_CheckForUpdates.Size = new Size(180, 22);
+        toolStripMenuItem_CheckForUpdates.Size = new Size(177, 22);
         toolStripMenuItem_CheckForUpdates.Text = "Auf Updates prüfen";
         // 
         // toolStripMenuItem_About
         // 
         toolStripMenuItem_About.Name = "toolStripMenuItem_About";
-        toolStripMenuItem_About.Size = new Size(180, 22);
+        toolStripMenuItem_About.Size = new Size(177, 22);
         toolStripMenuItem_About.Text = "Über";
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(177, 6);
+        toolStripSeparator1.Size = new Size(174, 6);
         // 
         // toolStripMenuItem_Exit
         // 
         toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-        toolStripMenuItem_Exit.Size = new Size(180, 22);
+        toolStripMenuItem_Exit.Size = new Size(177, 22);
         toolStripMenuItem_Exit.Text = "Beenden";
         toolStripMenuItem_Exit.Click += ExitMenuItem_Click;
+        // 
+        // anweisungenToolStripMenuItem
+        // 
+        anweisungenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dashboardToolStripMenuItem });
+        anweisungenToolStripMenuItem.Name = "anweisungenToolStripMenuItem";
+        anweisungenToolStripMenuItem.Size = new Size(91, 20);
+        anweisungenToolStripMenuItem.Text = "Anweisungen";
+        // 
+        // dashboardToolStripMenuItem
+        // 
+        dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
+        dashboardToolStripMenuItem.Size = new Size(131, 22);
+        dashboardToolStripMenuItem.Text = "Dashboard";
         // 
         // statusStrip_Main
         // 
         statusStrip_Main.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel_Status, toolStripStatusLabel_Spacer, toolStripStatusLabel_Version });
-        statusStrip_Main.Location = new Point(0, 237);
+        statusStrip_Main.Location = new Point(0, 386);
         statusStrip_Main.Name = "statusStrip_Main";
         statusStrip_Main.Size = new Size(287, 22);
         statusStrip_Main.SizingGrip = false;
@@ -241,7 +257,7 @@ partial class Mainframe
         // label_SystemListLabel
         // 
         label_SystemListLabel.AutoSize = true;
-        label_SystemListLabel.Location = new Point(12, 163);
+        label_SystemListLabel.Location = new Point(6, 282);
         label_SystemListLabel.Name = "label_SystemListLabel";
         label_SystemListLabel.Size = new Size(54, 15);
         label_SystemListLabel.TabIndex = 11;
@@ -250,7 +266,7 @@ partial class Mainframe
         // label_SystemList
         // 
         label_SystemList.AutoSize = true;
-        label_SystemList.Location = new Point(67, 193);
+        label_SystemList.Location = new Point(61, 312);
         label_SystemList.MaximumSize = new Size(213, 0);
         label_SystemList.Name = "label_SystemList";
         label_SystemList.Size = new Size(49, 15);
@@ -278,24 +294,29 @@ partial class Mainframe
         label_Tick.Text = "-Warte auf Daten-";
         label_Tick.TextAlign = ContentAlignment.TopCenter;
         // 
-        // anweisungenToolStripMenuItem
+        // groupBox_Orders
         // 
-        anweisungenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dashboardToolStripMenuItem });
-        anweisungenToolStripMenuItem.Name = "anweisungenToolStripMenuItem";
-        anweisungenToolStripMenuItem.Size = new Size(91, 20);
-        anweisungenToolStripMenuItem.Text = "Anweisungen";
+        groupBox_Orders.Controls.Add(label1);
+        groupBox_Orders.Location = new Point(12, 179);
+        groupBox_Orders.Name = "groupBox_Orders";
+        groupBox_Orders.Size = new Size(263, 100);
+        groupBox_Orders.TabIndex = 18;
+        groupBox_Orders.TabStop = false;
+        groupBox_Orders.Text = "BGS Order: TestSystem";
         // 
-        // dashboardToolStripMenuItem
+        // label1
         // 
-        dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
-        dashboardToolStripMenuItem.Size = new Size(180, 22);
-        dashboardToolStripMenuItem.Text = "Dashboard";
+        label1.Location = new Point(10, 22);
+        label1.Name = "label1";
+        label1.Size = new Size(247, 75);
+        label1.TabIndex = 1;
         // 
         // Mainframe
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(287, 259);
+        ClientSize = new Size(287, 408);
+        Controls.Add(groupBox_Orders);
         Controls.Add(label_SystemListLabel);
         Controls.Add(label_TickTitle);
         Controls.Add(label_Tick);
@@ -327,6 +348,7 @@ partial class Mainframe
         statusStrip_Main.ResumeLayout(false);
         statusStrip_Main.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+        groupBox_Orders.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
@@ -353,4 +375,6 @@ partial class Mainframe
     private ToolStripMenuItem toolStripMenuItem_CheckForUpdates;
     private ToolStripMenuItem anweisungenToolStripMenuItem;
     private ToolStripMenuItem dashboardToolStripMenuItem;
+    private GroupBox groupBox_Orders;
+    private Label label1;
 }

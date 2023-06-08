@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UGC_App.Order.DashViews;
 using UGC_App.Order.Model;
 using UGC_App.WebClient;
 
@@ -17,15 +18,19 @@ namespace UGC_App.Order
 {
     public partial class SystemEditor : Form
     {
-        public SystemEditor(string systemAddress)
+        private ulong SystemAddress = 0;
+        private SystemList parrent;
+        public SystemEditor(ulong systemAddress, SystemList systemList)
         {
             InitializeComponent();
-            dataGridView_Factions.CellDoubleClick += CheckEdit;
-            dataGridView_BgsHistory.CellDoubleClick += CheckEdit;
-            var history = OrderAPI.GetSystemHistory(systemAddress);
+            TopMost = Config.Instance.AlwaysOnTop;
+            parrent = systemList;
+            SystemAddress = systemAddress;
+            dataGridView_Orders.CellDoubleClick += CheckEdit;
+            var history = OrderAPI.GetSystemHistory(SystemAddress);
             Text = $"SystemEditor: {history.starSystem} - {history.lastBGSData}";
             textBox_StarSystem.Text = history.starSystem;
-            textBox_Address.Text = systemAddress;
+            textBox_Address.Text = systemAddress.ToString();
             textBox_DistSOL.Text = $"{GetDistance(JsonSerializer.Deserialize<double[]>(history.starPos), new double[] { 0, 0, 0 })} Ly";
             textBox_DistHome.Text = $"{GetDistance(JsonSerializer.Deserialize<double[]>(history.starPos), new double[] { 54.21875, -154.84375, 30.625 })} Ly";
             textBox_StarPos.Text = history.starPos.ToString().Replace("[", "").Replace("]", "");
@@ -40,12 +45,16 @@ namespace UGC_App.Order
             {
                 textBox_Factions.Text = data.systemHistory.Last().factions.Count.ToString();
             }
-
             LoadFactionTable(data);
             LoadHistoryTable(data);
             LoadOrdersTable(data);
         }
 
+        internal void Reload()
+        {
+            LoadOrdersTable(OrderAPI.GetSystemHistory(SystemAddress));
+            parrent.ReloadTable();
+        }
         private void LoadOrdersTable(SystemHistoryData data)
         {
             var table = new DataTable();
@@ -54,12 +63,12 @@ namespace UGC_App.Order
             table.Columns.Add("Fraction", typeof(string));
             table.Columns.Add("Typ", typeof(string));
             table.Columns.Add("Order", typeof(string));
-            var Orders = OrderAPI.GetSystemOrders(data.systemAddress.ToString());
+            var Orders = OrderAPI.GetSystemOrders(SystemAddress);
             if (!Orders.Any())
             {
                 foreach (var fraction in data.systemHistory.Last().factions)
                 {
-                    table.Rows.Add(0, fraction.name, "-", "-");
+                    table.Rows.Add(0, fraction.name, "", "");
                 }
             }
             else
@@ -69,7 +78,7 @@ namespace UGC_App.Order
                     var facorder = Orders.FirstOrDefault(x => x.Faction == fraction.name);
                     if (facorder == null)
                     {
-                        table.Rows.Add(0, fraction.name, "-", "-");
+                        table.Rows.Add(0, fraction.name, "", "");
                         continue;
                     };
                     table.Rows.Add(facorder.Priority, fraction.name, facorder.Type, facorder.Order);
@@ -77,7 +86,34 @@ namespace UGC_App.Order
             }
 
             dataGridView_Orders.DataSource = table;
-            dataGridView_Orders.Sort(dataGridView_Orders.Columns["Prio"], ListSortDirection.Descending);
+            dataGridView_Orders.DataBindingComplete += LoadColors;
+            dataGridView_Orders.Sort(dataGridView_Orders.Columns["Prio"], ListSortDirection.Ascending);
+        }
+        
+        private void LoadColors(object? sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            for (var i = 0; i < dataGridView_Orders.Rows.Count; i++)
+            {
+                switch (Convert.ToInt32(dataGridView_Orders.Rows[i].Cells[0].Value))
+                {
+                    case 0:
+                        dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(208, 228, 252);
+                        break;
+                    case 1:
+                        dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 216, 216);
+                        break;
+                    case 2:
+                        dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(255, 234, 120);
+                        break;
+                    case 3:
+                        dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor = Color.FromArgb(154, 255, 180);
+                        break;
+                    default:
+                        dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor =
+                            dataGridView_Orders.Rows[i].DefaultCellStyle.BackColor;
+                        break;
+                }
+            }
         }
 
         private void LoadFactionTable(SystemHistoryData data)
@@ -141,7 +177,16 @@ namespace UGC_App.Order
         private void CheckEdit(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
-            Debug.WriteLine($"{e.ColumnIndex} {e.RowIndex}");
+            OpenEditor(dataGridView_Orders.Rows[e.RowIndex]);
+        }
+
+        private void OpenEditor(DataGridViewRow fractionData)
+        {
+            var def = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            var edit = new OrderEditor(fractionData, SystemAddress, this);
+            if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
+            Cursor.Current = def;
         }
 
         private static double GetDistance(IReadOnlyList<double> cords1, IReadOnlyList<double> cords2, int digits = 2)

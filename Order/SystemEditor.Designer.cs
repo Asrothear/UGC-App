@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SystemEditor));
             label_Name = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -376,7 +377,12 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label_Name);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "SystemEditor";
+            RightToLeft = RightToLeft.No;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "SystemEditor";
             ((System.ComponentModel.ISupportInitialize)dataGridView_Factions).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_BgsHistory).EndInit();
