@@ -83,6 +83,9 @@ internal static class Program
     }
     private static void UpdateMyApp(string[] args)
     {
+        #if DEBUG
+            return;
+        #endif
         if(!Config.Instance.AutoUpdate) return;
         using var mgr = new UpdateManager(Config.Instance.UpdateUrl,"UGC-App");
         var newVersion = mgr.UpdateApp().Result;

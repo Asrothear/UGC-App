@@ -21,7 +21,7 @@ namespace UGC_App.EDLog
             var prefix = "Journal";
             var pollingInterval = TimeSpan.FromSeconds(5);
             SwitchToLatestFile(Config.Instance.PathJournal, prefix);
-            Program.Log("Watchdog running...");
+            Program.Log($"Journal Watchdog starting... {_currentFile}");
             while (Running)
             {
                 
@@ -71,10 +71,18 @@ namespace UGC_App.EDLog
         private static void CheckForFileChanges(bool swit = false)
         {
             if(swit)Program.Log($"Final Check before switching");
-            if (_currentFile == null) return;
+            if (_currentFile == null) 
+            {
+                if(swit)Program.Log($"nor current, now switching");
+                return;
+            };;
             var lastWriteTime = File.GetLastWriteTimeUtc(_currentFile);
 
-            if (lastWriteTime <= _lastCheckedTime) return;
+            if (lastWriteTime <= _lastCheckedTime)
+            {
+                if(swit)Program.Log($"_lastCheckedTime not enough, now switching");
+                return;
+            };
             string jsonContent;
             using (var stream = new FileStream(_currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -118,6 +126,7 @@ namespace UGC_App.EDLog
                             Config.Instance.LastDocked = Convert.ToBoolean(jsonObject["Docked"]) ? ToString(jsonObject["StationName"]) : "-";
                             _parent?.SetDockedText(Config.Instance.LastDocked);
                             Eddn.Send(new Journal(jsonObject), _parent);
+                            _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "Docked":
                             Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
@@ -128,10 +137,12 @@ namespace UGC_App.EDLog
                             Config.Instance.LastDocked = "-";
                             _parent?.SetDockedText(Config.Instance.LastDocked);
                             break;
+                        case "CarrierJump":
                         case "FSDJump":
                             Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
                             Config.Instance.LastDocked = "-";
                             Eddn.Send(new Journal(jsonObject), _parent);
+                            _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "ApproachSettlement":
                             Eddn.Send(new ApproachSettlement(jsonObject), _parent);

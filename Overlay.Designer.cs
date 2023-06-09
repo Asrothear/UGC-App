@@ -31,6 +31,8 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Overlay));
             panel = new Panel();
+            groupBox_Orders = new GroupBox();
+            label_Orders = new Label();
             greenLight = new PictureBox();
             label_SystemTitle = new Label();
             yellowLight = new PictureBox();
@@ -40,6 +42,7 @@
             label_SystemList = new Label();
             _mouseTimer = new System.Windows.Forms.Timer(components);
             panel.SuspendLayout();
+            groupBox_Orders.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
             ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
@@ -48,6 +51,7 @@
             // panel
             // 
             panel.BackColor = Color.Transparent;
+            panel.Controls.Add(groupBox_Orders);
             panel.Controls.Add(greenLight);
             panel.Controls.Add(label_SystemTitle);
             panel.Controls.Add(yellowLight);
@@ -58,11 +62,33 @@
             panel.Dock = DockStyle.Fill;
             panel.Location = new Point(0, 0);
             panel.Name = "panel";
-            panel.Size = new Size(260, 220);
+            panel.Size = new Size(260, 248);
             panel.TabIndex = 0;
             panel.MouseDown += OverlayForm_MouseDown;
             panel.MouseMove += OverlayForm_MouseMove;
             panel.MouseUp += OverlayForm_MouseUp;
+            // 
+            // groupBox_Orders
+            // 
+            groupBox_Orders.Controls.Add(label_Orders);
+            groupBox_Orders.Location = new Point(10, 66);
+            groupBox_Orders.Name = "groupBox_Orders";
+            groupBox_Orders.Size = new Size(238, 100);
+            groupBox_Orders.TabIndex = 19;
+            groupBox_Orders.TabStop = false;
+            groupBox_Orders.Text = "BGS Order: TestSystem";
+            groupBox_Orders.Visible = false;
+            // 
+            // label_Orders
+            // 
+            label_Orders.AutoSize = true;
+            label_Orders.Dock = DockStyle.Fill;
+            label_Orders.Location = new Point(3, 19);
+            label_Orders.MaximumSize = new Size(230, 0);
+            label_Orders.MinimumSize = new Size(230, 0);
+            label_Orders.Name = "label_Orders";
+            label_Orders.Size = new Size(230, 15);
+            label_Orders.TabIndex = 1;
             // 
             // greenLight
             // 
@@ -77,7 +103,7 @@
             // label_SystemTitle
             // 
             label_SystemTitle.AutoSize = true;
-            label_SystemTitle.Location = new Point(109, 76);
+            label_SystemTitle.Location = new Point(103, 169);
             label_SystemTitle.Name = "label_SystemTitle";
             label_SystemTitle.Size = new Size(54, 15);
             label_SystemTitle.TabIndex = 4;
@@ -126,7 +152,7 @@
             // 
             label_SystemList.AutoSize = true;
             label_SystemList.ForeColor = Color.White;
-            label_SystemList.Location = new Point(26, 91);
+            label_SystemList.Location = new Point(25, 194);
             label_SystemList.MaximumSize = new Size(215, 0);
             label_SystemList.Name = "label_SystemList";
             label_SystemList.Size = new Size(212, 45);
@@ -145,7 +171,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = Color.DarkGoldenrod;
-            ClientSize = new Size(260, 220);
+            ClientSize = new Size(260, 248);
             Controls.Add(panel);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -162,6 +188,8 @@
             MouseUp += OverlayForm_MouseUp;
             panel.ResumeLayout(false);
             panel.PerformLayout();
+            groupBox_Orders.ResumeLayout(false);
+            groupBox_Orders.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)greenLight).EndInit();
             ((System.ComponentModel.ISupportInitialize)yellowLight).EndInit();
             ((System.ComponentModel.ISupportInitialize)redLight).EndInit();
@@ -175,5 +203,7 @@
         internal PictureBox greenLight;
         internal PictureBox yellowLight;
         internal PictureBox redLight;
+        private GroupBox groupBox_Orders;
+        private Label label_Orders;
     }
 }

@@ -116,7 +116,7 @@ public partial class Mainframe : Form
         var newVersion = await mgr.UpdateApp();
         if (newVersion != null)
         {
-            MessageBox.Show("Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
+            MessageBox.Show($"Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
         }
     }
 
@@ -190,6 +190,17 @@ public partial class Mainframe : Form
         {
             Invoke(() =>
             {
+                if (!groupBox_Orders.Visible)
+                {
+                    label_SystemListLabel.Top = label_Tick.Bottom + 10;
+                    label_SystemList.Top = label_SystemListLabel.Bottom + 10;
+                }
+                else
+                {
+                    groupBox_Orders.Top = label_Tick.Bottom + 10;
+                    label_SystemListLabel.Top = groupBox_Orders.Bottom + 10;
+                    label_SystemList.Top = label_SystemListLabel.Bottom + 10;
+                }
                 Height = label_SystemList.Bottom + LabelSpacing + 46;
                 CenterObjectHorizontally(label_SystemList);
             });
@@ -434,6 +445,43 @@ public partial class Mainframe : Form
                 }
                 break;
         }
+    }
+
+    internal void GetSystemOrder(ulong SystemAddress)
+    {
+        Task.Run(() =>
+        {
+            var orders = OrderAPI.GetSystemOrders(SystemAddress);
+            if (orders == null || !orders.Any())
+            {
+                Invoke(() => { groupBox_Orders.Visible = false; });
+                overlayForm.HideOrderList();
+                FixLayout();
+                return;
+            };
+            Invoke(() => { groupBox_Orders.Visible = true; });
+            var final = orders.Aggregate("", (current, order) => current + $"{order.Faction}:\n{order.Order.Replace("\r", " ").Replace("\n", " ").Replace("  ", " ")}\n------------------\n");
+            overlayForm?.FillOrderList(final, orders.First().StarSystem);
+            Invoke(() =>
+            {
+                label_Orders.Text = final;
+                var size = label_Orders.ClientSize;
+                size.Height += 30;
+                groupBox_Orders.ClientSize = size;
+                groupBox_Orders.Text = $"BGS-Order: {orders.First().StarSystem}";
+                FixLayout();
+            });
+        });
+    }
+
+    internal string GetOrder()
+    {
+        var rets = label_Orders.Text;
+        if (string.IsNullOrWhiteSpace(rets))
+        {
+            overlayForm.HideOrderList();
+        }
+        return rets; 
     }
 
     public void AddSucess()

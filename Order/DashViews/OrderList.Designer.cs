@@ -43,13 +43,15 @@
             dataGridView_OrderList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView_OrderList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             dataGridView_OrderList.BackgroundColor = SystemColors.Control;
+            dataGridView_OrderList.BorderStyle = BorderStyle.None;
+            dataGridView_OrderList.CellBorderStyle = DataGridViewCellBorderStyle.Sunken;
             dataGridView_OrderList.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = SystemColors.Window;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
             dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.Desktop;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dataGridView_OrderList.DefaultCellStyle = dataGridViewCellStyle1;
             dataGridView_OrderList.Dock = DockStyle.Fill;
@@ -60,14 +62,18 @@
             dataGridView_OrderList.Name = "dataGridView_OrderList";
             dataGridView_OrderList.RowTemplate.Height = 25;
             dataGridView_OrderList.ScrollBars = ScrollBars.Vertical;
-            dataGridView_OrderList.Size = new Size(941, 597);
+            dataGridView_OrderList.ShowCellErrors = false;
+            dataGridView_OrderList.ShowCellToolTips = false;
+            dataGridView_OrderList.ShowEditingIcon = false;
+            dataGridView_OrderList.ShowRowErrors = false;
+            dataGridView_OrderList.Size = new Size(300, 320);
             dataGridView_OrderList.TabIndex = 2;
             // 
             // menuStrip1
             // 
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(941, 24);
+            menuStrip1.Size = new Size(300, 24);
             menuStrip1.TabIndex = 3;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -78,9 +84,10 @@
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(dataGridView_OrderList);
             Controls.Add(menuStrip1);
+            MaximumSize = new Size(0, 1000);
             MinimumSize = new Size(300, 200);
             Name = "OrderList";
-            Size = new Size(941, 621);
+            Size = new Size(300, 344);
             ((System.ComponentModel.ISupportInitialize)dataGridView_OrderList).EndInit();
             ResumeLayout(false);
             PerformLayout();

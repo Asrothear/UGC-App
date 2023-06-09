@@ -22,6 +22,7 @@ public partial class Overlay : Form
         parent = parrent;
         Location = parrent.Location;
         label_SystemList.SizeChanged += SystemListReSized;
+        label_Orders.SizeChanged += SystemListReSized;
         label_SystemList.Text = parrent.GetSystemList();
         label_TickTime.Text = parrent.GetTickTime();
         Height = label_SystemList.Bottom + LabelBottomMargin;
@@ -38,16 +39,48 @@ public partial class Overlay : Form
         {
             Thread.Sleep(10);
             Invoke(() => { Location = Config.Instance.OverlayLocation; });
-
         });
         SetCircles();
+        Task.Run(() =>
+        {
+            Thread.Sleep(100);
+            label_Orders.Text = parrent.GetOrder();
+            FixLayout();
+        });
     }
 
     private void SystemListReSized(object? sender, EventArgs e)
     {
-        CenterLabelHorizontally(label_SystemList);
-        Height = label_SystemList.Bottom + LabelBottomMargin;
-        UpdateLabelTextColorBasedOnBackgroundBrightness();
+        FixLayout();
+    }
+    private void FixLayout()
+    {
+        try
+        {
+            Invoke(() =>
+            {
+                if (!groupBox_Orders.Visible)
+                {
+                    label_TickTime.Top = label_TickTitle.Bottom + 10;
+                    label_SystemTitle.Top = label_TickTime.Bottom + 10;
+                    label_SystemList.Top = label_SystemTitle.Bottom + 10;
+                }
+                else
+                {
+                    label_TickTime.Top = label_TickTitle.Bottom + 10;
+                    groupBox_Orders.Top = label_TickTime.Bottom + 10;
+                    label_SystemTitle.Top = groupBox_Orders.Bottom + 10;
+                    label_SystemList.Top = label_SystemTitle.Bottom + 10;
+                }
+                Height = label_SystemList.Bottom + LabelBottomMargin;
+                CenterLabelHorizontally(label_SystemList);
+                UpdateLabelTextColorBasedOnBackgroundBrightness();
+            });
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void CenterLabelHorizontally(dynamic label)
@@ -80,6 +113,7 @@ public partial class Overlay : Form
         _mouseTimer.Stop();
         Config.Instance.OverlayLocation = Location;
         Config.Save();
+        FixLayout();
     }
 
     private void MouseTimer_Tick(object sender, EventArgs e)
@@ -158,12 +192,16 @@ public partial class Overlay : Form
                 label_TickTime.ForeColor = _tickDark;
                 label_SystemTitle.ForeColor = _systemeDark;
                 label_SystemList.ForeColor = _systemeDark;
+                groupBox_Orders.ForeColor = _systemeDark;
+                label_Orders.ForeColor = _systemeDark;
                 break;
             case > 49:
                 label_TickTitle.ForeColor = _tickLight;
                 label_TickTime.ForeColor = _tickLight;
                 label_SystemTitle.ForeColor = _systemeLight;
                 label_SystemList.ForeColor = _systemeLight;
+                groupBox_Orders.ForeColor = _systemeLight;
+                label_Orders.ForeColor = _systemeLight;
                 break;
         }
         _locked = false;
@@ -218,5 +256,24 @@ public partial class Overlay : Form
     {
         if (IsDisposed) return;
         light.BackColor = active ? (Color)(light.Tag ?? "Color [Magenta]") : Color.Gray;
+    }
+
+    internal void FillOrderList(string final, string StarSystem)
+    {
+        Invoke(() =>
+        {
+            groupBox_Orders.Visible = true;
+            label_Orders.Text = final;
+            var size = label_Orders.ClientSize;
+            size.Height += 30;
+            groupBox_Orders.ClientSize = size;
+            groupBox_Orders.Text = $"BGS-Order: {StarSystem}";
+            FixLayout();
+        });
+    }
+
+    internal void HideOrderList()
+    {
+        Invoke(() => { groupBox_Orders.Visible = false; });
     }
 }

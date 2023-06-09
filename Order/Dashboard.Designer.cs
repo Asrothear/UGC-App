@@ -40,7 +40,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { refreshToolStripMenuItem, ansichtWechselnToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(595, 24);
+            menuStrip1.Size = new Size(184, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -62,14 +62,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(595, 450);
+            ClientSize = new Size(184, 161);
             Controls.Add(menuStrip1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            MinimumSize = new Size(300, 200);
+            MinimumSize = new Size(100, 100);
             Name = "Dashboard";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "Dashboard";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

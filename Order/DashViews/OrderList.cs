@@ -40,10 +40,10 @@ namespace UGC_App.Order.DashViews
                 table.Rows.Add(OrderData.Priority, OrderData.StarSystem, OrderData.Faction, OrderData.Type, OrderData.Order, OrderData.SystemAddress);
             }
             dataGridView_OrderList.DataSource = table;
-            dataGridView_OrderList.DataBindingComplete += LoadColors;
             Height = dataGridView_OrderList.Height + menuStrip1.Height + 5;
             dataGridView_OrderList.Columns["Address"].Visible = false;
             dataGridView_OrderList.Sort(dataGridView_OrderList.Columns["Priority"], ListSortDirection.Ascending);
+            dataGridView_OrderList.DataBindingComplete += LoadColors;
         }
 
         private void LoadColors(object? sender, DataGridViewBindingCompleteEventArgs e)
@@ -60,6 +60,12 @@ namespace UGC_App.Order.DashViews
                         _ => dataGridView_OrderList.Rows[i].DefaultCellStyle.BackColor
                     };
             }
+
+            var size = dataGridView_OrderList.ClientSize;
+            size.Height = (int)GetDgvMinHeight(dataGridView_OrderList);
+            dataGridView_OrderList.ClientSize = size;
+            size.Width = GetDgvMinWidth(dataGridView_OrderList);
+            Size = size;
         }
 
         private void CheckEdit(object? sender, DataGridViewCellEventArgs e)
@@ -75,6 +81,27 @@ namespace UGC_App.Order.DashViews
             var edit = new OrderEditor(fractionData, Convert.ToUInt64(fractionData.Cells[5].Value), this, true);
             if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
             Cursor.Current = def;
+        }
+        /// <summary>
+        /// Return the minimum width in pixels a DataGridView can be before the control's vertical scrollbar would be displayed.
+        /// </summary>
+        private int GetDgvMinWidth(DataGridView dgv)
+        {
+            // Add two pixels for the border for BorderStyles other than None.
+            var controlBorderWidth = (dgv.BorderStyle == BorderStyle.None) ? 0 : 2;
+
+            // Return the width of all columns plus the row header, and adjusted for the DGV's BorderStyle.
+            if (dgv.ClientSize.Height <= dgv.MaximumSize.Height)
+                controlBorderWidth += SystemInformation.VerticalScrollBarWidth;
+            return dgv.Columns.GetColumnsWidth(DataGridViewElementStates.Visible) + dgv.RowHeadersWidth + controlBorderWidth;
+        }
+        private double GetDgvMinHeight(DataGridView dgv)
+        {
+            // Add two pixels for the border for BorderStyles other than None.
+            var controlBorderWidth = (dgv.BorderStyle == BorderStyle.None) ? 0 : 2;
+
+            // Return the width of all columns plus the row header, and adjusted for the DGV's BorderStyle.
+            return dgv.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + controlBorderWidth;
         }
     }
 }

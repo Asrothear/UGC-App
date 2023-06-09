@@ -31,7 +31,7 @@ public class Config
     public bool AutoStart { get; set; }
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; private set; } = "0.4.9";
+    [DisallowDeviation] public string Version { get; private set; } = "0.4.15";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public int DesignSel { get; set; }
     public Color ColorMainBackground { get; set; } = Color.FromName("Control");

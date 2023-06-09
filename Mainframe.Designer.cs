@@ -67,7 +67,7 @@ partial class Mainframe
         pictureBox1 = new PictureBox();
         label_Tick = new Label();
         groupBox_Orders = new GroupBox();
-        label1 = new Label();
+        label_Orders = new Label();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
@@ -257,7 +257,7 @@ partial class Mainframe
         // label_SystemListLabel
         // 
         label_SystemListLabel.AutoSize = true;
-        label_SystemListLabel.Location = new Point(6, 282);
+        label_SystemListLabel.Location = new Point(12, 282);
         label_SystemListLabel.Name = "label_SystemListLabel";
         label_SystemListLabel.Size = new Size(54, 15);
         label_SystemListLabel.TabIndex = 11;
@@ -296,20 +296,25 @@ partial class Mainframe
         // 
         // groupBox_Orders
         // 
-        groupBox_Orders.Controls.Add(label1);
+        groupBox_Orders.BackColor = Color.Transparent;
+        groupBox_Orders.Controls.Add(label_Orders);
         groupBox_Orders.Location = new Point(12, 179);
         groupBox_Orders.Name = "groupBox_Orders";
         groupBox_Orders.Size = new Size(263, 100);
         groupBox_Orders.TabIndex = 18;
         groupBox_Orders.TabStop = false;
         groupBox_Orders.Text = "BGS Order: TestSystem";
+        groupBox_Orders.Visible = false;
         // 
-        // label1
+        // label_Orders
         // 
-        label1.Location = new Point(10, 22);
-        label1.Name = "label1";
-        label1.Size = new Size(247, 75);
-        label1.TabIndex = 1;
+        label_Orders.AutoSize = true;
+        label_Orders.Location = new Point(6, 19);
+        label_Orders.MaximumSize = new Size(245, 0);
+        label_Orders.MinimumSize = new Size(245, 0);
+        label_Orders.Name = "label_Orders";
+        label_Orders.Size = new Size(245, 15);
+        label_Orders.TabIndex = 1;
         // 
         // Mainframe
         // 
@@ -349,6 +354,7 @@ partial class Mainframe
         statusStrip_Main.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
         groupBox_Orders.ResumeLayout(false);
+        groupBox_Orders.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }
@@ -376,5 +382,5 @@ partial class Mainframe
     private ToolStripMenuItem anweisungenToolStripMenuItem;
     private ToolStripMenuItem dashboardToolStripMenuItem;
     private GroupBox groupBox_Orders;
-    private Label label1;
+    private Label label_Orders;
 }
