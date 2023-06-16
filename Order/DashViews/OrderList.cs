@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UGC_App.LocalCache;
 using UGC_App.WebClient;
 
 namespace UGC_App.Order.DashViews
@@ -41,7 +42,7 @@ namespace UGC_App.Order.DashViews
             lastrow = dataGridView_OrderList.Rows[e.RowIndex];
         }
 
-        internal void Reload()
+        internal void Refresh()
         {
             //LoadAllOrdersTable();
             parrent.RefreshView();
@@ -56,7 +57,7 @@ namespace UGC_App.Order.DashViews
             table.Columns.Add("Infos", typeof(string));
             table.Columns.Add("Address", typeof(ulong));
             table.Columns.Add("letze Änderung", typeof(DateTime));
-            var lister = OrderAPI.GetAllOrders();
+            var lister = CacheHandler.GetOrderFromCache();
             if (lister == null) return;
             foreach (var OrderData in lister)
             {
@@ -100,6 +101,7 @@ namespace UGC_App.Order.DashViews
         {
             var def = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
+            Refresh();
             var edit = new OrderEditor(fractionData, Convert.ToUInt64(fractionData.Cells[5].Value), this, true);
             if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
             Cursor.Current = def;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using UGC_App.LocalCache;
 using UGC_App.Order.Model;
 using UGC_App.WebClient;
 
@@ -17,8 +18,9 @@ namespace UGC_App.Order.DashViews
             Reload();
         }
 
-        internal void Refresh(object? sender, EventArgs e)
+        internal void Refresh()
         {
+            CacheHandler.CacheSystemList(true);
             Reload();
         }
 
@@ -29,11 +31,10 @@ namespace UGC_App.Order.DashViews
             table.Columns.Add("Address", typeof(string));
             table.Columns.Add("stand BGS zahlen (UTC)", typeof(string));
             table.Columns.Add("Anweisungen", typeof(string));
-            var lister = OrderAPI.GetSystemList();
-            if (lister == null) return;
+            var lister = CacheHandler.GetSystemListFromCache();
             foreach (var systemData in lister)
             {
-                table.Rows.Add(systemData.GetProperty("starSystem"), systemData.GetProperty("systemAddress"), systemData.GetProperty("lastBGSData"), systemData.GetProperty("count"));
+                table.Rows.Add(systemData.StarSystem, systemData.SystemAddress, systemData.LastBgsData, systemData.Count);
             }
             dataGridView_SystemList.DataSource = table;
             dataGridView_SystemList.Columns["Address"].Visible = false;

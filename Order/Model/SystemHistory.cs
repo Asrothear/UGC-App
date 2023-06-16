@@ -67,3 +67,12 @@ public class SystemHistoryData
 
     }
 }
+
+public class SystemListing
+{
+    public string StarSystem { get; set; } = "";
+    public ulong SystemAddress { get; set; }
+    public DateTime LastBgsData { get; set; }
+    public int Count { get; set; }
+        
+}

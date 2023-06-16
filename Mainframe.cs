@@ -1,17 +1,18 @@
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.IO.Pipes;
 using System.Media;
 using System.Text.RegularExpressions;
-using Org.BouncyCastle.Math.EC;
 using Squirrel;
 using UGC_App.EDLog;
 using UGC_App.Order;
 using UGC_App.Order.DashViews;
 using UGC_App.WebClient;
 using NonInvasiveKeyboardHookLibrary;
+using UGC_App.LocalCache;
+using Timer = System.Timers.Timer;
 
 namespace UGC_App;
+
 public partial class Mainframe : Form
 {
     private Konfiguration? _conf;
@@ -21,10 +22,15 @@ public partial class Mainframe : Form
     private bool _closing;
     private int _sends;
     KeyboardHookManager keyboardHookManager = new();
+    private static readonly Timer CacheTimer = new Timer();
 
     public Mainframe()
     {
         InitializeComponent();
+        CacheTimer.Interval += 60 * (60 * 1000);
+        CacheTimer.Elapsed += (sender, args) => { CacheHandler.InitAll(true); };
+        CacheTimer.Start();
+        CacheHandler.InitAll(true);
         keyboardHookManager.Start();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
@@ -66,6 +72,7 @@ public partial class Mainframe : Form
             {
                 Invoke(() => { Location = Config.Instance.MainLocation; });
             }
+
             SizeChanged += (_, _) => FixLayout();
         });
         keyboardHookManager.RegisterHotkey(
@@ -90,14 +97,17 @@ public partial class Mainframe : Form
             Invoke(() => Clipboard.SetText(result.Replace("\u00A0", " ")));
         }
     }
+
     private void ShowOrderDashboard(object? sender, EventArgs e)
     {
         ShowDashboard(1);
     }
+
     private void ShowSystemDashboard(object? sender, EventArgs e)
     {
         ShowDashboard(2);
     }
+
     private void ShowDashboard(int type)
     {
         var def = Cursor.Current;
@@ -107,6 +117,7 @@ public partial class Mainframe : Form
             _Dashboard = new Dashboard();
             _Dashboard.Show(this);
         }
+
         _Dashboard.Activate();
         switch (type)
         {
@@ -117,6 +128,7 @@ public partial class Mainframe : Form
                 _Dashboard.SwitchView(new SystemList());
                 break;
         }
+
         Cursor.Current = def;
         //SetDesign();
     }
@@ -131,13 +143,19 @@ public partial class Mainframe : Form
             MessageBox.Show("Die aktuellste Version ist breits Installiert.", "Updater");
             return;
         }
+
         TopMost = false;
-        var dialogResult = MessageBox.Show($"Eine neue Version ist verfügbar.\n{infos.CurrentlyInstalledVersion.Version}->{infos.FutureReleaseEntry.Version}\nUpdate Installieren?", "Updater", MessageBoxButtons.YesNo);
+        var dialogResult =
+            MessageBox.Show(
+                $"Eine neue Version ist verfügbar.\n{infos.CurrentlyInstalledVersion.Version}->{infos.FutureReleaseEntry.Version}\nUpdate Installieren?",
+                "Updater", MessageBoxButtons.YesNo);
         if (dialogResult != DialogResult.Yes) return;
         var newVersion = await mgr.UpdateApp();
         if (newVersion != null)
         {
-            MessageBox.Show($"Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.", "Updater");
+            MessageBox.Show(
+                $"Version {newVersion.Version} Installiert,\nVersion nach Neustart der Anwendung verfügbar.",
+                "Updater");
         }
     }
 
@@ -145,18 +163,22 @@ public partial class Mainframe : Form
     {
         Invoke(() => label_CMDr.Text = $"CMDr: {text}");
     }
+
     internal void SetSystemText(string? text)
     {
         Invoke(() => label_System.Text = $"System: {text}");
     }
+
     internal void SetSuitText(string? text)
     {
         Invoke(() => label_Suit.Text = $"Anzug: {text}");
     }
+
     internal void SetDockedText(string? text)
     {
         Invoke(() => label_Docked.Text = $"Angedockt: {text}");
     }
+
     private void StartWorker()
     {
         Task.Run(() =>
@@ -173,6 +195,7 @@ public partial class Mainframe : Form
                 {
                     SetLightActive(redLight, false);
                 }
+
                 var list = string.Join(", ", StateReceiver.GetState());
                 var tick = string.Join(", ", StateReceiver.GetTick());
                 try
@@ -226,6 +249,7 @@ public partial class Mainframe : Form
                     label_SystemListLabel.Top = groupBox_Orders.Bottom + 10;
                     label_SystemList.Top = label_SystemListLabel.Bottom + 10;
                 }
+
                 Height = label_SystemList.Bottom + LabelSpacing + 46;
                 CenterObjectHorizontally(label_SystemList);
             });
@@ -235,6 +259,7 @@ public partial class Mainframe : Form
             // ignored
         }
     }
+
     private void ShowKonfig(object? sender, EventArgs e)
     {
         if (_conf == null || _conf.IsDisposed) _conf = new Konfiguration(this);
@@ -252,14 +277,19 @@ public partial class Mainframe : Form
         if (IsDisposed || _closing) return;
         FixLayout();
     }
+
     private void CenterObjectHorizontally(dynamic label)
     {
         if (IsDisposed || _closing) return;
         label.Left = (ClientSize.Width - label.Width) / 2;
     }
+
     internal void RefreshListOnKonfigChange()
     {
-        var list = string.Join(", ", Config.Instance.ShowAll ? StateReceiver.SystemList : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
+        var list = string.Join(", ",
+            Config.Instance.ShowAll
+                ? StateReceiver.SystemList
+                : StateReceiver.SystemList.Take(Convert.ToInt32(Config.Instance.ListCount)).ToArray());
         var tick = string.Join(", ", StateReceiver.Tick ?? new[] { "-Warte auf Daten-" });
         label_SystemList.Text = list;
         if (overlayForm == null || overlayForm.IsDisposed) return;
@@ -273,12 +303,14 @@ public partial class Mainframe : Form
         if (overlayForm is { IsDisposed: false }) overlayForm.SetLightActive(light.Tag!.ToString(), active);
 
     }
+
     private void ToogleOverlayClick(object? sender, EventArgs e)
     {
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
         SetDesign();
     }
+
     private void SetCircles()
     {
         using var path = new GraphicsPath();
@@ -289,6 +321,7 @@ public partial class Mainframe : Form
         yellowLight.Region = new Region(path);
         greenLight.Region = new Region(path);
     }
+
     private static ToolStripMenuItem CreateToolStripMenuItem(string text, EventHandler onClick)
     {
         var menuItem = new ToolStripMenuItem
@@ -298,6 +331,7 @@ public partial class Mainframe : Form
         menuItem.Click += onClick;
         return menuItem;
     }
+
     private void NotifyIcon_MouseDoubleClick(object? sender, MouseEventArgs e)
     {
         if (e.Button != MouseButtons.Left) return;
@@ -305,6 +339,7 @@ public partial class Mainframe : Form
         ShowInTaskbar = true;
         Activate();
     }
+
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
         if (e.CloseReason == CloseReason.WindowsShutDown)
@@ -321,14 +356,17 @@ public partial class Mainframe : Form
             {
                 Config.Instance.MainLocation = Location;
             }
+
             Config.Save();
             return;
         }
+
         e.Cancel = true;
         WindowState = FormWindowState.Minimized;
         ShowInTaskbar = false;
         Task.Run(StartIpc);
     }
+
     private void ExitMenuItem_Click(object? sender, EventArgs e)
     {
         StopAll();
@@ -343,10 +381,12 @@ public partial class Mainframe : Form
         {
             Config.Instance.MainLocation = Location;
         }
+
         if (overlayForm is { IsDisposed: false })
         {
             Config.Instance.OverlayLocation = overlayForm.Location;
         }
+
         Config.Save();
         Application.Exit();
         Application.ExitThread();
@@ -362,7 +402,9 @@ public partial class Mainframe : Form
         WindowState = FormWindowState.Normal;
         ShowInTaskbar = true;
         try
-        { Activate(); }
+        {
+            Activate();
+        }
         catch
         {
             // ignored
@@ -376,6 +418,7 @@ public partial class Mainframe : Form
     {
         return label_SystemList.Text;
     }
+
     private NamedPipeServerStream? _pipeServer;
 
     private void StartIpc()
@@ -417,6 +460,7 @@ public partial class Mainframe : Form
                             break;
                     }
                 }
+
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
@@ -424,6 +468,7 @@ public partial class Mainframe : Form
                         label.ForeColor = Config.Instance.ColorDefaultLabelLight;
                     }
                 }
+
                 break;
             case 1:
                 BackColor = Config.Instance.ColorDefaultBackgroundDark;
@@ -439,6 +484,7 @@ public partial class Mainframe : Form
                             break;
                     }
                 }
+
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
@@ -446,6 +492,7 @@ public partial class Mainframe : Form
                         label.ForeColor = Config.Instance.ColorDefaultLabelDark;
                     }
                 }
+
                 break;
             case 2:
                 BackColor = Config.Instance.ColorMainBackground;
@@ -461,6 +508,7 @@ public partial class Mainframe : Form
                             break;
                     }
                 }
+
                 foreach (var item in statusStrip_Main.Items)
                 {
                     if (item is ToolStripStatusLabel label)
@@ -468,6 +516,7 @@ public partial class Mainframe : Form
                         label.ForeColor = Config.Instance.ColorMainInfo;
                     }
                 }
+
                 break;
         }
     }
@@ -483,9 +532,14 @@ public partial class Mainframe : Form
                 overlayForm?.HideOrderList();
                 FixLayout();
                 return;
-            };
+            }
+
+            ;
             Invoke(() => { groupBox_Orders.Visible = true; });
-            var final = orders.Aggregate("", (current, order) => current + $"{order.Faction}:\n{order.Order.Replace("\r", " ").Replace("\n", " ").Replace("  ", " ")}\n------------------\n");
+            var final = orders.Aggregate("",
+                (current, order) =>
+                    current +
+                    $"{order.Faction}:\n{order.Order.Replace("\r", " ").Replace("\n", " ").Replace("  ", " ")}\n------------------\n");
             overlayForm?.FillOrderList(final, orders.First().StarSystem);
             Invoke(() =>
             {
@@ -506,6 +560,7 @@ public partial class Mainframe : Form
         {
             overlayForm.HideOrderList();
         }
+
         return rets;
     }
 
@@ -517,9 +572,6 @@ public partial class Mainframe : Form
 
     public void SetStatus(HttpResponseMessage response)
     {
-        Invoke(() =>
-        {
-            toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}";
-        });
+        Invoke(() => { toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}"; });
     }
 }

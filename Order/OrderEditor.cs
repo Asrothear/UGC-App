@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UGC_App.LocalCache;
 using UGC_App.Order.Model;
 using UGC_App.WebClient;
 
@@ -63,7 +64,7 @@ namespace UGC_App.Order
             var resp = OrderAPI.SaveOrders(neelde);
             if (resp)
             {
-                parent?.Reload();
+                parent?.Refresh();
                 Cursor.Current = def;
                 Close();
                 return;
@@ -97,7 +98,8 @@ namespace UGC_App.Order
             if(npriority != priority || ntype != type || norder != order) resp = OrderAPI.SaveOrders(neelde);
             if (resp)
             {
-                parent?.Reload();
+                CacheHandler.CacheOrder(true);
+                parent?.Refresh();
                 Cursor.Current = def;
                 Close();
                 return;

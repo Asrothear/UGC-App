@@ -11,20 +11,19 @@ namespace UGC_App.WebClient;
 
 public class OrderAPI
 {
-    internal static dynamic GetSystemList()
+    internal static HashSet<SystemListing> GetSystemList()
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.SystemDataUrl);
         request.Headers.Add("token", $"{Config.Instance.Token}");
         var response = client.Send(request);
 
-        dynamic? content = null;
+        HashSet<SystemListing> content = new();
 
         if (response.IsSuccessStatusCode)
         {
-            content = response.Content.ReadFromJsonAsync<HashSet<dynamic>>().Result;
+            content = response.Content.ReadFromJsonAsync<HashSet<SystemListing>>().Result;
         }
-
         return content;
     }
 

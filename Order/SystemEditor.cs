@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UGC_App.LocalCache;
 using UGC_App.Order.DashViews;
 using UGC_App.Order.Model;
 using UGC_App.WebClient;
@@ -27,7 +28,7 @@ namespace UGC_App.Order
             _parrent = systemList;
             SystemAddress = systemAddress;
             dataGridView_Orders.CellDoubleClick += CheckEdit;
-            var history = OrderAPI.GetSystemHistory(SystemAddress);
+            var history = CacheHandler.GetHistoryFromCache().FirstOrDefault(x=> x.systemAddress ==SystemAddress) ?? new SystemHistoryData();
             Text = $"SystemEditor: {history.starSystem} - {history.lastBGSData}";
             textBox_StarSystem.Text = history.starSystem;
             textBox_Address.Text = systemAddress.ToString();
@@ -37,6 +38,7 @@ namespace UGC_App.Order
             textBox_Population.Text = history.population.ToString();
             textBox_Allegiance.Text = history.systemAllegiance;
             LoadBGSData(history);
+            dataGridView_Orders.DataBindingComplete += LoadOrderColors;
         }
 
         private void LoadBGSData(SystemHistoryData data)
@@ -51,10 +53,10 @@ namespace UGC_App.Order
             LoadConflitsTable(data);
         }
 
-        internal void Reload()
+        internal void Refresh()
         {
-            LoadOrdersTable(OrderAPI.GetSystemHistory(SystemAddress));
-            _parrent?.Reload();
+            LoadOrdersTable(CacheHandler.GetHistoryFromCache().FirstOrDefault(x => x.systemAddress == SystemAddress));
+            _parrent?.Refresh();
         }
 
         private void LoadConflitsTable(SystemHistoryData data)
@@ -84,7 +86,7 @@ namespace UGC_App.Order
             table.Columns.Add("Fraction", typeof(string));
             table.Columns.Add("Typ", typeof(string));
             table.Columns.Add("Order", typeof(string));
-            var Orders = OrderAPI.GetSystemOrders(SystemAddress);
+            var Orders = CacheHandler.GetOrderFromCache().Where(x=> x.SystemAddress ==SystemAddress).ToHashSet();
             if (!Orders.Any())
             {
                 foreach (var fraction in data.systemHistory.Last().factions)
@@ -107,7 +109,6 @@ namespace UGC_App.Order
             }
 
             dataGridView_Orders.DataSource = table;
-            dataGridView_Orders.DataBindingComplete += LoadOrderColors;
             dataGridView_Orders.Sort(dataGridView_Orders.Columns["Prio"], ListSortDirection.Ascending);
         }
 
@@ -222,6 +223,8 @@ namespace UGC_App.Order
         private void CheckEdit(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            CacheHandler.CacheOrder();
+            LoadOrdersTable(CacheHandler.GetHistoryFromCache().FirstOrDefault(x => x.systemAddress == SystemAddress));
             OpenEditor(dataGridView_Orders.Rows[e.RowIndex]);
         }
 

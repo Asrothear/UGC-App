@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using UGC_App.LocalCache;
 using UGC_App.Order.DashViews;
 
 namespace UGC_App.Order
@@ -49,6 +50,7 @@ namespace UGC_App.Order
         }
         internal void RefreshView()
         {
+            CacheHandler.InitAll();
             switch (views)
             {
                 case 0:
@@ -57,12 +59,14 @@ namespace UGC_App.Order
                     var sys = Controls.Find("SystemList", true);
                     if (sys.Any()) foreach (var v in sys) Controls.Remove(v);
                     Controls.Remove(sys.First());
+                    CacheHandler.CacheSystemList(true);
                     AttachView(new SystemList());
                     Refresh();
                     break;
                 case 2:
                     var ord = Controls.Find("OrderList", true);
                     if (ord.Any()) foreach (var v in ord) Controls.Remove(v);
+                    CacheHandler.CacheOrder(true);
                     AttachView(new OrderList(this));
                     Refresh();
                     break;

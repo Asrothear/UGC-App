@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Squirrel;
 using UGC_App.ErrorReporter;
 
+
 namespace UGC_App;
 
 internal static class Program
