@@ -13,16 +13,38 @@ namespace UGC_App.Order.DashViews
 {
     public partial class OrderList : UserControl
     {
-        public OrderList()
+        private DataGridViewRow lastrow;
+        private Dashboard parrent;
+        public OrderList(Dashboard dashboard)
         {
+            parrent = dashboard;
             InitializeComponent();
             LoadAllOrdersTable();
-            dataGridView_OrderList.CellDoubleClick += CheckEdit;
+            dataGridView_OrderList.CellMouseDoubleClick += CheckEdit;
+            dataGridView_OrderList.CellMouseClick += CheckContext;
+            bearbeitenToolStripMenuItem.Click += (o, args) =>
+            {
+                if (lastrow != null) OpenEditor(lastrow);
+            };
+            systemEditorÖffnenToolStripMenuItem.Click += (o, args) =>
+            {
+                if (lastrow != null) OpenSysEditor(Convert.ToUInt64(lastrow.Cells[5].Value));
+            };
+            dataGridView_OrderList.DataBindingComplete += (sender, args) => LoadColors();
+        }
+
+        private void CheckContext(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right || e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            dataGridView_OrderList.CurrentCell = dataGridView_OrderList.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            contextMenuStrip_Options.Show(Cursor.Position);
+            lastrow = dataGridView_OrderList.Rows[e.RowIndex];
         }
 
         internal void Reload()
         {
-            LoadAllOrdersTable();
+            //LoadAllOrdersTable();
+            parrent.RefreshView();
         }
         private void LoadAllOrdersTable()
         {
@@ -33,20 +55,19 @@ namespace UGC_App.Order.DashViews
             table.Columns.Add("Typ", typeof(string));
             table.Columns.Add("Infos", typeof(string));
             table.Columns.Add("Address", typeof(ulong));
+            table.Columns.Add("letze Änderung", typeof(DateTime));
             var lister = OrderAPI.GetAllOrders();
             if (lister == null) return;
             foreach (var OrderData in lister)
             {
-                table.Rows.Add(OrderData.Priority, OrderData.StarSystem, OrderData.Faction, OrderData.Type, OrderData.Order, OrderData.SystemAddress);
+                table.Rows.Add(OrderData.Priority, OrderData.StarSystem, OrderData.Faction, OrderData.Type, OrderData.Order, OrderData.SystemAddress, OrderData.TimeStamp);
             }
             dataGridView_OrderList.DataSource = table;
-            Height = dataGridView_OrderList.Height + menuStrip1.Height + 5;
             dataGridView_OrderList.Columns["Address"].Visible = false;
             dataGridView_OrderList.Sort(dataGridView_OrderList.Columns["Priority"], ListSortDirection.Ascending);
-            dataGridView_OrderList.DataBindingComplete += LoadColors;
         }
 
-        private void LoadColors(object? sender, DataGridViewBindingCompleteEventArgs e)
+        private void LoadColors()
         {
             for (var i = 0; i < dataGridView_OrderList.Rows.Count; i++)
             {
@@ -63,13 +84,14 @@ namespace UGC_App.Order.DashViews
 
             var size = dataGridView_OrderList.ClientSize;
             size.Height = (int)GetDgvMinHeight(dataGridView_OrderList);
-            dataGridView_OrderList.ClientSize = size;
+            Invoke(() => dataGridView_OrderList.ClientSize = size);
             size.Width = GetDgvMinWidth(dataGridView_OrderList);
-            Size = size;
+            Invoke(() =>  Size = size);
         }
 
-        private void CheckEdit(object? sender, DataGridViewCellEventArgs e)
+        private void CheckEdit(object? sender, DataGridViewCellMouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Left) return;
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
             OpenEditor(dataGridView_OrderList.Rows[e.RowIndex]);
         }
@@ -79,6 +101,14 @@ namespace UGC_App.Order.DashViews
             var def = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
             var edit = new OrderEditor(fractionData, Convert.ToUInt64(fractionData.Cells[5].Value), this, true);
+            if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
+            Cursor.Current = def;
+        }
+        private void OpenSysEditor(ulong systemAddress)
+        {
+            var def = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            var edit = new SystemEditor(systemAddress, this);
             if (edit is { IsDisposed: false }) { edit.ShowDialog(this); }
             Cursor.Current = def;
         }

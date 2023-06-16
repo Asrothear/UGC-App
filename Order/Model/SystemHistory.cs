@@ -19,7 +19,7 @@ public class SystemHistoryData
         public string timestamp { get; set; } = "";
         public HashSet<FactionsO> factions { get; set; } = new();
         public SystemFactionO systemFaction { get; set; } = new();
-        public HashSet<ConflictsO> conflicts { get; set; } = new();
+        public HashSet<ConflictsO>? conflicts { get; set; } = new();
 
         public class FactionsO
         {
@@ -30,8 +30,8 @@ public class SystemHistoryData
             public string allegiance { get; set; } = "";
             public string happiness { get; set; } = "";
             public string happiness_Localised { get; set; } = "";
-            public HashSet<ActiveStatesO> activeStates { get; set; } = new();
-            public HashSet<PendingStatesO> pendingStates { get; set; } = new();
+            public HashSet<ActiveStatesO>? activeStates { get; set; } = new();
+            public HashSet<PendingStatesO>? pendingStates { get; set; } = new();
 
             public class ActiveStatesO
             {

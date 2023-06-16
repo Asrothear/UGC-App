@@ -37,6 +37,7 @@
             label2 = new Label();
             button_Save = new Button();
             label3 = new Label();
+            button_Remove = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_Prio).BeginInit();
             SuspendLayout();
             // 
@@ -51,10 +52,10 @@
             // 
             // button_abort
             // 
-            button_abort.Location = new Point(58, 146);
+            button_abort.Location = new Point(95, 146);
             button_abort.Name = "button_abort";
             button_abort.Size = new Size(75, 23);
-            button_abort.TabIndex = 1;
+            button_abort.TabIndex = 4;
             button_abort.Text = "Abbruch";
             button_abort.UseVisualStyleBackColor = true;
             // 
@@ -75,7 +76,7 @@
             comboBox_Type.Location = new Point(49, 60);
             comboBox_Type.Name = "comboBox_Type";
             comboBox_Type.Size = new Size(121, 23);
-            comboBox_Type.TabIndex = 3;
+            comboBox_Type.TabIndex = 1;
             // 
             // textBox_Orders
             // 
@@ -83,7 +84,7 @@
             textBox_Orders.Multiline = true;
             textBox_Orders.Name = "textBox_Orders";
             textBox_Orders.Size = new Size(261, 51);
-            textBox_Orders.TabIndex = 4;
+            textBox_Orders.TabIndex = 3;
             // 
             // label2
             // 
@@ -96,10 +97,10 @@
             // 
             // button_Save
             // 
-            button_Save.Location = new Point(148, 146);
+            button_Save.Location = new Point(187, 146);
             button_Save.Name = "button_Save";
             button_Save.Size = new Size(86, 23);
-            button_Save.TabIndex = 6;
+            button_Save.TabIndex = 5;
             button_Save.Text = "Übernehmen";
             button_Save.UseVisualStyleBackColor = true;
             // 
@@ -113,11 +114,22 @@
             label3.TabIndex = 7;
             label3.Text = "Title";
             // 
+            // button_Remove
+            // 
+            button_Remove.Location = new Point(12, 146);
+            button_Remove.Name = "button_Remove";
+            button_Remove.Size = new Size(40, 23);
+            button_Remove.TabIndex = 8;
+            button_Remove.TabStop = false;
+            button_Remove.Text = "Entf";
+            button_Remove.UseVisualStyleBackColor = true;
+            // 
             // OrderEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(285, 181);
+            Controls.Add(button_Remove);
             Controls.Add(label3);
             Controls.Add(button_Save);
             Controls.Add(label2);
@@ -149,5 +161,6 @@
         private Label label2;
         private Button button_Save;
         private Label label3;
+        private Button button_Remove;
     }
 }

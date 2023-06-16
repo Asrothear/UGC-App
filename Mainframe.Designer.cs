@@ -53,7 +53,8 @@ partial class Mainframe
         toolStripSeparator1 = new ToolStripSeparator();
         toolStripMenuItem_Exit = new ToolStripMenuItem();
         anweisungenToolStripMenuItem = new ToolStripMenuItem();
-        dashboardToolStripMenuItem = new ToolStripMenuItem();
+        dashboardOrderToolStripMenuItem = new ToolStripMenuItem();
+        dashboardSystemsToolStripMenuItem = new ToolStripMenuItem();
         statusStrip_Main = new StatusStrip();
         toolStripStatusLabel_Status = new ToolStripStatusLabel();
         toolStripStatusLabel_Spacer = new ToolStripStatusLabel();
@@ -68,6 +69,7 @@ partial class Mainframe
         label_Tick = new Label();
         groupBox_Orders = new GroupBox();
         label_Orders = new Label();
+        label_Suit = new Label();
         ((System.ComponentModel.ISupportInitialize)redLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)yellowLight).BeginInit();
         ((System.ComponentModel.ISupportInitialize)greenLight).BeginInit();
@@ -175,16 +177,22 @@ partial class Mainframe
         // 
         // anweisungenToolStripMenuItem
         // 
-        anweisungenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dashboardToolStripMenuItem });
+        anweisungenToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dashboardOrderToolStripMenuItem, dashboardSystemsToolStripMenuItem });
         anweisungenToolStripMenuItem.Name = "anweisungenToolStripMenuItem";
-        anweisungenToolStripMenuItem.Size = new Size(91, 20);
-        anweisungenToolStripMenuItem.Text = "Anweisungen";
+        anweisungenToolStripMenuItem.Size = new Size(40, 20);
+        anweisungenToolStripMenuItem.Text = "BGS";
         // 
-        // dashboardToolStripMenuItem
+        // dashboardOrderToolStripMenuItem
         // 
-        dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
-        dashboardToolStripMenuItem.Size = new Size(131, 22);
-        dashboardToolStripMenuItem.Text = "Dashboard";
+        dashboardOrderToolStripMenuItem.Name = "dashboardOrderToolStripMenuItem";
+        dashboardOrderToolStripMenuItem.Size = new Size(146, 22);
+        dashboardOrderToolStripMenuItem.Text = "Anweisungen";
+        // 
+        // dashboardSystemsToolStripMenuItem
+        // 
+        dashboardSystemsToolStripMenuItem.Name = "dashboardSystemsToolStripMenuItem";
+        dashboardSystemsToolStripMenuItem.Size = new Size(146, 22);
+        dashboardSystemsToolStripMenuItem.Text = "System Liste";
         // 
         // statusStrip_Main
         // 
@@ -220,7 +228,7 @@ partial class Mainframe
         // label_CMDr
         // 
         label_CMDr.AutoSize = true;
-        label_CMDr.Location = new Point(12, 42);
+        label_CMDr.Location = new Point(12, 40);
         label_CMDr.Name = "label_CMDr";
         label_CMDr.Size = new Size(41, 15);
         label_CMDr.TabIndex = 6;
@@ -229,7 +237,7 @@ partial class Mainframe
         // label_System
         // 
         label_System.AutoSize = true;
-        label_System.Location = new Point(12, 72);
+        label_System.Location = new Point(12, 84);
         label_System.Name = "label_System";
         label_System.Size = new Size(48, 15);
         label_System.TabIndex = 7;
@@ -239,7 +247,7 @@ partial class Mainframe
         // label_Docked
         // 
         label_Docked.AutoSize = true;
-        label_Docked.Location = new Point(12, 103);
+        label_Docked.Location = new Point(12, 107);
         label_Docked.Name = "label_Docked";
         label_Docked.Size = new Size(68, 15);
         label_Docked.TabIndex = 8;
@@ -248,7 +256,7 @@ partial class Mainframe
         // label_TickTitle
         // 
         label_TickTitle.AutoSize = true;
-        label_TickTitle.Location = new Point(12, 133);
+        label_TickTitle.Location = new Point(12, 138);
         label_TickTitle.Name = "label_TickTitle";
         label_TickTitle.Size = new Size(31, 15);
         label_TickTitle.TabIndex = 9;
@@ -287,7 +295,7 @@ partial class Mainframe
         // 
         // label_Tick
         // 
-        label_Tick.Location = new Point(58, 133);
+        label_Tick.Location = new Point(58, 138);
         label_Tick.Name = "label_Tick";
         label_Tick.Size = new Size(183, 45);
         label_Tick.TabIndex = 17;
@@ -316,17 +324,27 @@ partial class Mainframe
         label_Orders.Size = new Size(245, 15);
         label_Orders.TabIndex = 1;
         // 
+        // label_Suit
+        // 
+        label_Suit.AutoSize = true;
+        label_Suit.Location = new Point(12, 61);
+        label_Suit.Name = "label_Suit";
+        label_Suit.Size = new Size(44, 15);
+        label_Suit.TabIndex = 19;
+        label_Suit.Text = "Anzug:";
+        // 
         // Mainframe
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(287, 408);
+        Controls.Add(label_Suit);
         Controls.Add(groupBox_Orders);
+        Controls.Add(label_Docked);
         Controls.Add(label_SystemListLabel);
         Controls.Add(label_TickTitle);
         Controls.Add(label_Tick);
         Controls.Add(label_SystemList);
-        Controls.Add(label_Docked);
         Controls.Add(label_System);
         Controls.Add(label_CMDr);
         Controls.Add(statusStrip_Main);
@@ -380,7 +398,9 @@ partial class Mainframe
     private Label label_Tick;
     private ToolStripMenuItem toolStripMenuItem_CheckForUpdates;
     private ToolStripMenuItem anweisungenToolStripMenuItem;
-    private ToolStripMenuItem dashboardToolStripMenuItem;
+    private ToolStripMenuItem dashboardOrderToolStripMenuItem;
     private GroupBox groupBox_Orders;
     private Label label_Orders;
+    private ToolStripMenuItem dashboardSystemsToolStripMenuItem;
+    private Label label_Suit;
 }

@@ -14,15 +14,15 @@ namespace UGC_App.Order.DashViews
             KeyPress += KeyDetect;
             if (Parent != null) Parent.KeyPress += KeyDetect;
             dataGridView_SystemList.CellDoubleClick += CheckEdit;
-            ReloadTable();
+            Reload();
         }
 
         internal void Refresh(object? sender, EventArgs e)
         {
-            ReloadTable();
+            Reload();
         }
 
-        internal void ReloadTable()
+        internal void Reload()
         {
             var table = new DataTable();
             table.Columns.Add("System", typeof(string));
@@ -46,7 +46,7 @@ namespace UGC_App.Order.DashViews
         {
             if (e.KeyChar == (int)Keys.F5)
             {
-                ReloadTable();
+                Reload();
             }
         }
 

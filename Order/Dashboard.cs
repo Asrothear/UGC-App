@@ -14,10 +14,20 @@ namespace UGC_App.Order
             ansichtWechselnToolStripMenuItem.Click += (sender, args) => SwitchView();
         }
 
-        private void SwitchView()
+        internal void SwitchView(dynamic? view = null)
         {
             var def = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
+            if (view?.GetType() == typeof(SystemList))
+            {
+                views = 2;
+                
+            }
+            else if (view?.GetType() == typeof(OrderList))
+            {
+                views = 1;
+            }
+
             switch (views)
             {
                 case 0:
@@ -25,7 +35,7 @@ namespace UGC_App.Order
                 case 1:
                     var sys = Controls.Find("SystemList", true);
                     if (sys.Any()) foreach (var v in sys) Controls.Remove(v);
-                    AttachView(new OrderList());
+                    AttachView(new OrderList(this));
                     Refresh();
                     break;
                 case 2:
@@ -37,7 +47,7 @@ namespace UGC_App.Order
             }
             Cursor.Current = def;
         }
-        private void RefreshView()
+        internal void RefreshView()
         {
             switch (views)
             {
@@ -53,12 +63,12 @@ namespace UGC_App.Order
                 case 2:
                     var ord = Controls.Find("OrderList", true);
                     if (ord.Any()) foreach (var v in ord) Controls.Remove(v);
-                    AttachView(new OrderList());
+                    AttachView(new OrderList(this));
                     Refresh();
                     break;
             }
         }
-        internal void AttachView(dynamic view)
+        private void AttachView(dynamic view)
         {
             Control[] vie;
             switch (view.GetType())

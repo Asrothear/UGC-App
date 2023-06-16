@@ -21,8 +21,6 @@ public partial class Overlay : Form
         InitializeComponent();
         parent = parrent;
         Location = parrent.Location;
-        label_SystemList.SizeChanged += SystemListReSized;
-        label_Orders.SizeChanged += SystemListReSized;
         label_SystemList.Text = parrent.GetSystemList();
         label_TickTime.Text = parrent.GetTickTime();
         Height = label_SystemList.Bottom + LabelBottomMargin;
@@ -43,9 +41,11 @@ public partial class Overlay : Form
         SetCircles();
         Task.Run(() =>
         {
-            Thread.Sleep(100);
+            Thread.Sleep(10);
             label_Orders.Text = parrent.GetOrder();
             FixLayout();
+            label_SystemList.SizeChanged += SystemListReSized;
+            label_Orders.SizeChanged += SystemListReSized;
         });
     }
 

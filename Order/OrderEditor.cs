@@ -20,13 +20,14 @@ namespace UGC_App.Order
         private string type;
         private string order;
         private dynamic? parent;
-        public OrderEditor(DataGridViewRow fractionData, ulong systemAddress, dynamic parrent , bool direct = false)
+        public OrderEditor(DataGridViewRow fractionData, ulong systemAddress, dynamic parrent, bool direct = false)
         {
             InitializeComponent();
             TopMost = Config.Instance.AlwaysOnTop;
             _systemAddress = systemAddress;
             parent = parrent;
             priority = Convert.ToInt32(fractionData.Cells[0].Value);
+            if (direct) Text = $"OrderEditor: {fractionData.Cells[1].Value}";
             fractionName = !direct ? fractionData.Cells[1].Value.ToString() : fractionData.Cells[2].Value.ToString();
             type = !direct ? fractionData.Cells[2].Value.ToString() : fractionData.Cells[3].Value.ToString();
             order = !direct ? fractionData.Cells[3].Value.ToString() : fractionData.Cells[4].Value.ToString();
@@ -38,6 +39,36 @@ namespace UGC_App.Order
             CenterObjectHorizontally(textBox_Orders);
             button_abort.Click += (sender, args) => Close();
             button_Save.Click += (sender, args) => Save();
+            button_Remove.Click += (sender, args) => Remove();
+            if (string.IsNullOrWhiteSpace(comboBox_Type.Text) && string.IsNullOrWhiteSpace(textBox_Orders.Text))
+                button_Remove.Visible = false;
+        }
+
+        private void Remove()
+        {
+            var res = MessageBox.Show(this, "Diese Anweisung wirklich entfernen?", $"Anweisung {label3.Text} löschen?", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (res != DialogResult.Yes) return;
+            var def = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            var npriority = Convert.ToInt32(numericUpDown_Prio.Value);
+            var nfractionName = label3.Text;
+            var neelde = new Orders
+            {
+                SystemAddress = _systemAddress,
+                Faction = nfractionName,
+                Type = "",
+                Order = "",
+                Priority = npriority
+            };
+            var resp = OrderAPI.SaveOrders(neelde);
+            if (resp)
+            {
+                parent?.Reload();
+                Cursor.Current = def;
+                Close();
+                return;
+            };
+            Cursor.Current = def;
         }
 
         private void CenterObjectHorizontally(dynamic label)
@@ -62,10 +93,12 @@ namespace UGC_App.Order
                 Order = norder,
                 Priority = npriority
             };
-            var resp =OrderAPI.SaveOrders(neelde);
+            var resp = false;
+            if(npriority != priority || ntype != type || norder != order) resp = OrderAPI.SaveOrders(neelde);
             if (resp)
             {
                 parent?.Reload();
+                Cursor.Current = def;
                 Close();
                 return;
             };

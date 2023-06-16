@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dataGridView_OrderList = new DataGridView();
             menuStrip1 = new MenuStrip();
+            contextMenuStrip_Options = new ContextMenuStrip(components);
+            bearbeitenToolStripMenuItem = new ToolStripMenuItem();
+            systemEditorÖffnenToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)dataGridView_OrderList).BeginInit();
+            contextMenuStrip_Options.SuspendLayout();
             SuspendLayout();
             // 
             // dataGridView_OrderList
@@ -77,6 +82,24 @@
             menuStrip1.TabIndex = 3;
             menuStrip1.Text = "menuStrip1";
             // 
+            // contextMenuStrip_Options
+            // 
+            contextMenuStrip_Options.Items.AddRange(new ToolStripItem[] { bearbeitenToolStripMenuItem, systemEditorÖffnenToolStripMenuItem });
+            contextMenuStrip_Options.Name = "contextMenuStrip_Options";
+            contextMenuStrip_Options.Size = new Size(182, 70);
+            // 
+            // bearbeitenToolStripMenuItem
+            // 
+            bearbeitenToolStripMenuItem.Name = "bearbeitenToolStripMenuItem";
+            bearbeitenToolStripMenuItem.Size = new Size(181, 22);
+            bearbeitenToolStripMenuItem.Text = "Bearbeiten";
+            // 
+            // systemEditorÖffnenToolStripMenuItem
+            // 
+            systemEditorÖffnenToolStripMenuItem.Name = "systemEditorÖffnenToolStripMenuItem";
+            systemEditorÖffnenToolStripMenuItem.Size = new Size(181, 22);
+            systemEditorÖffnenToolStripMenuItem.Text = "SystemEditor öffnen";
+            // 
             // OrderList
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -89,6 +112,7 @@
             Name = "OrderList";
             Size = new Size(300, 344);
             ((System.ComponentModel.ISupportInitialize)dataGridView_OrderList).EndInit();
+            contextMenuStrip_Options.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -97,5 +121,8 @@
 
         internal DataGridView dataGridView_OrderList;
         private MenuStrip menuStrip1;
+        private ContextMenuStrip contextMenuStrip_Options;
+        private ToolStripMenuItem bearbeitenToolStripMenuItem;
+        private ToolStripMenuItem systemEditorÖffnenToolStripMenuItem;
     }
 }

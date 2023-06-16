@@ -26,7 +26,6 @@ public partial class Mainframe : Form
     {
         InitializeComponent();
         keyboardHookManager.Start();
-        SizeChanged += (_, _) => FixLayout();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
         {
@@ -34,7 +33,7 @@ public partial class Mainframe : Form
             CreateToolStripMenuItem("Toogle Overlay", ToogleOverlayClick),
             CreateToolStripMenuItem("Einstellungen", ShowKonfig),
             new ToolStripSeparator(),
-            CreateToolStripMenuItem("Über", ShowAbout),
+            CreateToolStripMenuItem("About", ShowAbout),
             CreateToolStripMenuItem("auf Updates Prüfen", CheckUpdates),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click)
@@ -46,15 +45,17 @@ public partial class Mainframe : Form
         toolStripMenuItem_About.Click += ShowAbout;
         toolStripMenuItem_Settings.Click += ShowKonfig;
         toolStripMenuItem_CheckForUpdates.Click += CheckUpdates;
-        dashboardToolStripMenuItem.Click += ShowOrderDashboard;
+        dashboardOrderToolStripMenuItem.Click += ShowOrderDashboard;
+        dashboardSystemsToolStripMenuItem.Click += ShowSystemDashboard;
         SetCircles();
         StartWorker();
         CenterObjectHorizontally(label_SystemList);
-        toolStripStatusLabel_Version.Text = $"Version {Config.Instance.Version}";
+        toolStripStatusLabel_Version.Text = $"{Properties.language.Version} {Config.Instance.Version}";
         Height = label_SystemList.Bottom + LabelSpacing + 46;
         label_CMDr.Text = $"CMDr: {Config.Instance.Cmdr}";
         label_System.Text = $"System: {Config.Instance.LastSystem}";
         label_Docked.Text = $"Angedockt: {Config.Instance.LastDocked}";
+        label_Suit.Text = $"Anzug: {Properties.language.ResourceManager.GetString(Config.Instance.Suit)}";
         SetDesign();
         TopMost = Config.Instance.AlwaysOnTop;
         Program.SetStartup(Config.Instance.AutoStart);
@@ -65,6 +66,7 @@ public partial class Mainframe : Form
             {
                 Invoke(() => { Location = Config.Instance.MainLocation; });
             }
+            SizeChanged += (_, _) => FixLayout();
         });
         keyboardHookManager.RegisterHotkey(
             new[]
@@ -90,12 +92,31 @@ public partial class Mainframe : Form
     }
     private void ShowOrderDashboard(object? sender, EventArgs e)
     {
+        ShowDashboard(1);
+    }
+    private void ShowSystemDashboard(object? sender, EventArgs e)
+    {
+        ShowDashboard(2);
+    }
+    private void ShowDashboard(int type)
+    {
         var def = Cursor.Current;
         Cursor.Current = Cursors.WaitCursor;
-        if (_Dashboard == null || _Dashboard.IsDisposed) _Dashboard = new Dashboard();
-        _Dashboard.Show(this);
+        if (_Dashboard == null || _Dashboard.IsDisposed)
+        {
+            _Dashboard = new Dashboard();
+            _Dashboard.Show(this);
+        }
         _Dashboard.Activate();
-        _Dashboard.AttachView(new OrderList());
+        switch (type)
+        {
+            case 1:
+                _Dashboard.SwitchView(new OrderList(_Dashboard));
+                break;
+            case 2:
+                _Dashboard.SwitchView(new SystemList());
+                break;
+        }
         Cursor.Current = def;
         //SetDesign();
     }
@@ -127,6 +148,10 @@ public partial class Mainframe : Form
     internal void SetSystemText(string? text)
     {
         Invoke(() => label_System.Text = $"System: {text}");
+    }
+    internal void SetSuitText(string? text)
+    {
+        Invoke(() => label_Suit.Text = $"Anzug: {text}");
     }
     internal void SetDockedText(string? text)
     {
@@ -455,7 +480,7 @@ public partial class Mainframe : Form
             if (orders == null || !orders.Any())
             {
                 Invoke(() => { groupBox_Orders.Visible = false; });
-                overlayForm.HideOrderList();
+                overlayForm?.HideOrderList();
                 FixLayout();
                 return;
             };
@@ -481,7 +506,7 @@ public partial class Mainframe : Form
         {
             overlayForm.HideOrderList();
         }
-        return rets; 
+        return rets;
     }
 
     public void AddSucess()

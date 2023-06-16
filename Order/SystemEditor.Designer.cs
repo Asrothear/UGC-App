@@ -54,11 +54,11 @@
             groupBox1 = new GroupBox();
             dataGridView_BgsHistory = new DataGridView();
             dataGridView_Orders = new DataGridView();
-            dataGridView2 = new DataGridView();
+            dataGridView_Conflicts = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Factions).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_BgsHistory).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Orders).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_Conflicts).BeginInit();
             SuspendLayout();
             // 
             // label_Name
@@ -325,33 +325,33 @@
             dataGridView_Orders.Size = new Size(528, 158);
             dataGridView_Orders.TabIndex = 27;
             // 
-            // dataGridView2
+            // dataGridView_Conflicts
             // 
-            dataGridView2.AllowUserToAddRows = false;
-            dataGridView2.AllowUserToDeleteRows = false;
-            dataGridView2.AllowUserToResizeColumns = false;
-            dataGridView2.AllowUserToResizeRows = false;
-            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView2.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView2.Location = new Point(546, 176);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridView2.RowTemplate.Height = 25;
-            dataGridView2.ScrollBars = ScrollBars.None;
-            dataGridView2.ShowCellErrors = false;
-            dataGridView2.ShowEditingIcon = false;
-            dataGridView2.ShowRowErrors = false;
-            dataGridView2.Size = new Size(528, 158);
-            dataGridView2.TabIndex = 28;
+            dataGridView_Conflicts.AllowUserToAddRows = false;
+            dataGridView_Conflicts.AllowUserToDeleteRows = false;
+            dataGridView_Conflicts.AllowUserToResizeColumns = false;
+            dataGridView_Conflicts.AllowUserToResizeRows = false;
+            dataGridView_Conflicts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView_Conflicts.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView_Conflicts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView_Conflicts.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView_Conflicts.Location = new Point(546, 176);
+            dataGridView_Conflicts.Name = "dataGridView_Conflicts";
+            dataGridView_Conflicts.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView_Conflicts.RowTemplate.Height = 25;
+            dataGridView_Conflicts.ScrollBars = ScrollBars.None;
+            dataGridView_Conflicts.ShowCellErrors = false;
+            dataGridView_Conflicts.ShowEditingIcon = false;
+            dataGridView_Conflicts.ShowRowErrors = false;
+            dataGridView_Conflicts.Size = new Size(528, 158);
+            dataGridView_Conflicts.TabIndex = 28;
             // 
             // SystemEditor
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1086, 674);
-            Controls.Add(dataGridView2);
+            Controls.Add(dataGridView_Conflicts);
             Controls.Add(dataGridView_Orders);
             Controls.Add(dataGridView_BgsHistory);
             Controls.Add(groupBox1);
@@ -387,7 +387,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView_Factions).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_BgsHistory).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Orders).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView_Conflicts).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -419,6 +419,6 @@
         private GroupBox groupBox1;
         private DataGridView dataGridView_BgsHistory;
         private DataGridView dataGridView_Orders;
-        private DataGridView dataGridView2;
+        private DataGridView dataGridView_Conflicts;
     }
 }
