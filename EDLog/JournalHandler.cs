@@ -24,16 +24,22 @@ namespace UGC_App.EDLog
             Program.Log($"Journal Watchdog starting... {_currentFile}");
             while (Running)
             {
-                
-                _parent?.SetLightActive(_parent.yellowLight, true);
-                _parent?.SetLightActive(_parent.greenLight, false);
-                
-                CheckForLatestFile(Config.Instance.PathJournal, prefix);
-                CheckForFileChanges();
-                
-                _parent?.SetLightActive(_parent.yellowLight, false);
-                _parent?.SetLightActive(_parent.greenLight, true);
-                Thread.Sleep(pollingInterval);
+                try
+                {
+                    _parent?.SetLightActive(_parent.yellowLight, true);
+                    _parent?.SetLightActive(_parent.greenLight, false);
+
+                    CheckForLatestFile(Config.Instance.PathJournal, prefix);
+                    CheckForFileChanges();
+
+                    _parent?.SetLightActive(_parent.yellowLight, false);
+                    _parent?.SetLightActive(_parent.greenLight, true);
+                    Thread.Sleep(pollingInterval);
+                }
+                catch
+                {
+                    Running = false;
+                }
             }
         }
 
@@ -41,12 +47,10 @@ namespace UGC_App.EDLog
         {
             var latestFile = GetLatestFile(directoryPath, prefix);
 
-            if (latestFile != null)
-            {
-                _currentFile = latestFile;
-                _previousPosition = new FileInfo(_currentFile).Length;
-                _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
-            }
+            if (latestFile == null) return;
+            _currentFile = latestFile;
+            _previousPosition = new FileInfo(_currentFile).Length;
+            _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
         }
 
         private static string? GetLatestFile(string directoryPath, string prefix)
@@ -58,14 +62,12 @@ namespace UGC_App.EDLog
         {
             var latestFile = GetLatestFile(directoryPath, prefix);
 
-            if (latestFile != null && latestFile != _currentFile)
-            {
-                Program.Log($"Wechsel zur neuesten Datei: {latestFile}");
-                CheckForFileChanges(true);
-                _currentFile = latestFile;
-                _previousPosition = 0;
-                _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
-            }
+            if (latestFile == null || latestFile == _currentFile) return;
+            Program.Log($"Wechsel zur neuesten Datei: {latestFile}");
+            CheckForFileChanges(true);
+            _currentFile = latestFile;
+            _previousPosition = 0;
+            _lastCheckedTime = File.GetLastWriteTimeUtc(_currentFile);
         }
 
         private static void CheckForFileChanges(bool swit = false)
@@ -75,7 +77,7 @@ namespace UGC_App.EDLog
             {
                 if(swit)Program.Log($"nor current, now switching");
                 return;
-            };;
+            };
             var lastWriteTime = File.GetLastWriteTimeUtc(_currentFile);
 
             if (lastWriteTime <= _lastCheckedTime)
@@ -93,7 +95,8 @@ namespace UGC_App.EDLog
                     _previousPosition = stream.Position;
                 }                    
             }
-            ProcessJsonContent(jsonContent);
+
+            Task.Run(() => ProcessJsonContent(jsonContent));
 
             _lastCheckedTime = lastWriteTime;
             if(swit)Program.Log($"Final end, now switching");
@@ -113,7 +116,7 @@ namespace UGC_App.EDLog
                             Config.Instance.GameBuild = ToString(jsonObject["build"]);
                             break;
                         case "LoadGame":
-                            Config.Instance.Cmdr = ToString(jsonObject["Commander"]);
+                            Config.Instance.Cmdr = ToString(jsonObject["Commander"]) ?? "";
                             Config.Instance.GameVersion = ToString(jsonObject["gameversion"]);
                             Config.Instance.GameBuild = ToString(jsonObject["build"]);
                             Config.Instance.Horizons = Convert.ToBoolean(jsonObject["Horizons"]);
@@ -186,8 +189,12 @@ namespace UGC_App.EDLog
                         case "Shipyard":
                             //EDDN.Send(new Shipyard(jsonObject), parent);
                             break;
+                        case "SuitLoadout":
+                            var suit = CutString(ToString(jsonObject["SuitName"]) ?? "", '_');
+                            Config.Instance.Suit = suit;
+                            _parent?.SetSuitText(Properties.language.ResourceManager.GetString(Config.Instance.Suit));
+                            break;
                     }
-
                     Config.Save();
                     _parent?.SetSystemText(Config.Instance.LastSystem);
                     _parent?.SetDockedText(Config.Instance.LastDocked);
@@ -207,6 +214,14 @@ namespace UGC_App.EDLog
         {
             var lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return lines.Select(JsonConvert.DeserializeObject<JObject>).Where(jsonObject => jsonObject != null).ToList();
+        }
+
+        private static string CutString(string inputString, char character)
+        {
+            if (string.IsNullOrWhiteSpace(inputString)) return "";
+            var index = inputString.IndexOf(character);
+            var result = index >= 0 ? inputString[..(index + 1)] : inputString;
+            return result;
         }
     }
 }
