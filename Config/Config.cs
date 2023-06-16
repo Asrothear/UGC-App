@@ -9,10 +9,14 @@ public class Config
 {
     [AttributeUsage(AttributeTargets.Property)]
     private class DisallowDeviationAttribute : Attribute {}
+    [DisallowDeviation] public string Version { get; private set; } = "0.5.2";
+    [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public static Config Instance { get; }
     public Point MainLocation { get; set; } = new (50, 50);
     public Point OverlayLocation { get; set; } = new (50, 50);
-    public string? Cmdr { get; set; } = "";
+    public string Cmdr { get; set; } = "";
+    
+    public string Suit { get; set; } = "";
     public string Token { get; set; } = "";
     public string SendUrl { get; set; } = "https://api.ugc-tools.de/api/v1/QLS";
     public string StateUrl { get; set; } = "https://api.ugc-tools.de/api/v1/State";
@@ -31,8 +35,6 @@ public class Config
     public bool AutoStart { get; set; }
     public decimal ListCount { get; set; } = 1;
     public bool CloseMini { get; set; } = true;
-    [DisallowDeviation] public string Version { get; private set; } = "0.4.15";
-    [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public int DesignSel { get; set; }
     public Color ColorMainBackground { get; set; } = Color.FromName("Control");
     public Color ColorMainInfo { get; set; } = Color.Black;
