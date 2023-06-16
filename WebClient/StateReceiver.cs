@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Json;
+using Org.BouncyCastle.Math.EC;
 
 namespace UGC_App.WebClient;
 
@@ -13,8 +14,7 @@ public class StateReceiver
         var request = new HttpRequestMessage(HttpMethod.Get, Config.Instance.StateUrl);
         
         request.Headers.Add("version", Config.Instance.Version);
-        request.Headers.Add("br", Config.Instance.VersionMeta);
-        request.Headers.Add("branch", $"standalone");
+        request.Headers.Add("branch", $"{Config.Instance.VersionMeta}");
         request.Headers.Add("cmdr", $"{Config.Instance.SendName}");
         request.Headers.Add("token", $"{Config.Instance.Token}");
         request.Headers.Add("onlyBGS", $"{Config.Instance.BgsOnly}");
@@ -26,8 +26,8 @@ public class StateReceiver
         catch(Exception ex)
         {
             //ToDo: Add Error Handler for any Connection failures
-            Debug.WriteLine(ex);
-            string[] er = new string[1];
+            Program.LogException(ex);
+            var er = new string[1];
             er[0] = $"{ex.Message}";
             return er;
         }
@@ -35,11 +35,10 @@ public class StateReceiver
         if (response.IsSuccessStatusCode)
         {
             content = response.Content.ReadFromJsonAsync<string[]>().Result;
-            Debug.WriteLine(content);
         }
         else
         {
-            Debug.WriteLine($"{(int)response.StatusCode} {response.ReasonPhrase}");
+            Program.Log($"{(int)response.StatusCode} {response.ReasonPhrase}");
             var rets = new string[1];
             rets[0] = $"{(int)response.StatusCode} {response.ReasonPhrase}";
             return rets;
@@ -69,11 +68,10 @@ public class StateReceiver
         if (response.IsSuccessStatusCode)
         {
             content = response.Content.ReadFromJsonAsync<string[]>().Result;
-            Debug.WriteLine(content);
         }
         else
         {
-            Debug.WriteLine($"{(int)response.StatusCode} {response.ReasonPhrase}");
+            Program.Log($"{(int)response.StatusCode} {response.ReasonPhrase}");
         }
         if (content != null) Tick = content;
         return Tick;
