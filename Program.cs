@@ -22,11 +22,13 @@ internal static class Program
     private static void Main(string[] args)
     {
         CheckSingleInstance();
+        #if !DEBUG
         SquirrelAwareApp.HandleEvents(
             onInitialInstall: OnAppInstall,
             onAppUninstall: OnAppUninstall,
             onEveryRun: OnAppRun);
         UpdateMyApp(args);
+        #endif
         Application.ThreadException += Application_ThreadException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         ApplicationConfiguration.Initialize();
@@ -109,7 +111,7 @@ internal static class Program
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogException(ex);
             }
         }
         else
@@ -120,7 +122,7 @@ internal static class Program
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                LogException(ex);
             }
         }
 
@@ -136,7 +138,7 @@ internal static class Program
     {
         LogException((Exception)e.ExceptionObject);
     }
-    private static void LogException(Exception exception)
+    internal static void LogException(Exception exception)
     {
         if(MailClient.IsDelError)return;
         const string logFileName = "error_log.json";
