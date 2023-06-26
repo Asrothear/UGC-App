@@ -124,72 +124,83 @@ namespace UGC_App.EDLog
                             _parent?.SetCmDrText(Config.Instance.Cmdr);
                             break;
                         case "Location":
-                            Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
-                            _parent?.SetSystemText(Config.Instance.LastSystem);
-                            Config.Instance.LastDocked = Convert.ToBoolean(jsonObject["Docked"]) ? ToString(jsonObject["StationName"]) : "-";
-                            _parent?.SetDockedText(Config.Instance.LastDocked);
+                            CheckMeta(jsonObject);
                             Eddn.Send(new Journal(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "Docked":
-                            Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
-                            _parent?.SetDockedText(Config.Instance.LastDocked);
+                            CheckMeta(jsonObject);
                             Eddn.Send(new Journal(jsonObject), _parent);
                             break;
                         case "Undocked":
-                            Config.Instance.LastDocked = "-";
-                            _parent?.SetDockedText(Config.Instance.LastDocked);
+                            CheckMeta(jsonObject);
                             break;
                         case "CarrierJump":
                         case "FSDJump":
-                            Config.Instance.LastSystem = ToString(jsonObject["StarSystem"]);
-                            Config.Instance.LastDocked = "-";
+                            CheckMeta(jsonObject);
                             Eddn.Send(new Journal(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "ApproachSettlement":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new ApproachSettlement(jsonObject), _parent);
                             break;
                         case "ApproachBody":
+                            CheckMeta(jsonObject);
                             //ToDo: Collect safe Location Data for EDDN Tranmission
                             break;
                         case "CodexEntry":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new CodexEntry(jsonObject), parent);
                             break;
                         case "Market":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new Market(jsonObject), parent);
                             break;
                         case "FCMaterials":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new FCMaterials(jsonObject), parent);
                             break;
                         case "FSSAllBodiesFound":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new FssAllBodiesFound(jsonObject), _parent);
                             break;
                         case "FSSBodySignals":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new FssBodySignals(jsonObject), _parent);
+                            CheckMeta(jsonObject);
                             break;
                         case "FSSDiscoveryScan":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new FssDiscoveryScan(jsonObject), _parent);
+                            _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "FSSSignalDiscovered":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
                             break;
                         case "NavBeaconScan":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new NavBeaconScan(jsonObject), _parent);
                             break;
                         case "NavRoute":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new NavRoute(jsonObject), parent);
                             break;
                         case "Outfitting":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new Outfitting(jsonObject), parent);
                             break;
                         case "ScanBaryCentre":
+                            CheckMeta(jsonObject);
                             Eddn.Send(new ScanBaryCentre(jsonObject), _parent);
                             break;
                         case "Shipyard":
+                            CheckMeta(jsonObject);
                             //EDDN.Send(new Shipyard(jsonObject), parent);
                             break;
                         case "SuitLoadout":
+                            CheckMeta(jsonObject);
                             var suit = CutString(ToString(jsonObject["SuitName"]) ?? "", '_');
                             Config.Instance.Suit = suit;
                             _parent?.SetSuitText(Properties.language.ResourceManager.GetString(Config.Instance.Suit));
@@ -206,6 +217,24 @@ namespace UGC_App.EDLog
             }
         }
 
+        private static void CheckMeta(JObject jsonObject)
+        {
+            if (jsonObject.TryGetValue("StarSystem", out var starSystem))
+            {
+                Config.Instance.LastSystem = ToString(starSystem);
+                _parent?.SetSystemText(Config.Instance.LastSystem);
+            }
+            if (jsonObject.TryGetValue("Docked", out var docked))
+            {
+                Config.Instance.LastDocked = Convert.ToBoolean(docked) ? ToString(jsonObject["StationName"]) : "-";
+                _parent?.SetDockedText(Config.Instance.LastDocked);
+            }
+            else
+            {
+                Config.Instance.LastDocked = "-";
+                _parent?.SetDockedText(Config.Instance.LastDocked);
+            }
+        }
         private static string? ToString(JToken? inp)
         {
             return inp?.ToString();

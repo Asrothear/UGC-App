@@ -27,10 +27,13 @@ public partial class Mainframe : Form
     public Mainframe()
     {
         InitializeComponent();
+        Task.Run(() =>
+        {
+            CacheHandler.InitAll();
+        });
         CacheTimer.Interval += 60 * (60 * 1000);
-        CacheTimer.Elapsed += (sender, args) => { CacheHandler.InitAll(true); };
+        CacheTimer.Elapsed += (sender, args) => { Program.Log("CacheTimer");CacheHandler.InitAll(true); };
         CacheTimer.Start();
-        CacheHandler.InitAll(true);
         keyboardHookManager.Start();
         Task.Run(() => { JournalHandler.Start(this); });
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
@@ -41,6 +44,7 @@ public partial class Mainframe : Form
             new ToolStripSeparator(),
             CreateToolStripMenuItem("About", ShowAbout),
             CreateToolStripMenuItem("auf Updates Prüfen", CheckUpdates),
+            CreateToolStripMenuItem("Position Reset (Debug)", ResetPos),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click)
         });
@@ -81,6 +85,20 @@ public partial class Mainframe : Form
                 NonInvasiveKeyboardHookLibrary.ModifierKeys.Control, NonInvasiveKeyboardHookLibrary.ModifierKeys.Alt
             }, (int)Keys.C, FisrtToClip);
 
+    }
+
+    private void ResetPos(object? sender, EventArgs e)
+    {
+        var res = MessageBox.Show("Hiermit werden die Positionen des Hauptfensters und des Overlays der UGC-App zurückgesetzt.\nDies ist für den fall das die UGC-App nicht mehr sichtbar ist.\nFortfahren?","Position Reset",MessageBoxButtons.YesNo, MessageBoxIcon.Information,MessageBoxDefaultButton.Button2,
+            MessageBoxOptions.ServiceNotification
+        );
+        if(res != DialogResult.Yes)return;
+        Config.Instance.MainLocation = new Point(50, 50);
+        Config.Instance.OverlayLocation = new Point(50, 50);
+        Config.Save();
+        Location = Config.Instance.MainLocation;
+        if (overlayForm is { IsDisposed: false }) overlayForm.Location = Config.Instance.OverlayLocation;
+        Activate();
     }
 
     private void FisrtToClip()
@@ -308,6 +326,7 @@ public partial class Mainframe : Form
     {
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
+        if(!string.IsNullOrWhiteSpace(groupBox_Orders.Text))overlayForm.FillOrderList(label_Orders.Text,groupBox_Orders.Text);
         SetDesign();
     }
 
@@ -528,7 +547,10 @@ public partial class Mainframe : Form
             var orders = OrderAPI.GetSystemOrders(SystemAddress);
             if (orders == null || !orders.Any())
             {
-                Invoke(() => { groupBox_Orders.Visible = false; });
+                Invoke(() =>
+                {
+                    groupBox_Orders.Text = "";
+                    groupBox_Orders.Visible = false; });
                 overlayForm?.HideOrderList();
                 FixLayout();
                 return;
@@ -539,8 +561,8 @@ public partial class Mainframe : Form
             var final = orders.Aggregate("",
                 (current, order) =>
                     current +
-                    $"{order.Faction}:\n{order.Order.Replace("\r", " ").Replace("\n", " ").Replace("  ", " ")}\n------------------\n");
-            overlayForm?.FillOrderList(final, orders.First().StarSystem);
+                    $"{order.Faction}:\nType: {order.Type}\n{order.Order.Replace("\r", " ").Replace("\n", " ").Replace("  ", " ")}\n------------------\n");
+            overlayForm?.FillOrderList(final, $"BGS-Order: {orders.First().StarSystem}");
             Invoke(() =>
             {
                 label_Orders.Text = final;

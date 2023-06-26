@@ -48,9 +48,8 @@ namespace UGC_App.Order
             }
             Cursor.Current = def;
         }
-        internal void RefreshView()
+        internal void RefreshView(bool force = false)
         {
-            CacheHandler.InitAll();
             switch (views)
             {
                 case 0:

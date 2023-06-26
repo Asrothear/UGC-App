@@ -4,6 +4,7 @@
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=UGC_0020App_002FOrder_002FDashViews_002FOrderList/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=UGC_0020App_002FOrder_002FDashViews_002FSystemList/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=UGC_0020App_002FProperties_002Flanguage/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=UGC_0020App_002FProperties_002FResources/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=UGC_0020App_002FUpdater/@EntryIndexedValue">False</s:Boolean>
 	<s:String x:Key="/Default/ResxEditorPersonal/DisabledLanguages/@EntryValue">de</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

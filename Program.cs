@@ -18,7 +18,7 @@ internal static class Program
 #pragma warning restore SYSLIB1054
     private static Mutex? _mutex;
     private const string MutexName = "UGC App";
-        
+    private static readonly SemaphoreSlim Semaphore = new(1,1);
     [STAThread]
     private static void Main(string[] args)
     {
@@ -141,6 +141,7 @@ internal static class Program
     }
     internal static void LogException(Exception exception)
     {
+        Debug.WriteLine(exception);
         if(MailClient.IsDelError)return;
         const string logFileName = "error_log.json";
     
@@ -184,9 +185,10 @@ internal static class Program
     }
     internal static void Log(string msg)
     {
+        Debug.WriteLine(msg);
         if (MailClient.IsDelLog)
             return;
-
+        Semaphore.Wait();
         const string logFileName = "log.json";
         var logDirectory = Config.Instance.PathLogs;
         Directory.CreateDirectory(logDirectory);
@@ -227,5 +229,6 @@ internal static class Program
             writer.Close();
             writer.Dispose();
         }
+        Semaphore.Release();
     }
 }

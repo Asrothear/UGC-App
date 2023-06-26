@@ -258,7 +258,7 @@ public partial class Overlay : Form
         light.BackColor = active ? (Color)(light.Tag ?? "Color [Magenta]") : Color.Gray;
     }
 
-    internal void FillOrderList(string final, string StarSystem)
+    internal void FillOrderList(string final, string starSystem)
     {
         Invoke(() =>
         {
@@ -267,7 +267,7 @@ public partial class Overlay : Form
             var size = label_Orders.ClientSize;
             size.Height += 30;
             groupBox_Orders.ClientSize = size;
-            groupBox_Orders.Text = $"BGS-Order: {StarSystem}";
+            groupBox_Orders.Text = starSystem;
             FixLayout();
         });
     }
