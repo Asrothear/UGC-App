@@ -3,7 +3,7 @@
 This is the successor of the EDMC Plugin "UGC Plugin"  
 The UGC App is a Standalone Application, cabable of processing every Journal-Entry for Elite Dangerous.  
 
-This Project is combinded with an API-Service and at the moment only in use by the [UGC](https://united-german-commander.de), all functionallity is mainly designed for their demands.    
+This Project is combinded with an API-Service and at the moment only in use by the [UGC](https://united-german-commanders.de), all functionallity is mainly designed for their demands.    
 Nethertheless in the future this Application should be used by every Squadron or Community to benefit from its features.  
 Squdarons could simply:
 - Track their BGS activity
