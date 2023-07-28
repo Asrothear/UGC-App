@@ -29,54 +29,51 @@ public static class CacheHandler
     } 
     internal static HashSet<Orders> GetOrderFromCache()
     {
-        var cache = GetCache(OrderCacheDataPath);
-        return cache.OrdersCahce.Order;
+        var cache = GetCache<OrdersCacheModel>(OrderCacheDataPath);
+        return cache.Order;
     }
     internal static HashSet<SystemHistoryData> GetHistoryFromCache()
     {
-        var cache = GetCache(HistoryCacheDataPath);
-        return cache.HistoryChache.SystemHistoryData;
+        var cache = GetCache<HistoryChacheModel>(HistoryCacheDataPath);
+        return cache.SystemHistoryData;
     }
     internal static HashSet<SystemListing> GetSystemListFromCache()
     {
-        var cache = GetCache(SystemListCacheDataPath);
-        return cache.SystemListCache.SystemList;
+        var cache = GetCache<SystemListDataCacheModel>(SystemListCacheDataPath);
+        return cache.SystemList;
     }
     internal static void CacheOrder(bool force = false)
     {
         Program.Log($"Update Order-Cache, Forced = {force}");
-        var cache = GetCache(OrderCacheDataPath);
-        if (DateTime.UtcNow - cache.OrdersCahce.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
-        cache.OrdersCahce = new OrdersCacheModel();
-            SaveOrderCache(cache, OrderAPI.GetAllOrders());
+        var cache = GetCache<OrdersCacheModel>(OrderCacheDataPath);
+        if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(0, 30, 0) && !force) return;
+        SaveOrderCache<OrdersCacheModel>(new OrdersCacheModel(), OrderAPI.GetAllOrders());
     }
     internal static void CacheHistory(bool force = false)
     {
         Program.Log($"Update History-Cache, Forced = {force}");
-        var cache = GetCache(HistoryCacheDataPath);
-        if (DateTime.UtcNow - cache.HistoryChache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
-        cache.HistoryChache = new HistoryChacheModel();
+        var cache = GetCache<HistoryChacheModel>(HistoryCacheDataPath);
+        if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
+        cache = new HistoryChacheModel();
         var syslist = OrderAPI.GetSystemList();
-        foreach (var syshist in syslist.Select(system => OrderAPI.GetSystemHistory(system.SystemAddress)))
-            SaveHistoryCache(cache, syshist);
+        foreach (var syshist in syslist.Select(system => OrderAPI.GetSystemHistory(system.SystemAddress))) 
+            SaveHistoryCache<HistoryChacheModel>(cache, syshist);
     }
     internal static void CacheUser(bool force = false)
     {
         Program.Log($"Update User-Cache, Forced = {force}");
-        var cache = GetCache(UserCacheDataPath);
-        if (DateTime.UtcNow - cache.OrdersCahce.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
-        cache.OrdersCahce = new OrdersCacheModel();
-        var syslist = OrderAPI.GetSystemList();
-        foreach (var sysorder in syslist.Select(system => OrderAPI.GetSystemOrders(system.SystemAddress)))
-            SaveOrderCache(cache, sysorder);
+        var cache = GetCache<UserDataCacheModel>(UserCacheDataPath);
+        if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
+        cache = new UserDataCacheModel();
+            SaveUserCache<UserDataCacheModel>(cache);
     }
     internal static void CacheSystemList(bool force = false)
     {
         Program.Log($"Update SystemList-Cache, Forced = {force}");
-        var cache = GetCache(SystemListCacheDataPath);
-        if (DateTime.UtcNow - cache.SystemListCache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
-        cache.SystemListCache = new SystemListDataCacheModel();
-        SaveSystemListCache(cache, OrderAPI.GetSystemList());
+        var cache = GetCache<SystemListDataCacheModel>(SystemListCacheDataPath);
+        if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
+        cache = new SystemListDataCacheModel();
+        SaveSystemListCache<SystemListDataCacheModel>(cache, OrderAPI.GetSystemList());
     }
 
     private static bool CheckDataExist(string path)
@@ -84,56 +81,56 @@ public static class CacheHandler
         return File.Exists(path);
     }
 
-    private static void CreateDataFile(string path)
+    private static void CreateDataFile<T>(string path) where T : class, new()
     {
         if (CheckDataExist(path)) return;
         var file = File.Create(path);
         file.Dispose();
-        Save(new DataModel(), path);
+        Save(new T(), path);
     }
 
-    private static void Save(DataModel data, string path)
+    private static void Save(dynamic data, string path)
     {
         var encryptedBytes = Encrypt(JsonConvert.SerializeObject(data), Config.Instance.Token);
         File.WriteAllBytes(path, encryptedBytes);
     }
 
-    private static void SaveOrderCache(DataModel cache, HashSet<Orders> ordersSet)
+    private static void SaveOrderCache<T>(OrdersCacheModel cache, HashSet<Orders> ordersSet) where T : class, new()
     {
-        CreateDataFile(OrderCacheDataPath);
-        foreach (var order in ordersSet) cache.OrdersCahce.Order.Add(order);
-        cache.OrdersCahce.LastUpdate = DateTime.UtcNow;
+        CreateDataFile<T>(OrderCacheDataPath);
+        foreach (var order in ordersSet) cache.Order.Add(order);
+        cache.LastUpdate = DateTime.UtcNow;
         Save(cache, OrderCacheDataPath);
     }
 
-    private static void SaveHistoryCache(DataModel cache, SystemHistoryData historyData)
+    private static void SaveHistoryCache<T>(HistoryChacheModel cache, SystemHistoryData historyData) where T : class, new()
     {
-        CreateDataFile(HistoryCacheDataPath);
-        var needle = cache.HistoryChache.SystemHistoryData.FirstOrDefault(x => x.systemAddress == historyData.systemAddress);
-        if (needle != null) cache.HistoryChache.SystemHistoryData.Remove(needle);
-        cache.HistoryChache.SystemHistoryData.Add(historyData);
-        cache.HistoryChache.LastUpdate = DateTime.UtcNow;
+        CreateDataFile<T>(HistoryCacheDataPath);
+        var needle = cache.SystemHistoryData.FirstOrDefault(x => x.systemAddress == historyData.systemAddress);
+        if (needle != null) cache.SystemHistoryData.Remove(needle);
+        cache.SystemHistoryData.Add(historyData);
+        cache.LastUpdate = DateTime.UtcNow;
         Save(cache,HistoryCacheDataPath);
     }
 
-    private static void SaveUserCache(HashSet<Orders> ordersSet)
+    private static void SaveUserCache<T>(UserDataCacheModel ordersSet) where T : class, new()
     {
-        CreateDataFile(UserCacheDataPath);
+        CreateDataFile<T>(UserCacheDataPath);
     }
 
-    private static void SaveSystemListCache(DataModel cache, HashSet<SystemListing> systemListings)
+    private static void SaveSystemListCache<T>(SystemListDataCacheModel cache, HashSet<SystemListing> systemListings) where T : class, new()
     {
-        CreateDataFile(SystemListCacheDataPath);
-        foreach (var system in systemListings) cache.SystemListCache.SystemList.Add(system);
-        cache.SystemListCache.LastUpdate = DateTime.UtcNow;
+        CreateDataFile<T>(SystemListCacheDataPath);
+        foreach (var system in systemListings) cache.SystemList.Add(system);
+        cache.LastUpdate = DateTime.UtcNow;
         Save(cache,SystemListCacheDataPath);
     }
 
-    private static DataModel GetCache(string path)
+    private static dynamic GetCache <T>(string path) where T : class, new()
     {
-        CreateDataFile(path);
+        CreateDataFile<T>(path);
         var data = Decrypt(File.ReadAllBytes(path), Config.Instance.Token);
-        return JsonConvert.DeserializeObject<DataModel>(data) ?? new DataModel();
+        return JsonConvert.DeserializeObject<T>(data) ?? new T();
     }
     private static byte[] Encrypt(string plainText, string encryptionKey)
     {

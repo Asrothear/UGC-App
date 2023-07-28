@@ -56,20 +56,27 @@ namespace UGC_App.Order
                     break;
                 case 1:
                     var sys = Controls.Find("SystemList", true);
-                    if (sys.Any()) foreach (var v in sys) Controls.Remove(v);
+                    if (sys.Any())
+                        foreach (var v in sys)
+                            Controls.Remove(v);
                     Controls.Remove(sys.First());
                     CacheHandler.CacheSystemList(true);
+                    CacheHandler.CacheHistory(true);
                     AttachView(new SystemList());
                     Refresh();
                     break;
                 case 2:
                     var ord = Controls.Find("OrderList", true);
-                    if (ord.Any()) foreach (var v in ord) Controls.Remove(v);
+                    if (ord.Any())
+                        foreach (var v in ord)
+                            Controls.Remove(v);
                     CacheHandler.CacheOrder(true);
+                    CacheHandler.CacheHistory(true);
                     AttachView(new OrderList(this));
                     Refresh();
                     break;
             }
+
         }
         private void AttachView(dynamic view)
         {

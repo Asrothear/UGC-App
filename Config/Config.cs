@@ -9,7 +9,7 @@ public class Config
 {
     [AttributeUsage(AttributeTargets.Property)]
     private class DisallowDeviationAttribute : Attribute {}
-    [DisallowDeviation] public string Version { get; private set; } = "0.5.5";
+    [DisallowDeviation] public string Version { get; private set; } = "0.5.18";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public static Config Instance { get; }
     public Point MainLocation { get; set; } = new (50, 50);
@@ -59,6 +59,9 @@ public class Config
     public bool Odyssey { get; set; }
     public bool Horizons { get; set; }
     public bool Eddn { get; set; }
+    public bool AlertEDMC { get; set; }
+    public bool RemoteMode { get; set; }
+    internal bool ExternTool { get; set; }
     public string PathLogs { get; set; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "logs");
 

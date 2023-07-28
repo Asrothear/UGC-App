@@ -23,13 +23,11 @@ internal static class Program
     private static void Main(string[] args)
     {
         CheckSingleInstance();
-        #if !DEBUG
         SquirrelAwareApp.HandleEvents(
             onInitialInstall: OnAppInstall,
             onAppUninstall: OnAppUninstall,
             onEveryRun: OnAppRun);
         UpdateMyApp(args);
-        #endif
         Application.ThreadException += Application_ThreadException;
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         ApplicationConfiguration.Initialize();
@@ -86,16 +84,20 @@ internal static class Program
     }
     private static void UpdateMyApp(string[] args)
     {
-        #if DEBUG
-            return;
-        #endif
         if(!Config.Instance.AutoUpdate) return;
-        using var mgr = new UpdateManager(Config.Instance.UpdateUrl,"UGC-App");
-        var newVersion = mgr.UpdateApp().Result;
-        if (newVersion == null) return;
-        //MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
-        var arg = string.Join(",",args);
-        UpdateManager.RestartApp(null, arg);
+        try
+        {
+            using var mgr = new UpdateManager(Config.Instance.UpdateUrl, "UGC-App");
+            var newVersion = mgr.UpdateApp().Result;
+            if (newVersion == null) return;
+            //MessageBox.Show($"Die neue Version {newVersion.Version} wurde installiert!");
+            var arg = string.Join(",", args);
+            UpdateManager.RestartApp(null, arg);
+        }
+        catch
+        {
+            //Ignored to start Applaction anyways
+        }
     }
 
     internal static void SetStartup(bool enable)
@@ -143,17 +145,12 @@ internal static class Program
     {
         Debug.WriteLine(exception);
         if(MailClient.IsDelError)return;
-        const string logFileName = "error_log.json";
-    
-        var logDirectory = Config.Instance.PathLogs;
-        Directory.CreateDirectory(logDirectory);
-        var logFilePath = Path.Combine(logDirectory, logFileName);
-
-        var timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture);
+        Directory.CreateDirectory(Config.Instance.PathLogs);
+        var logFilePath = Path.Combine(Config.Instance.PathLogs, "error_log.json");
 
         var errorLog = new
         {
-            Timestamp = timestamp,
+            Timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture),
             exception.Message,
             exception.StackTrace,
             exception.Source,
@@ -186,49 +183,39 @@ internal static class Program
     internal static void Log(string msg)
     {
         Debug.WriteLine(msg);
-        if (MailClient.IsDelLog)
-            return;
+        if (MailClient.IsDelLog) return;
         Semaphore.Wait();
-        const string logFileName = "log.json";
-        var logDirectory = Config.Instance.PathLogs;
-        Directory.CreateDirectory(logDirectory);
-        var logFilePath = Path.Combine(logDirectory, logFileName);
-
-        if (!Config.Instance.Debug)
-            return;
-
-        var timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture);
-
+        Directory.CreateDirectory(Config.Instance.PathLogs);
+        var logFilePath = Path.Combine(Config.Instance.PathLogs, "log.json");
         var errorLog = new
         {
-            Timestamp = timestamp,
+            Timestamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffK", CultureInfo.InvariantCulture),
             Message = msg
         };
-
-        if (!Config.Instance.Debug)
-            return;
-        string jsonContent;
         if (!File.Exists(logFilePath))
         {
             var file = File.Create(logFilePath);
             file.Close();
         }
-        using (var reader = new StreamReader(logFilePath))
-        {
-            jsonContent = reader.ReadToEnd();
-            reader.Close();
-            reader.Dispose();
-        }
+        using var reader = new StreamReader(logFilePath);
+        var jsonContent = reader.ReadToEnd();
+        reader.Close();
+        reader.Dispose();
         if(string.IsNullOrWhiteSpace(jsonContent))jsonContent="[]";
         var errorLogs = JsonConvert.DeserializeObject<List<dynamic>>(jsonContent);
         errorLogs?.Add(errorLog);
         jsonContent = JsonConvert.SerializeObject(errorLogs, Formatting.Indented);
-        using (var writer = new StreamWriter(logFilePath))
+        try
         {
+            using var writer = new StreamWriter(logFilePath);
             writer.Write(jsonContent);
             writer.Close();
             writer.Dispose();
+            Semaphore.Release();
         }
-        Semaphore.Release();
+        catch
+        {
+            Semaphore.Release();
+        }
     }
 }

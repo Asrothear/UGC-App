@@ -127,13 +127,13 @@ public partial class Konfiguration : Form
                     textBox_Support.Enabled = false;
                     button_Report_Senden.Enabled = false;
                 });
-                MessageBox.Show("Report gesendet!", "Reporter");
+                MessageBox.Show(this, "Report gesendet!", "Reporter");
             }
             else
             {
                 textBox_Support.Enabled = true;
                 button_Report_Senden.Enabled = true;
-                MessageBox.Show("Es konnte kein Report gesendet werden!", "Reporter");
+                MessageBox.Show(this, "Es konnte kein Report gesendet werden!", "Reporter");
             }
         });
 
@@ -174,6 +174,8 @@ public partial class Konfiguration : Form
         textBox_path_logs.Text = Config.Instance.PathLogs;
         textBox_path_config.Text = Config.Instance.PathConfig;
         textBox_path_journal.Text = Config.Instance.PathJournal;
+        checkBox_EDMC.Checked = Config.Instance.AlertEDMC;
+        checkBox_RemoteMode.Checked = Config.Instance.RemoteMode;
         Activate();
     }
 
@@ -192,11 +194,13 @@ public partial class Konfiguration : Form
         Config.Instance.ListCount = numericUpDown_ListCount.Value;
         Config.Instance.CloseMini = checkBox_CloseMini.Checked;
         Config.Instance.AlwaysOnTop = checkBox_AlwaysTop.Checked;
+        Config.Instance.AlertEDMC = checkBox_EDMC.Checked;
         Config.Instance.Eddn = checkBox_EDDN.Checked;
         Config.Instance.CheckBackgroundIntervall = numericUpDown_AutoKontrast.Value;
         Config.Instance.PathLogs = textBox_path_logs.Text;
         Config.Instance.PathConfig = textBox_path_config.Text;
         Config.Instance.PathJournal = textBox_path_journal.Text;
+        Config.Instance.RemoteMode = checkBox_RemoteMode.Checked;
         Config.Save();
         Program.SetStartup(checkBoxy_AutoStart.Checked);
         _parent.TopMost = Config.Instance.AlwaysOnTop;
@@ -218,57 +222,57 @@ public partial class Konfiguration : Form
                             control.ForeColor = Config.Instance.ColorDefaultLabelLight;
                             break;
                         case TabControl:
-                        {
-                            control.BackColor = Config.Instance.ColorDefaultBackgroundLight;
-                            foreach (Control lab in control.Controls)
                             {
-                                switch (lab)
+                                control.BackColor = Config.Instance.ColorDefaultBackgroundLight;
+                                foreach (Control lab in control.Controls)
                                 {
-                                    case Label:
-                                    case CheckBox:
-                                        lab.ForeColor = Config.Instance.ColorDefaultLabelLight;
-                                        break;
-                                    case TabPage:
+                                    switch (lab)
                                     {
-                                        lab.BackColor = Config.Instance.ColorDefaultBackgroundLight;
-                                        foreach (Control labs in lab.Controls)
-                                        {
-                                            switch (labs)
+                                        case Label:
+                                        case CheckBox:
+                                            lab.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                            break;
+                                        case TabPage:
                                             {
-                                                case Label:
-                                                case CheckBox:
-                                                case RadioButton:
-                                                    labs.ForeColor = Config.Instance.ColorDefaultLabelLight;
-                                                    break;
-                                                case GroupBox:
+                                                lab.BackColor = Config.Instance.ColorDefaultBackgroundLight;
+                                                foreach (Control labs in lab.Controls)
                                                 {
-                                                    labs.ForeColor = Config.Instance.ColorDefaultLabelLight;
-                                                    foreach (Control sub in labs.Controls)
+                                                    switch (labs)
                                                     {
-                                                        switch (sub)
-                                                        {
-                                                            case Label:
-                                                            case CheckBox:
-                                                            case RadioButton:
-                                                            case GroupBox:
-                                                            case Button:
-                                                                sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                        case Label:
+                                                        case CheckBox:
+                                                        case RadioButton:
+                                                            labs.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                            break;
+                                                        case GroupBox:
+                                                            {
+                                                                labs.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                                foreach (Control sub in labs.Controls)
+                                                                {
+                                                                    switch (sub)
+                                                                    {
+                                                                        case Label:
+                                                                        case CheckBox:
+                                                                        case RadioButton:
+                                                                        case GroupBox:
+                                                                        case Button:
+                                                                            sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                                            break;
+                                                                    }
+                                                                }
+
                                                                 break;
-                                                        }
+                                                            }
                                                     }
-
-                                                    break;
                                                 }
-                                            }
-                                        }
 
-                                        break;
+                                                break;
+                                            }
                                     }
                                 }
-                            }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
                 }
 
@@ -284,59 +288,59 @@ public partial class Konfiguration : Form
                             control.ForeColor = Config.Instance.ColorDefaultLabelDark;
                             break;
                         case TabControl:
-                        {
-                            control.BackColor = Config.Instance.ColorDefaultBackgroundDark;
-                            foreach (Control lab in control.Controls)
                             {
-                                switch (lab)
+                                control.BackColor = Config.Instance.ColorDefaultBackgroundDark;
+                                foreach (Control lab in control.Controls)
                                 {
-                                    case Label:
-                                    case CheckBox:
-                                        lab.ForeColor = Config.Instance.ColorDefaultLabelDark;
-                                        break;
-                                    case TabPage:
+                                    switch (lab)
                                     {
-                                        lab.BackColor = Config.Instance.ColorDefaultBackgroundDark;
-                                        foreach (Control labs in lab.Controls)
-                                        {
-                                            switch (labs)
+                                        case Label:
+                                        case CheckBox:
+                                            lab.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                                            break;
+                                        case TabPage:
                                             {
-                                                case Label:
-                                                case CheckBox:
-                                                case RadioButton:
-                                                    labs.ForeColor = Config.Instance.ColorDefaultLabelDark;
-                                                    break;
-                                                case GroupBox:
+                                                lab.BackColor = Config.Instance.ColorDefaultBackgroundDark;
+                                                foreach (Control labs in lab.Controls)
                                                 {
-                                                    labs.ForeColor = Config.Instance.ColorDefaultLabelDark;
-                                                    foreach (Control sub in labs.Controls)
+                                                    switch (labs)
                                                     {
-                                                        switch (sub)
-                                                        {
-                                                            case Label:
-                                                            case CheckBox:
-                                                            case RadioButton:
-                                                            case GroupBox:
-                                                                sub.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                                                        case Label:
+                                                        case CheckBox:
+                                                        case RadioButton:
+                                                            labs.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                                                            break;
+                                                        case GroupBox:
+                                                            {
+                                                                labs.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                                                                foreach (Control sub in labs.Controls)
+                                                                {
+                                                                    switch (sub)
+                                                                    {
+                                                                        case Label:
+                                                                        case CheckBox:
+                                                                        case RadioButton:
+                                                                        case GroupBox:
+                                                                            sub.ForeColor = Config.Instance.ColorDefaultLabelDark;
+                                                                            break;
+                                                                        case Button:
+                                                                            sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                                            break;
+                                                                    }
+                                                                }
+
                                                                 break;
-                                                            case Button:
-                                                                sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
-                                                                break;
-                                                        }
+                                                            }
                                                     }
-
-                                                    break;
                                                 }
-                                            }
-                                        }
 
-                                        break;
+                                                break;
+                                            }
                                     }
                                 }
-                            }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
                 }
 
@@ -352,59 +356,59 @@ public partial class Konfiguration : Form
                             control.ForeColor = Config.Instance.ColorMainInfo;
                             break;
                         case TabControl:
-                        {
-                            control.BackColor = Config.Instance.ColorMainBackground;
-                            foreach (Control lab in control.Controls)
                             {
-                                switch (lab)
+                                control.BackColor = Config.Instance.ColorMainBackground;
+                                foreach (Control lab in control.Controls)
                                 {
-                                    case Label:
-                                    case CheckBox:
-                                        lab.ForeColor = Config.Instance.ColorMainInfo;
-                                        break;
-                                    case TabPage:
+                                    switch (lab)
                                     {
-                                        lab.BackColor = Config.Instance.ColorMainBackground;
-                                        foreach (Control labs in lab.Controls)
-                                        {
-                                            switch (labs)
+                                        case Label:
+                                        case CheckBox:
+                                            lab.ForeColor = Config.Instance.ColorMainInfo;
+                                            break;
+                                        case TabPage:
                                             {
-                                                case Label:
-                                                case CheckBox:
-                                                case RadioButton:
-                                                    labs.ForeColor = Config.Instance.ColorMainInfo;
-                                                    break;
-                                                case GroupBox:
+                                                lab.BackColor = Config.Instance.ColorMainBackground;
+                                                foreach (Control labs in lab.Controls)
                                                 {
-                                                    labs.ForeColor = Config.Instance.ColorMainInfo;
-                                                    foreach (Control sub in labs.Controls)
+                                                    switch (labs)
                                                     {
-                                                        switch (sub)
-                                                        {
-                                                            case Label:
-                                                            case CheckBox:
-                                                            case RadioButton:
-                                                            case GroupBox:
-                                                                sub.ForeColor = Config.Instance.ColorMainInfo;
+                                                        case Label:
+                                                        case CheckBox:
+                                                        case RadioButton:
+                                                            labs.ForeColor = Config.Instance.ColorMainInfo;
+                                                            break;
+                                                        case GroupBox:
+                                                            {
+                                                                labs.ForeColor = Config.Instance.ColorMainInfo;
+                                                                foreach (Control sub in labs.Controls)
+                                                                {
+                                                                    switch (sub)
+                                                                    {
+                                                                        case Label:
+                                                                        case CheckBox:
+                                                                        case RadioButton:
+                                                                        case GroupBox:
+                                                                            sub.ForeColor = Config.Instance.ColorMainInfo;
+                                                                            break;
+                                                                        case Button:
+                                                                            sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
+                                                                            break;
+                                                                    }
+                                                                }
+
                                                                 break;
-                                                            case Button:
-                                                                sub.ForeColor = Config.Instance.ColorDefaultLabelLight;
-                                                                break;
-                                                        }
+                                                            }
                                                     }
-
-                                                    break;
                                                 }
-                                            }
-                                        }
 
-                                        break;
+                                                break;
+                                            }
                                     }
                                 }
-                            }
 
-                            break;
-                        }
+                                break;
+                            }
                     }
                 }
 

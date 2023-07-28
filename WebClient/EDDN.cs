@@ -11,6 +11,11 @@ public class Eddn
         //if(!Config.Instance.EDDN)return;
         Task.Run(() =>
         {
+            if (Config.Instance.ExternTool)
+            {
+                parrent?.SetStatus("EDMC");
+                return;
+            }
             if(payload.DontSend)return;
             string shef = payload.Data["$schemaRef"].ToString();
             //if(shef != "https://eddn.edcd.io/schemas/journal/1") payload.Data["$schemaRef"] = $"{shef}/test";

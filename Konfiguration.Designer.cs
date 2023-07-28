@@ -34,6 +34,7 @@
             toolTip_Konfig = new ToolTip(components);
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            checkBox_EDMC = new CheckBox();
             checkBox_EDDN = new CheckBox();
             checkBox_CloseMini = new CheckBox();
             numericUpDown_ListCount = new NumericUpDown();
@@ -97,6 +98,7 @@
             colorDialog1 = new ColorDialog();
             folderBrowserDialog1 = new FolderBrowserDialog();
             openFileDialog1 = new OpenFileDialog();
+            checkBox_RemoteMode = new CheckBox();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
@@ -141,6 +143,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(checkBox_EDMC);
             tabPage1.Controls.Add(checkBox_EDDN);
             tabPage1.Controls.Add(checkBox_CloseMini);
             tabPage1.Controls.Add(numericUpDown_ListCount);
@@ -164,6 +167,16 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Main";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_EDMC
+            // 
+            checkBox_EDMC.AutoSize = true;
+            checkBox_EDMC.Location = new Point(7, 329);
+            checkBox_EDMC.Name = "checkBox_EDMC";
+            checkBox_EDMC.Size = new Size(124, 19);
+            checkBox_EDMC.TabIndex = 34;
+            checkBox_EDMC.Text = "An EDMC erinnern";
+            checkBox_EDMC.UseVisualStyleBackColor = true;
             // 
             // checkBox_EDDN
             // 
@@ -236,9 +249,9 @@
             checkBox_Debug.AutoSize = true;
             checkBox_Debug.Location = new Point(7, 304);
             checkBox_Debug.Name = "checkBox_Debug";
-            checkBox_Debug.Size = new Size(61, 19);
+            checkBox_Debug.Size = new Size(106, 19);
             checkBox_Debug.TabIndex = 26;
-            checkBox_Debug.Text = "Debug";
+            checkBox_Debug.Text = "Erweiterte Logs";
             checkBox_Debug.UseVisualStyleBackColor = true;
             // 
             // checkBox_SlowState
@@ -617,6 +630,7 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(checkBox_RemoteMode);
             tabPage3.Controls.Add(label10);
             tabPage3.Controls.Add(label9);
             tabPage3.Controls.Add(label7);
@@ -636,7 +650,7 @@
             // 
             // label10
             // 
-            label10.Location = new Point(4, 258);
+            label10.Location = new Point(4, 280);
             label10.Name = "label10";
             label10.Size = new Size(325, 75);
             label10.TabIndex = 8;
@@ -644,7 +658,7 @@
             // 
             // label9
             // 
-            label9.Location = new Point(4, 174);
+            label9.Location = new Point(4, 205);
             label9.Name = "label9";
             label9.Size = new Size(320, 75);
             label9.TabIndex = 7;
@@ -653,7 +667,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(4, 90);
+            label7.Location = new Point(3, 118);
             label7.Name = "label7";
             label7.Size = new Size(272, 75);
             label7.TabIndex = 6;
@@ -771,6 +785,16 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
+            // checkBox_RemoteMode
+            // 
+            checkBox_RemoteMode.AutoSize = true;
+            checkBox_RemoteMode.Location = new Point(55, 96);
+            checkBox_RemoteMode.Name = "checkBox_RemoteMode";
+            checkBox_RemoteMode.Size = new Size(101, 19);
+            checkBox_RemoteMode.TabIndex = 9;
+            checkBox_RemoteMode.Text = "Remote Mode";
+            checkBox_RemoteMode.UseVisualStyleBackColor = true;
+            // 
             // Konfiguration
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -882,5 +906,7 @@
         private Label label11;
         private TextBox textBox_Support;
         private Label label12;
+        private CheckBox checkBox_EDMC;
+        private CheckBox checkBox_RemoteMode;
     }
 }

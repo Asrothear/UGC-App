@@ -32,21 +32,16 @@ public partial class Overlay : Form
             controls.MouseMove += OverlayForm_MouseMove;
             controls.MouseUp += OverlayForm_MouseUp;
         }
-
-        Task.Run(() =>
+        Load += (sender, args) =>
         {
-            Thread.Sleep(10);
-            Invoke(() => { Location = Config.Instance.OverlayLocation; });
-        });
-        SetCircles();
-        Task.Run(() =>
-        {
-            Thread.Sleep(10);
-            label_Orders.Text = parrent.GetOrder();
+            Invoke(() => { Location = Config.Instance.MainLocation; });label_Orders.Text = parrent.GetOrder();
             FixLayout();
             label_SystemList.SizeChanged += SystemListReSized;
             label_Orders.SizeChanged += SystemListReSized;
-        });
+            Location = Config.Instance.OverlayLocation;
+
+        };
+        SetCircles();
     }
 
     private void SystemListReSized(object? sender, EventArgs e)
