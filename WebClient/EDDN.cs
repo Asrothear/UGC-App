@@ -14,7 +14,7 @@ public class Eddn
             if (Config.Instance.ExternTool)
             {
                 parrent?.SetStatus("EDMC");
-                return;
+                //return;
             }
             if(payload.DontSend)return;
             string shef = payload.Data["$schemaRef"].ToString();

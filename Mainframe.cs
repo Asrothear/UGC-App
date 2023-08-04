@@ -311,6 +311,8 @@ public partial class Mainframe : Form
     {
         FixLayout();
         var warn = false;
+        var p0 = false;
+        var wrn = 0;
         while (!IsDisposed && !_closing)
         {
             Thread.Sleep(500);
@@ -325,13 +327,16 @@ public partial class Mainframe : Form
             _ed = true;
             Task.Run(() => { JournalHandler.Start(this); });
             Thread.Sleep(5000);
+            if(wrn > 0)Thread.Sleep(5000);
             var edmc = Process.GetProcessesByName("EDMarketConnector");
             if (edmc.Length == 0)
             {
                 Config.Instance.ExternTool = false;
-                if(warn)continue;
-                if(!Config.Instance.AlertEDMC)Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
+                if(warn || p0)continue;
+                if (wrn >= 2) p0 = true;
+                if(Config.Instance.AlertEDMC)Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning));
+                wrn++;
                 continue;
             }
             if(warn)continue;
