@@ -4,8 +4,11 @@ using Newtonsoft.Json;
 
 namespace UGC_App.WebClient;
 
-public class Eddn
+public static class EDDN
 {
+    internal static string JournalBodyName { get; set; } = string.Empty;
+    internal static ulong JournalBodyId { get; set; }
+    internal static string StatusBodyName { get; set; } = string.Empty;
     internal static void Send(dynamic payload, Mainframe? parrent)
     {
         //if(!Config.Instance.EDDN)return;

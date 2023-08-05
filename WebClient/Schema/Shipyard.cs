@@ -6,7 +6,7 @@ public class Shipyard : SchemaFilter
 {
     public Shipyard(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
-        Data["message"] = inp;
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/shipyard/2";
+        ParseShipArray(inp);
     }
 }

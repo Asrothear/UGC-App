@@ -6,7 +6,7 @@ public class FssSignalDiscovered : SchemaFilter
 {
     public FssSignalDiscovered(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fsssignaldiscovered/1/test";
         Data["message"] = inp;
     }
 }

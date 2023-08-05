@@ -77,14 +77,14 @@ namespace UGC_App.EDLog
             {
                 if(swit)Program.Log($"nor current, now switching");
                 return;
-            };
+            }
             var lastWriteTime = File.GetLastWriteTimeUtc(_currentFile);
 
             if (lastWriteTime <= _lastCheckedTime)
             {
                 if(swit)Program.Log($"_lastCheckedTime not enough, now switching");
                 return;
-            };
+            }
             string jsonContent;
             using (var stream = new FileStream(_currentFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -125,12 +125,14 @@ namespace UGC_App.EDLog
                             break;
                         case "Location":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new Journal(jsonObject), _parent);
+                            if (jsonObject.TryGetValue("Body", out var lbody))EDDN.JournalBodyName = lbody.ToString();
+                            if (jsonObject.TryGetValue("BodyID", out var lbodyid)) EDDN.JournalBodyId = Convert.ToUInt64(lbodyid);
+                            EDDN.Send(new Journal(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "Docked":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new Journal(jsonObject), _parent);
+                            EDDN.Send(new Journal(jsonObject), _parent);
                             break;
                         case "Undocked":
                             CheckMeta(jsonObject);
@@ -138,66 +140,85 @@ namespace UGC_App.EDLog
                         case "CarrierJump":
                         case "FSDJump":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new Journal(jsonObject), _parent);
+                            EDDN.JournalBodyName = "";
+                            EDDN.JournalBodyId = 0;
+                            EDDN.Send(new Journal(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "ApproachSettlement":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new ApproachSettlement(jsonObject), _parent);
+                            EDDN.Send(new ApproachSettlement(jsonObject), _parent);
                             break;
                         case "ApproachBody":
                             CheckMeta(jsonObject);
-                            //ToDo: Collect safe Location Data for EDDN Tranmission
+                            if (jsonObject.TryGetValue("Body", out var body))EDDN.JournalBodyName = body.ToString();
+                            if (jsonObject.TryGetValue("BodyID", out var bodyid)) EDDN.JournalBodyId = Convert.ToUInt64(bodyid);
                             break;
                         case "CodexEntry":
+                            StatusHandler.GetBodyStatus();
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new CodexEntry(jsonObject), parent);
+                            EDDN.Send(new CodexEntry(jsonObject), _parent);
                             break;
                         case "Market":
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new Market(jsonObject), parent);
+                            var mark = JsonDataHandler.GetData("Market.json");
+                            if(mark==null)break;
+                            EDDN.Send(new Market(mark), _parent);
                             break;
                         case "FCMaterials":
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new FCMaterials(jsonObject), parent);
+                            var mats = JsonDataHandler.GetData("FCMaterials.json");
+                            if(mats==null)break;
+                            EDDN.Send(new FcMaterials(mats), _parent);
                             break;
                         case "FSSAllBodiesFound":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new FssAllBodiesFound(jsonObject), _parent);
+                            EDDN.Send(new FssAllBodiesFound(jsonObject), _parent);
                             break;
                         case "FSSBodySignals":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new FssBodySignals(jsonObject), _parent);
+                            EDDN.Send(new FssBodySignals(jsonObject), _parent);
                             CheckMeta(jsonObject);
                             break;
                         case "FSSDiscoveryScan":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new FssDiscoveryScan(jsonObject), _parent);
+                            EDDN.Send(new FssDiscoveryScan(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
                             break;
                         case "FSSSignalDiscovered":
+                            //ToDo: https://github.com/EDCD/EDDN/blob/master/schemas/fsssignaldiscovered-README.md
                             CheckMeta(jsonObject);
                             //EDDN.Send(new FSSSignalDiscovered(jsonObject), parent);
                             break;
+                        case "LeaveBody":
+                            EDDN.JournalBodyName = "";
+                            EDDN.JournalBodyId = 0;
+                            break;
                         case "NavBeaconScan":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new NavBeaconScan(jsonObject), _parent);
+                            EDDN.Send(new NavBeaconScan(jsonObject), _parent);
                             break;
                         case "NavRoute":
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new NavRoute(jsonObject), parent);
+                            var route = JsonDataHandler.GetData("NavRoute.json");
+                            if(route==null)break;
+                            EDDN.Send(new NavRoute(route), _parent);
                             break;
                         case "Outfitting":
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new Outfitting(jsonObject), parent);
+                            var outf = JsonDataHandler.GetData("Outfitting.json");
+                            if(outf==null)break;
+                            EDDN.Send(new Outfitting(outf), _parent);
                             break;
                         case "ScanBaryCentre":
                             CheckMeta(jsonObject);
-                            Eddn.Send(new ScanBaryCentre(jsonObject), _parent);
+                            EDDN.Send(new ScanBaryCentre(jsonObject), _parent);
                             break;
                         case "Shipyard":
                             CheckMeta(jsonObject);
-                            //EDDN.Send(new Shipyard(jsonObject), parent);
+                            var ship = JsonDataHandler.GetData("Shipyard.json");
+                            if(ship==null)break;
+                            EDDN.Send(new Shipyard(ship), _parent);
                             break;
                         case "SuitLoadout":
                             CheckMeta(jsonObject);

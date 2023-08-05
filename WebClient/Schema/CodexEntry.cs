@@ -7,9 +7,9 @@ public class CodexEntry : SchemaFilter
 {
     public CodexEntry(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/codexentry/1";
-        Data["message"] = inp;
-        var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]!["StarPos"] = JToken.FromObject(JsonConvert.DeserializeObject<double[]>(datas[1])!);
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/codexentry/1/test";
+        Merge(inp);
+        GetCoords(inp);
+        CheckBodyMeta(inp);
     }
 }

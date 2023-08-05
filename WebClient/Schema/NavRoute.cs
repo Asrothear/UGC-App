@@ -6,7 +6,7 @@ public class NavRoute : SchemaFilter
 {
     public NavRoute(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/approachsettlement/1";
-        Data["message"] = inp;
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/navroute/1";
+        Merge(inp);
     }
 }

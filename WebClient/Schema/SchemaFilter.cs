@@ -54,6 +54,46 @@ public class SchemaFilter
             factionObject.Remove("SquadronFaction");
         }
     }
+    
+    internal static void FilterMarket(JObject jsonObject)
+    {
+        if (jsonObject["message"] is JObject items)
+        {
+            items.Remove("StationType");
+            items.Remove("CarrierDockingAccess");
+            RenameKeys(items,"StationName","stationName");
+            RenameKeys(items,"StarSystem","systemName");
+            RenameKeys(items,"MarketID","marketId");
+        }
+        var item = jsonObject["message"]?["commodities"];
+        if (item == null) return;
+        foreach (var ite in item)
+        {
+            var itemObject = ite.Value<JObject>();
+            if (itemObject == null) continue;
+            if (itemObject["categoryname"]?.ToString() == "NonMarketable")
+            {
+                ite.Remove();
+                continue;
+            }
+            itemObject.Remove("Producer");
+            itemObject.Remove("Rare");
+            itemObject.Remove("id");
+            itemObject.Remove("Category_Localised");
+            itemObject.Remove("Category");
+            itemObject.Remove("Consumer");
+            itemObject["Name"] = itemObject["Name"]?.ToString().Replace("$", "").Replace("_name;", "");
+            RenameKeys(itemObject,"Name","name");
+            RenameKeys(itemObject,"MeanPrice","meanPrice");
+            RenameKeys(itemObject,"BuyPrice","buyPrice");
+            RenameKeys(itemObject,"Stock","stock");
+            RenameKeys(itemObject,"StockBracket","stockBracket");
+            RenameKeys(itemObject,"SellPrice","sellPrice");
+            RenameKeys(itemObject,"Demand","demand");
+            RenameKeys(itemObject,"DemandBracket","demandBracket");
+        }
+    }
+    
     private static void RemoveKeysWithSubstring(JObject jsonObject, string substring)
     {
         var properties = jsonObject.Properties().ToList();
@@ -78,7 +118,13 @@ public class SchemaFilter
             }
         }
     }
-
+    internal static void RenameKeys(JObject jsonObject, string oldKeyName, string newKeyName)
+    {
+        var oldValue = jsonObject[oldKeyName];
+        if (oldValue == null) return;
+        jsonObject.Remove(oldKeyName);
+        jsonObject.Add(newKeyName, oldValue);
+    }
     internal void GetCoords(JObject inp)
     {
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
@@ -100,11 +146,20 @@ public class SchemaFilter
         if (pos == null || string.IsNullOrWhiteSpace(datas[0])) DontSend = true;
         Data["message"]!["StarPos"] = JToken.FromObject(pos ?? Array.Empty<double>());
     }
+    internal void CheckBodyMeta(JObject inp)
+    {
+        if (string.IsNullOrWhiteSpace(EDDN.StatusBodyName))return;
+        if (!string.IsNullOrWhiteSpace(EDDN.JournalBodyName))Data["message"]!["BodyName"] = EDDN.JournalBodyName;
+        if (EDDN.StatusBodyName != EDDN.JournalBodyName) return;
+        Data["message"]!["BodyName"] = EDDN.StatusBodyName;
+        Data["message"]!["BodyID "] = EDDN.JournalBodyId;
+    }
     
     internal void Merge(JObject inp)
     {
         if (Data["message"] is JObject message)
         {
+            message.Remove("CarrierDockingAccess");
             message.Merge(inp, new JsonMergeSettings
             {
                 MergeArrayHandling = MergeArrayHandling.Merge
@@ -115,6 +170,84 @@ public class SchemaFilter
         {
             Data["message"] = inp;
         }
+        RemoveKeysWithSubstring(Data, "_Localised");
+    }
+    internal void MergeMarket(JObject inp)
+    {
+        var items = inp["Items"];
+        inp.Remove("Items");
+        Merge(inp);
+        if (Data["message"] is JObject message)
+        {
+            message.Remove("event");
+            message["commodities"] ??= new JObject();
+        }
+        Data["message"]!["commodities"] = items;
+        
+        if (items == null || !items.Any()) DontSend = true;
+        RemoveKeysWithSubstring(Data, "_Localised");
+    }
+    internal void ParseModuleArray(JObject inp)
+    {
+        var items = inp["Items"];
+        inp.Remove("Items");
+        Merge(inp);
+        if (Data["message"] is JObject message)
+        {
+            RenameKeys(message,"StarSystem","systemName");
+            RenameKeys(message,"StationName","stationName");
+            RenameKeys(message,"MarketID","marketId");
+            message.Remove("CarrierDockingAccess");
+            message.Remove("event");
+            message.Remove("Horizons");
+            message["modules"] ??= new JObject();
+        }
+        HashSet<JToken> list = new();
+        foreach (var item in items)
+        {
+            var name = item["Name"]?.ToString();
+            if(string.IsNullOrWhiteSpace(name))continue;
+            var sitem = item.ToString();
+            if (JObject.Parse(item.ToString()).TryGetValue("sku", out var starSystem))
+            {
+                if(item["sku"]==null && name.ToLower()!= "ELITE_HORIZONS_V_PLANETARY_LANDINGS".ToLower())continue;
+            }
+            
+            if (name.ToLower() == "ELITE_HORIZONS_V_PLANETARY_LANDINGS".ToLower())
+            {
+                list.Add(name);
+                continue;
+            }
+            if (!list.Any()) DontSend = true;
+            if(name.ToLower().Contains("hpt_") || name.Contains("int_") || name.Contains("_armour_") && !string.Equals(name.ToLower(), "Int_PlanetApproachSuite".ToLower(), StringComparison.CurrentCultureIgnoreCase))list.Add(name);
+        }
+        Data["message"]!["modules"] = new JArray(list);
+        RemoveKeysWithSubstring(Data, "_Localised");
+    }
+    internal void ParseShipArray(JObject inp)
+    {
+        var items = inp["PriceList"];
+        inp.Remove("PriceList");
+        Merge(inp);
+        if (Data["message"] is JObject message)
+        {
+            RenameKeys(message,"StarSystem","systemName");
+            RenameKeys(message,"StationName","stationName");
+            RenameKeys(message,"MarketID","marketId");
+            RenameKeys(message,"AllowCobraMkIV","allowCobraMkIV");
+            message.Remove("CarrierDockingAccess");
+            message.Remove("event");
+            message.Remove("Horizons");
+            message["ships"] ??= new JObject();
+        }
+        HashSet<JToken> list = new();
+        foreach (var item in items)
+        {
+            var name = item["ShipType"]?.ToString();
+            list.Add(name);
+        }
+        if (!list.Any()) DontSend = true;
+        Data["message"]!["ships"] = new JArray(list);
         RemoveKeysWithSubstring(Data, "_Localised");
     }
 }

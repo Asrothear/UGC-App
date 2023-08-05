@@ -9,7 +9,7 @@ public class Config
 {
     [AttributeUsage(AttributeTargets.Property)]
     private class DisallowDeviationAttribute : Attribute {}
-    [DisallowDeviation] public string Version { get; private set; } = "0.5.20";
+    [DisallowDeviation] public string Version { get; private set; } = "0.6.3";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public static Config Instance { get; }
     public Point MainLocation { get; set; } = new (50, 50);
