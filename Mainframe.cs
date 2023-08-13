@@ -24,23 +24,29 @@ public partial class Mainframe : Form
     private bool _ed;
     private int _sends;
     private readonly KeyboardHookManager _keyboardHookManager = new();
-    private static readonly Timer CacheTimer = new Timer();
+    private static readonly Timer CacheTimer = new();
+
     [GeneratedRegex("(.*?)(?:\\s*:\\s*\\d+(?:\\.\\d+)?\\s*ly)?$")]
     private static partial Regex SystemListRegex();
 
     public Mainframe()
     {
         InitializeComponent();
-        
         CacheTimer.Interval += 30 * 60 * 1000;
-        CacheTimer.Elapsed += (_, _) => { Program.Log("CacheTimer");CacheHandler.InitAll(true); };
+        CacheTimer.Elapsed += (_, _) =>
+        {
+            Program.Log("CacheTimer");
+            CacheHandler.InitAll(true);
+        };
         SizeChanged += (_, _) => FixLayout();
         Load += (_, _) =>
         {
             if (WindowState == FormWindowState.Normal)
             {
                 Invoke(() => { Location = Config.Instance.MainLocation; });
+                FixLayout();
             }
+
             Task.Run(() =>
             {
                 Thread.Sleep(500);
@@ -50,13 +56,12 @@ public partial class Mainframe : Form
                 CacheHandler.InitAll();
                 anweisungenToolStripMenuItem.Text = "BGS";
                 anweisungenToolStripMenuItem.Enabled = true;
+                CacheTimer.Start();
+                StartWorker();
+                Task.Run(SetUpEdSpy);
             });
-            CacheTimer.Start();
-            _keyboardHookManager.Start();
-            StartWorker();
-            Task.Run(SetUpEdSpy);
         };
-        
+
         contextMenuStrip.Items.AddRange(new ToolStripItem[]
         {
             CreateToolStripMenuItem("Wiederherstellen", RestoreClick),
@@ -89,6 +94,7 @@ public partial class Mainframe : Form
         SetDesign();
         TopMost = Config.Instance.AlwaysOnTop;
         Program.SetStartup(Config.Instance.AutoStart);
+        _keyboardHookManager.Start();
         _keyboardHookManager.RegisterHotkey(
             new[]
             {
@@ -98,10 +104,12 @@ public partial class Mainframe : Form
 
     private void ResetPos(object? sender, EventArgs e)
     {
-        var res = MessageBox.Show("Hiermit werden die Positionen des Hauptfensters und des Overlays der UGC-App zurückgesetzt.\nDies ist für den fall das die UGC-App nicht mehr sichtbar ist.\nFortfahren?","Position Reset",MessageBoxButtons.YesNo, MessageBoxIcon.Information,MessageBoxDefaultButton.Button2,
+        var res = MessageBox.Show(
+            "Hiermit werden die Positionen des Hauptfensters und des Overlays der UGC-App zurückgesetzt.\nDies ist für den fall das die UGC-App nicht mehr sichtbar ist.\nFortfahren?",
+            "Position Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2,
             MessageBoxOptions.ServiceNotification
         );
-        if(res != DialogResult.Yes)return;
+        if (res != DialogResult.Yes) return;
         Config.Instance.MainLocation = new Point(50, 50);
         Config.Instance.OverlayLocation = new Point(50, 50);
         Config.Save();
@@ -164,7 +172,7 @@ public partial class Mainframe : Form
         if (infos.CurrentlyInstalledVersion.Version >= infos.FutureReleaseEntry.Version &&
             infos.CurrentlyInstalledVersion.SHA1 == infos.FutureReleaseEntry.SHA1)
         {
-            MessageBox.Show(this,"Die aktuellste Version ist breits Installiert.", "Updater");
+            MessageBox.Show(this, "Die aktuellste Version ist breits Installiert.", "Updater");
             return;
         }
 
@@ -174,6 +182,8 @@ public partial class Mainframe : Form
                 $"Eine neue Version ist verfügbar.\n{infos.CurrentlyInstalledVersion.Version}->{infos.FutureReleaseEntry.Version}\nUpdate Installieren?",
                 "Updater", MessageBoxButtons.YesNo);
         if (dialogResult != DialogResult.Yes) return;
+        JournalHandler.Stop();
+        SetStatus("Update App...");
         var newVersion = await mgr.UpdateApp();
         if (newVersion != null)
         {
@@ -219,16 +229,20 @@ public partial class Mainframe : Form
                         SetStatus("Fehler beim JournalHandler");
                         return;
                     }
+
                     SetStatus("Warte auf Elite");
-                    Task.Run(() => {
+                    Task.Run(() =>
+                    {
                         Thread.Sleep(1100);
                         SetLightActive(redLight, false);
                     });
-                    Task.Run(() => {
+                    Task.Run(() =>
+                    {
                         Thread.Sleep(800);
                         SetLightActive(yellowLight, true);
                     });
-                    Task.Run(() => {
+                    Task.Run(() =>
+                    {
                         Thread.Sleep(400);
                         SetLightActive(greenLight, true);
                     });
@@ -236,7 +250,6 @@ public partial class Mainframe : Form
                 }
                 else
                 {
-                    
                     SetLightActive(redLight, false);
                     if (!_ed)
                     {
@@ -248,22 +261,27 @@ public partial class Mainframe : Form
                             SetStatus("Fehler beim JournalHandler");
                             return;
                         }
+
                         SetStatus("Warte auf Elite");
-                        Task.Run(() => {
+                        Task.Run(() =>
+                        {
                             Thread.Sleep(1100);
                             SetLightActive(redLight, false);
                         });
-                        Task.Run(() => {
+                        Task.Run(() =>
+                        {
                             Thread.Sleep(800);
                             SetLightActive(yellowLight, true);
                         });
-                        Task.Run(() => {
+                        Task.Run(() =>
+                        {
                             Thread.Sleep(400);
                             SetLightActive(greenLight, true);
                         });
                         Thread.Sleep(500);
                     }
                 }
+
                 Thread.Sleep(1000);
             }
         });
@@ -321,30 +339,35 @@ public partial class Mainframe : Form
             {
                 _ed = false;
                 warn = false;
+                JournalHandler.Stop();
                 continue;
             }
-            if(!_ed) Program.Log(Config.Instance.RemoteMode ? "RemoteMode läuft." : "EliteDangerous läuft.");
+
+            if (!_ed) Program.Log(Config.Instance.RemoteMode ? "RemoteMode läuft." : "EliteDangerous läuft.");
             _ed = true;
             Task.Run(() => { JournalHandler.Start(this); });
             Thread.Sleep(5000);
-            if(wrn > 0)Thread.Sleep(5000);
+            if (wrn > 0) Thread.Sleep(5000);
             var edmc = Process.GetProcessesByName("EDMarketConnector");
             if (edmc.Length == 0)
             {
                 Config.Instance.ExternTool = false;
-                if(warn || p0)continue;
+                if (warn || p0) continue;
                 if (wrn >= 2) p0 = true;
-                if(Config.Instance.AlertEDMC)Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning));
+                if (Config.Instance.AlertEDMC)
+                    Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning));
                 wrn++;
                 continue;
             }
-            if(warn)continue;
+
+            if (warn) continue;
             SetStatus("Start Up");
             Config.Instance.ExternTool = true;
             warn = true;
         }
     }
+
     private void FixLayout()
     {
         try
@@ -362,6 +385,7 @@ public partial class Mainframe : Form
                     label_SystemListLabel.Top = groupBox_Orders.Bottom + 10;
                     label_SystemList.Top = label_SystemListLabel.Bottom + 10;
                 }
+
                 Height = label_SystemList.Bottom + LabelSpacing + 46;
                 CenterObjectHorizontally(label_SystemList);
             });
@@ -420,7 +444,8 @@ public partial class Mainframe : Form
     {
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
-        if(!string.IsNullOrWhiteSpace(groupBox_Orders.Text))overlayForm.FillOrderList(label_Orders.Text,groupBox_Orders.Text);
+        if (!string.IsNullOrWhiteSpace(groupBox_Orders.Text))
+            overlayForm.FillOrderList(label_Orders.Text, groupBox_Orders.Text);
         SetDesign();
     }
 
@@ -644,11 +669,13 @@ public partial class Mainframe : Form
                 Invoke(() =>
                 {
                     groupBox_Orders.Text = "";
-                    groupBox_Orders.Visible = false; });
+                    groupBox_Orders.Visible = false;
+                });
                 overlayForm?.HideOrderList();
                 FixLayout();
                 return;
             }
+
             Invoke(() => { groupBox_Orders.Visible = true; });
             var final = orders.Aggregate("",
                 (current, order) =>
@@ -686,7 +713,21 @@ public partial class Mainframe : Form
 
     public void SetStatus(HttpResponseMessage response)
     {
-        Invoke(() => { toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}"; });
+        try
+        {
+            toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}";
+        }
+        catch
+        {
+            try
+            {
+                Invoke(() => { toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}"; });
+            }
+            catch
+            {
+                //ignore
+            }
+        }
     }
 
     internal void SetStatus(string response)

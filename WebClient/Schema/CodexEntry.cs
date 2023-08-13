@@ -7,7 +7,7 @@ public class CodexEntry : SchemaFilter
 {
     public CodexEntry(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/codexentry/1/test";
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/codexentry/1";
         Merge(inp);
         GetCoords(inp);
         CheckBodyMeta(inp);

@@ -13,6 +13,11 @@ namespace UGC_App.EDLog
         private static DateTime _lastCheckedTime;
         internal static bool Running;
 
+        internal static void Stop()
+        {
+            Running = false;
+        }
+
         internal static void Start(Mainframe? parrent)
         {
             if (Running) return;
@@ -234,6 +239,8 @@ namespace UGC_App.EDLog
 
                 if (jsonObject == null) continue;
                 jsonObject["user"] = Config.Instance.Cmdr;
+                if(Config.Instance.Debug)Program.Log($"{jsonObject["event"]}");
+                if(Config.Instance.Debug && jsonObject["event"].ToString() == "FSDJump" || jsonObject["event"].ToString() == "CarrierJump")Program.Log($"{jsonObject["event"]} - {jsonObject["event"]?["StarSystem"]}");
                 ApiSender.SendApi(jsonObject.ToString(), _parent);
             }
         }

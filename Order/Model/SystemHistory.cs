@@ -20,6 +20,7 @@ public class SystemHistoryData
         public HashSet<FactionsO> factions { get; set; } = new();
         public SystemFactionO systemFaction { get; set; } = new();
         public HashSet<ConflictsO>? conflicts { get; set; } = new();
+        public DateTime TickTime { get; set; } = DateTime.MinValue;
 
         public class FactionsO
         {
@@ -47,20 +48,20 @@ public class SystemHistoryData
 
         public class SystemFactionO
         {
-            public string name { get; set; }
+            public string name { get; set; } = "";
         }
 
         public class ConflictsO
         {
-            public string warType { get; set; }
-            public string status { get; set; }
+            public string warType { get; set; } = "";
+            public string? status { get; set; } = "";
             public ConflictFaction faction1 { get; set; }
             public ConflictFaction faction2 { get; set; }
 
             public class ConflictFaction
             {
-                public string name { get; set; }
-                public string stake { get; set; }
+                public string name { get; set; } = "";
+                public string stake { get; set; } = "";
                 public int wonDays { get; set; }
             }
         }

@@ -21,7 +21,7 @@ public static class CacheHandler
     internal static void InitAll(bool force = false)
     {
         File.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "cache.ugc"));
-        Program.Log($"Update Cache, Forced = {force}");
+        if(Config.Instance.Debug)Program.Log($"Update Cache, Forced = {force}");
         CacheOrder(force);
         CacheHistory(force);
         CacheSystemList(force);
@@ -44,14 +44,14 @@ public static class CacheHandler
     }
     internal static void CacheOrder(bool force = false)
     {
-        Program.Log($"Update Order-Cache, Forced = {force}");
+        if(Config.Instance.Debug)Program.Log($"Update Order-Cache, Forced = {force}");
         var cache = GetCache<OrdersCacheModel>(OrderCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(0, 30, 0) && !force) return;
         SaveOrderCache<OrdersCacheModel>(new OrdersCacheModel(), OrderAPI.GetAllOrders());
     }
     internal static void CacheHistory(bool force = false)
     {
-        Program.Log($"Update History-Cache, Forced = {force}");
+        if(Config.Instance.Debug)Program.Log($"Update History-Cache, Forced = {force}");
         var cache = GetCache<HistoryChacheModel>(HistoryCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
         cache = new HistoryChacheModel();
@@ -61,7 +61,7 @@ public static class CacheHandler
     }
     internal static void CacheUser(bool force = false)
     {
-        Program.Log($"Update User-Cache, Forced = {force}");
+        if(Config.Instance.Debug)Program.Log($"Update User-Cache, Forced = {force}");
         var cache = GetCache<UserDataCacheModel>(UserCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
         cache = new UserDataCacheModel();
@@ -69,7 +69,7 @@ public static class CacheHandler
     }
     internal static void CacheSystemList(bool force = false)
     {
-        Program.Log($"Update SystemList-Cache, Forced = {force}");
+        if(Config.Instance.Debug)Program.Log($"Update SystemList-Cache, Forced = {force}");
         var cache = GetCache<SystemListDataCacheModel>(SystemListCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
         cache = new SystemListDataCacheModel();
@@ -93,6 +93,7 @@ public static class CacheHandler
     {
         var encryptedBytes = Encrypt(JsonConvert.SerializeObject(data), Config.Instance.Token);
         File.WriteAllBytes(path, encryptedBytes);
+        //File.WriteAllText(path, JsonConvert.SerializeObject(data));
     }
 
     private static void SaveOrderCache<T>(OrdersCacheModel cache, HashSet<Orders> ordersSet) where T : class, new()
@@ -131,6 +132,7 @@ public static class CacheHandler
         CreateDataFile<T>(path);
         var data = Decrypt(File.ReadAllBytes(path), Config.Instance.Token);
         return JsonConvert.DeserializeObject<T>(data) ?? new T();
+        //return JsonConvert.DeserializeObject<T>(File.ReadAllText(path)) ?? new T();
     }
     private static byte[] Encrypt(string plainText, string encryptionKey)
     {

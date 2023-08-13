@@ -6,7 +6,7 @@ public class FcMaterials : SchemaFilter
 {
     public FcMaterials(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fcmaterials_journal/1/test";
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/fcmaterials_journal/1";
         Merge(inp);
     }
 }

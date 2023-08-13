@@ -7,7 +7,7 @@ public class Outfitting : SchemaFilter
 {
     public Outfitting(JObject inp)
     {
-        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/outfitting/2";
+        Data["$schemaRef"] = "https://eddn.edcd.io/schemas/outfitting/2/test";
         ParseModuleArray(inp);
     }
 }

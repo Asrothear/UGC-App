@@ -148,11 +148,17 @@ public class SchemaFilter
     }
     internal void CheckBodyMeta(JObject inp)
     {
+        var temp = Data["message"]!["BodyName"];
+        if (Data["message"] is JObject message)
+        {
+            message.Remove("BodyName");
+            message.Remove("BodyID");
+            message.Remove("IsNewEntry");
+            message.Remove("NewTraitsDiscovered");
+        }
         if (string.IsNullOrWhiteSpace(EDDN.StatusBodyName))return;
-        if (!string.IsNullOrWhiteSpace(EDDN.JournalBodyName))Data["message"]!["BodyName"] = EDDN.JournalBodyName;
-        if (EDDN.StatusBodyName != EDDN.JournalBodyName) return;
         Data["message"]!["BodyName"] = EDDN.StatusBodyName;
-        Data["message"]!["BodyID "] = EDDN.JournalBodyId;
+        if (EDDN.StatusBodyName == EDDN.JournalBodyName) Data["message"]!["BodyID "] = EDDN.JournalBodyId;
     }
     
     internal void Merge(JObject inp)
@@ -218,9 +224,12 @@ public class SchemaFilter
                 list.Add(name);
                 continue;
             }
-            if (!list.Any()) DontSend = true;
             if(name.ToLower().Contains("hpt_") || name.Contains("int_") || name.Contains("_armour_") && !string.Equals(name.ToLower(), "Int_PlanetApproachSuite".ToLower(), StringComparison.CurrentCultureIgnoreCase))list.Add(name);
         }
+        if(Config.Instance.Debug)Program.Log(JsonConvert.SerializeObject(list));
+        if(Config.Instance.Debug)Program.Log(list.Any().ToString());
+        if (!list.Any()) DontSend = true;
+        if(Config.Instance.Debug)Program.Log(DontSend.ToString());
         Data["message"]!["modules"] = new JArray(list);
         RemoveKeysWithSubstring(Data, "_Localised");
     }

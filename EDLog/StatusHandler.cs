@@ -11,9 +11,10 @@ public class StatusHandler
         StatusModel? status = null;
         try
         {
-            status = JsonConvert.DeserializeObject<StatusModel>(Path.Combine(Config.Instance.PathJournal, "status.json"));
+            var str = JsonDataHandler.GetData("Status.json");
+            status = JsonConvert.DeserializeObject<StatusModel>(str.ToString());
         }
-        catch
+        catch(Exception ex)
         {
             EDDN.StatusBodyName = string.Empty;
         }

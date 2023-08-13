@@ -72,7 +72,7 @@
             comboBox_Type.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             comboBox_Type.AutoCompleteSource = AutoCompleteSource.ListItems;
             comboBox_Type.FormattingEnabled = true;
-            comboBox_Type.Items.AddRange(new object[] { "Unterstützung", "Unterstützung (Wahlen)", "Unterstützung Rückzug verhindern", "Konfliktzonen", "Thargoiden", "Spezial" });
+            comboBox_Type.Items.AddRange(new object[] { "Unterstützung", "Wahlen", "Rückzug verhindern", "Konfliktzonen", "Thargoiden", "Spezial" });
             comboBox_Type.Location = new Point(49, 60);
             comboBox_Type.Name = "comboBox_Type";
             comboBox_Type.Size = new Size(121, 23);

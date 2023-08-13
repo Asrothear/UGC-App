@@ -20,9 +20,9 @@ public class ApiSender
                 client.Send(request);
                 parent?.AddSucess();
             }
-            catch
+            catch(Exception ex)
             {
-                // ignored
+                Program.LogException(ex);
             }
         });
     }
