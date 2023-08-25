@@ -37,6 +37,19 @@ public partial class Konfiguration : Form
                 numericUpDown_ListCount.Visible = true;
             }
         };
+        checkBox_CustomState.CheckStateChanged += (_, _) =>
+        {
+            if (checkBox_CustomState.Checked)
+            {
+                checkBox_SlowState.Enabled = false;
+                numericUpDown_CustomState.Visible = true;
+            }
+            else
+            {
+                checkBox_SlowState.Enabled = true;
+                numericUpDown_CustomState.Visible = false;
+            }
+        };
         if (!Config.Instance.ShowAll)
         {
             checkBox_FullList.Text = "Zeige nur x Systeme    x=";
@@ -57,6 +70,8 @@ public partial class Konfiguration : Form
         toolTip_Konfig.SetToolTip(checkBox_AlwaysTop, "Setzt das Hauptfenster immer in den Vordergrund.");
         toolTip_Konfig.SetToolTip(label_AutoKontrast, "Stellt die Zeitliche Verzögerung in Millisekunden, für den Wechsel zwischen Dunklem und Hellem Hintergrund, zur Anpassung des Overlaytextes ein.");
         toolTip_Konfig.SetToolTip(numericUpDown_AutoKontrast, "Stellt die Zeitliche Verzögerung in Millisekunden, für den Wechsel zwischen Dunklem und Hellem Hintergrund, zur Anpassung des Overlaytextes ein.");
+        toolTip_Konfig.SetToolTip(numericUpDown_CustomState, "Stellt die Zeitliche Verzögerung in Millisekunden, für das abfragen der System Liste, ein.");
+        toolTip_Konfig.SetToolTip(checkBox_CustomState, "Stellt die Zeitliche Verzögerung in Millisekunden, für das abfragen der System Liste, ein.");
 
 
 
@@ -170,12 +185,13 @@ public partial class Konfiguration : Form
         numericUpDown_ListCount.Value = Config.Instance.ListCount;
         checkBox_CloseMini.Checked = Config.Instance.CloseMini;
         checkBox_AlwaysTop.Checked = Config.Instance.AlwaysOnTop;
-        checkBox_EDDN.Checked = Config.Instance.Eddn;
         textBox_path_logs.Text = Config.Instance.PathLogs;
         textBox_path_config.Text = Config.Instance.PathConfig;
         textBox_path_journal.Text = Config.Instance.PathJournal;
-        checkBox_EDMC.Checked = Config.Instance.AlertEDMC;
+        checkBox_EDMC.Checked = Config.Instance.AlertEdmc;
         checkBox_RemoteMode.Checked = Config.Instance.RemoteMode;
+        checkBox_CustomState.Checked = Config.Instance.CustomState;
+        numericUpDown_CustomState.Value = Config.Instance.CustomStateSpeed;
         Activate();
     }
 
@@ -194,13 +210,14 @@ public partial class Konfiguration : Form
         Config.Instance.ListCount = numericUpDown_ListCount.Value;
         Config.Instance.CloseMini = checkBox_CloseMini.Checked;
         Config.Instance.AlwaysOnTop = checkBox_AlwaysTop.Checked;
-        Config.Instance.AlertEDMC = checkBox_EDMC.Checked;
-        Config.Instance.Eddn = checkBox_EDDN.Checked;
+        Config.Instance.AlertEdmc = checkBox_EDMC.Checked;
         Config.Instance.CheckBackgroundIntervall = numericUpDown_AutoKontrast.Value;
         Config.Instance.PathLogs = textBox_path_logs.Text;
         Config.Instance.PathConfig = textBox_path_config.Text;
         Config.Instance.PathJournal = textBox_path_journal.Text;
         Config.Instance.RemoteMode = checkBox_RemoteMode.Checked;
+        Config.Instance.CustomState = checkBox_CustomState.Checked;
+        Config.Instance.CustomStateSpeed = numericUpDown_CustomState.Value;
         Config.Save();
         Program.SetStartup(checkBoxy_AutoStart.Checked);
         _parent.TopMost = Config.Instance.AlwaysOnTop;

@@ -149,6 +149,7 @@ namespace UGC_App.EDLog
                             EDDN.JournalBodyId = 0;
                             EDDN.Send(new Journal(jsonObject), _parent);
                             _parent?.GetSystemOrder(Convert.ToUInt64(jsonObject["SystemAddress"]));
+                            if(Config.Instance.Debug)Program.Log($"Jump - {Config.Instance.LastSystem}");
                             break;
                         case "ApproachSettlement":
                             CheckMeta(jsonObject);
@@ -239,8 +240,6 @@ namespace UGC_App.EDLog
 
                 if (jsonObject == null) continue;
                 jsonObject["user"] = Config.Instance.Cmdr;
-                if(Config.Instance.Debug)Program.Log($"{jsonObject["event"]}");
-                if(Config.Instance.Debug && jsonObject["event"].ToString() == "FSDJump" || jsonObject["event"].ToString() == "CarrierJump")Program.Log($"{jsonObject["event"]} - {jsonObject["event"]?["StarSystem"]}");
                 ApiSender.SendApi(jsonObject.ToString(), _parent);
             }
         }

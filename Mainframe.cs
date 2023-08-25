@@ -308,11 +308,19 @@ public partial class Mainframe : Form
                     // ignored
                 }
 
-                Thread.Sleep(Config.Instance.SlowState
-                    ? TimeSpan.FromSeconds(15)
-                    : TimeSpan.FromSeconds(2));
+                if (Config.Instance.CustomState)
+                {
+                    Thread.Sleep(Convert.ToInt32(Config.Instance.CustomStateSpeed));
+                }
+                else
+                {
+                    Thread.Sleep(Config.Instance.SlowState
+                        ? TimeSpan.FromSeconds(15)
+                        : TimeSpan.FromSeconds(2));
+                }
+
                 if (IsDisposed || _closing) return;
-            }
+            } 
         });
         Task.Run(() =>
         {
@@ -351,21 +359,56 @@ public partial class Mainframe : Form
             var edmc = Process.GetProcessesByName("EDMarketConnector");
             if (edmc.Length == 0)
             {
-                Config.Instance.ExternTool = false;
                 if (warn || p0) continue;
                 if (wrn >= 2) p0 = true;
-                if (Config.Instance.AlertEDMC)
+                if(Config.Instance.EdmcAutoStart == 1 && !string.IsNullOrWhiteSpace(Config.Instance.EdmcPath))
+                {
+                    warn = true;
+                    Process.Start(Config.Instance.EdmcPath);
+                    SetStatus("Start Up");
+                    continue;
+                }
+                if (Config.Instance.AlertEdmc)                    
                     Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
                         MessageBoxIcon.Warning));
                 wrn++;
                 continue;
             }
+            else
+            {
+                if (Config.Instance.EdmcAutoStart == 0)
+                {
+                    Invoke(() =>
+                    {
+                        var res1 = MessageBox.Show(this, "Soll EDMC beim Starten von ED Automatisch über die UGC-App gestartet werden?", "Autostart von EDMC aktivieren?", MessageBoxButtons.YesNo);
+                        switch (res1)
+                        {
+                            case DialogResult.Yes:
+                                Config.Instance.EdmcPath = edmc.First().MainModule?.FileName ?? string.Empty;
+                                Config.Instance.EdmcAutoStart = 1;
+                                break;
+                            case DialogResult.No:
+                                Config.Instance.EdmcAutoStart = 2;
+                                break;
+                            default:
+                                return;
+                        }
+
+                        Config.Save();
+                    });
+                }
+            }
 
             if (warn) continue;
             SetStatus("Start Up");
-            Config.Instance.ExternTool = true;
             warn = true;
         }
+    }
+
+    internal static bool CheckEDMCRunning()
+    {
+        var edmc = Process.GetProcessesByName("EDMarketConnector");
+        return edmc.Length != 0;
     }
 
     private void FixLayout()
@@ -703,12 +746,6 @@ public partial class Mainframe : Form
         }
 
         return rets;
-    }
-
-    public void AddSucess()
-    {
-        if (IsDisposed || _closing || !JournalHandler.Running) return;
-        toolStripStatusLabel_Spacer.Text = $"Sended: {_sends++}";
     }
 
     public void SetStatus(HttpResponseMessage response)

@@ -14,11 +14,6 @@ public static class EDDN
         //if(!Config.Instance.EDDN)return;
         Task.Run(() =>
         {
-            if (Config.Instance.ExternTool)
-            {
-                parrent?.SetStatus("EDMC");
-                //return;
-            }
             if(payload.DontSend)return;
             string shef = payload.Data["$schemaRef"].ToString();
             string inp = JsonConvert.SerializeObject(payload.Data, Formatting.Indented);

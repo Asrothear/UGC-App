@@ -56,7 +56,7 @@ namespace UGC_App.Order
             table.Columns.Add("Status", typeof(string));
             table.Columns.Add("Fraction 1", typeof(string));
             table.Columns.Add("Fraction 2", typeof(string));
-            table.Columns.Add("Stand", typeof(string));
+            table.Columns.Add("Stand (Tie)", typeof(string));
             table.Columns.Add("Dauer", typeof(string));
             var conflitcs = data.systemHistory.Last().conflicts;
             if (conflitcs != null && conflitcs.Any())
@@ -65,7 +65,9 @@ namespace UGC_App.Order
                 {
                     var points = $"{conflict.faction1.wonDays}:{conflict.faction2.wonDays}";
                     var duartion = 0;
-                    if(conflict.status == null || conflict.status.ToLower() != "pending")duartion = GetConflictDuration(data.systemHistory, conflict);
+                    var confd = GetConflictDuration(data.systemHistory, conflict);
+                    if(conflict.status == null || conflict.status.ToLower() != "pending")duartion = confd[0];
+                    if (confd[1] > 0) points += $" ({confd[1]})";
                     table.Rows.Add(conflict.warType, conflict.status ?? "", conflict.faction1.name, conflict.faction2.name,
                         points, $"{duartion.ToString()} Tage");
                 }
@@ -73,30 +75,36 @@ namespace UGC_App.Order
             dataGridView_Conflicts.DataSource = table;
         }
 
-        private int GetConflictDuration(HashSet<SystemHistoryData.HisoryModel> dataSystemHistory,
+        private int[] GetConflictDuration(HashSet<SystemHistoryData.HisoryModel> dataSystemHistory,
             SystemHistoryData.HisoryModel.ConflictsO conflictsO)
         {
             var fac1 = conflictsO.faction1.name;
             var fac2 = conflictsO.faction2.name;
             var conf = conflictsO.warType;
-            var result = 0;
+            var result = 1;
             var irt = 1;
+            var tie = 0;
             var lastdate = DateTime.MinValue;
             for (var i = dataSystemHistory.Count - 1; i >= 0; i--)
             {
                 var dat = dataSystemHistory.ElementAt(i);
                 if (dat.conflicts != null && dat.conflicts.Any())
                 {
-                    foreach (var conflict in dat.conflicts)
+                    foreach (var conflict in dat.conflicts.Where(conflict => conflict.warType == conf && conflict.faction1.name == fac1 && conflict.faction2.name == fac2 && lastdate != dat.TickTime ))
                     {
-                        if (conflict.warType == conf && conflict.faction1.name == fac1 && conflict.faction2.name == fac2 && lastdate != dat.TickTime) result++;
+                        if (conflict.status?.ToLower() == "pending")continue;
+                        if (conflict.faction1.wonDays == 0 && conflict.faction2.wonDays == 0) tie++;
+                        result++;
                     }
                 }
                 lastdate = dat.TickTime;
                 irt++;
                 if(irt>=8)break;
+                
             }
-            return result;
+
+            var fi = new[] { result, tie };
+            return fi;
         }
 
         private void LoadOrdersTable(SystemHistoryData data)

@@ -35,7 +35,6 @@
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             checkBox_EDMC = new CheckBox();
-            checkBox_EDDN = new CheckBox();
             checkBox_CloseMini = new CheckBox();
             numericUpDown_ListCount = new NumericUpDown();
             checkBoxy_AutoStart = new CheckBox();
@@ -81,6 +80,7 @@
             radioButton_Light = new RadioButton();
             checkBox_AlwaysTop = new CheckBox();
             tabPage3 = new TabPage();
+            checkBox_RemoteMode = new CheckBox();
             label10 = new Label();
             label9 = new Label();
             label7 = new Label();
@@ -98,7 +98,8 @@
             colorDialog1 = new ColorDialog();
             folderBrowserDialog1 = new FolderBrowserDialog();
             openFileDialog1 = new OpenFileDialog();
-            checkBox_RemoteMode = new CheckBox();
+            checkBox_CustomState = new CheckBox();
+            numericUpDown_CustomState = new NumericUpDown();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
@@ -117,6 +118,7 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).BeginInit();
             tabPage3.SuspendLayout();
             tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).BeginInit();
             SuspendLayout();
             // 
             // button_Save
@@ -143,8 +145,9 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(numericUpDown_CustomState);
+            tabPage1.Controls.Add(checkBox_CustomState);
             tabPage1.Controls.Add(checkBox_EDMC);
-            tabPage1.Controls.Add(checkBox_EDDN);
             tabPage1.Controls.Add(checkBox_CloseMini);
             tabPage1.Controls.Add(numericUpDown_ListCount);
             tabPage1.Controls.Add(checkBoxy_AutoStart);
@@ -178,16 +181,6 @@
             checkBox_EDMC.Text = "An EDMC erinnern";
             checkBox_EDMC.UseVisualStyleBackColor = true;
             // 
-            // checkBox_EDDN
-            // 
-            checkBox_EDDN.AutoSize = true;
-            checkBox_EDDN.Location = new Point(7, 103);
-            checkBox_EDDN.Name = "checkBox_EDDN";
-            checkBox_EDDN.Size = new Size(114, 19);
-            checkBox_EDDN.TabIndex = 33;
-            checkBox_EDDN.Text = "an EDDN senden";
-            checkBox_EDDN.UseVisualStyleBackColor = true;
-            // 
             // checkBox_CloseMini
             // 
             checkBox_CloseMini.AutoSize = true;
@@ -200,7 +193,7 @@
             // 
             // numericUpDown_ListCount
             // 
-            numericUpDown_ListCount.Location = new Point(163, 152);
+            numericUpDown_ListCount.Location = new Point(164, 127);
             numericUpDown_ListCount.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             numericUpDown_ListCount.Name = "numericUpDown_ListCount";
             numericUpDown_ListCount.Size = new Size(36, 23);
@@ -257,7 +250,7 @@
             // checkBox_SlowState
             // 
             checkBox_SlowState.AutoSize = true;
-            checkBox_SlowState.Location = new Point(7, 228);
+            checkBox_SlowState.Location = new Point(7, 203);
             checkBox_SlowState.Name = "checkBox_SlowState";
             checkBox_SlowState.Size = new Size(80, 19);
             checkBox_SlowState.TabIndex = 25;
@@ -288,7 +281,7 @@
             // checkBox_AutoUpdate
             // 
             checkBox_AutoUpdate.AutoSize = true;
-            checkBox_AutoUpdate.Location = new Point(7, 203);
+            checkBox_AutoUpdate.Location = new Point(7, 178);
             checkBox_AutoUpdate.Name = "checkBox_AutoUpdate";
             checkBox_AutoUpdate.Size = new Size(93, 19);
             checkBox_AutoUpdate.TabIndex = 21;
@@ -298,7 +291,7 @@
             // checkBox_OnlyBGS
             // 
             checkBox_OnlyBGS.AutoSize = true;
-            checkBox_OnlyBGS.Location = new Point(7, 178);
+            checkBox_OnlyBGS.Location = new Point(7, 153);
             checkBox_OnlyBGS.Name = "checkBox_OnlyBGS";
             checkBox_OnlyBGS.Size = new Size(158, 19);
             checkBox_OnlyBGS.TabIndex = 20;
@@ -308,7 +301,7 @@
             // checkBox_FullList
             // 
             checkBox_FullList.AutoSize = true;
-            checkBox_FullList.Location = new Point(7, 153);
+            checkBox_FullList.Location = new Point(7, 128);
             checkBox_FullList.Name = "checkBox_FullList";
             checkBox_FullList.Size = new Size(136, 19);
             checkBox_FullList.TabIndex = 19;
@@ -318,7 +311,7 @@
             // checkBox_CMDr
             // 
             checkBox_CMDr.AutoSize = true;
-            checkBox_CMDr.Location = new Point(7, 128);
+            checkBox_CMDr.Location = new Point(7, 103);
             checkBox_CMDr.Name = "checkBox_CMDr";
             checkBox_CMDr.Size = new Size(160, 19);
             checkBox_CMDr.TabIndex = 18;
@@ -648,6 +641,16 @@
             tabPage3.Text = "Pfade";
             tabPage3.UseVisualStyleBackColor = true;
             // 
+            // checkBox_RemoteMode
+            // 
+            checkBox_RemoteMode.AutoSize = true;
+            checkBox_RemoteMode.Location = new Point(55, 96);
+            checkBox_RemoteMode.Name = "checkBox_RemoteMode";
+            checkBox_RemoteMode.Size = new Size(101, 19);
+            checkBox_RemoteMode.TabIndex = 9;
+            checkBox_RemoteMode.Text = "Remote Mode";
+            checkBox_RemoteMode.UseVisualStyleBackColor = true;
+            // 
             // label10
             // 
             label10.Location = new Point(4, 280);
@@ -785,15 +788,26 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // checkBox_RemoteMode
+            // checkBox_CustomState
             // 
-            checkBox_RemoteMode.AutoSize = true;
-            checkBox_RemoteMode.Location = new Point(55, 96);
-            checkBox_RemoteMode.Name = "checkBox_RemoteMode";
-            checkBox_RemoteMode.Size = new Size(101, 19);
-            checkBox_RemoteMode.TabIndex = 9;
-            checkBox_RemoteMode.Text = "Remote Mode";
-            checkBox_RemoteMode.UseVisualStyleBackColor = true;
+            checkBox_CustomState.AutoSize = true;
+            checkBox_CustomState.Location = new Point(7, 228);
+            checkBox_CustomState.Name = "checkBox_CustomState";
+            checkBox_CustomState.Size = new Size(97, 19);
+            checkBox_CustomState.TabIndex = 35;
+            checkBox_CustomState.Text = "Custom State";
+            checkBox_CustomState.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown_CustomState
+            // 
+            numericUpDown_CustomState.Location = new Point(164, 227);
+            numericUpDown_CustomState.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numericUpDown_CustomState.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDown_CustomState.Name = "numericUpDown_CustomState";
+            numericUpDown_CustomState.Size = new Size(86, 23);
+            numericUpDown_CustomState.TabIndex = 36;
+            numericUpDown_CustomState.Value = new decimal(new int[] { 2000, 0, 0, 0 });
+            numericUpDown_CustomState.Visible = false;
             // 
             // Konfiguration
             // 
@@ -834,6 +848,7 @@
             tabPage3.PerformLayout();
             tabPage4.ResumeLayout(false);
             tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).EndInit();
             ResumeLayout(false);
         }
 
@@ -886,7 +901,6 @@
         private RadioButton radioButton_Dark;
         private RadioButton radioButton_Light;
         private ColorDialog colorDialog1;
-        private CheckBox checkBox_EDDN;
         private TabPage tabPage3;
         private Label label_path_journal;
         private Label label_path_config;
@@ -908,5 +922,7 @@
         private Label label12;
         private CheckBox checkBox_EDMC;
         private CheckBox checkBox_RemoteMode;
+        private NumericUpDown numericUpDown_CustomState;
+        private CheckBox checkBox_CustomState;
     }
 }

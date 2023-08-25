@@ -18,7 +18,6 @@ public class ApiSender
             try
             {
                 client.Send(request);
-                parent?.AddSucess();
             }
             catch(Exception ex)
             {
