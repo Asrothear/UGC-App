@@ -12,18 +12,17 @@ public static class MailClient
     internal static bool Send(string additional)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("UGC App Log Sender", "reporter@ugc-tools.de"));
+        message.From.Add(new MailboxAddress("UGC App Log Sender", "reporter@united-german-commanders.de"));
         message.To.Add(new MailboxAddress("Empfänger", "lord@asrothear.de"));
         message.Subject = $"UGC App User:{Config.Instance.Cmdr}";
-        
-        
-
         var bodyBuilder = new BodyBuilder();
         if (string.IsNullOrWhiteSpace(additional))
         {
             additional = "Keine weiteren Details";
         }
-        bodyBuilder.TextBody = $"User: {Config.Instance.Cmdr}\nUGC App Version: {Config.Instance.Version}{Config.Instance.VersionMeta}\nGame Version: {Config.Instance.GameVersion}-{Config.Instance.GameBuild}\nOS: {Environment.OSVersion.VersionString}\nContent:\n{additional}";
+
+        bodyBuilder.TextBody =
+            $"User: {Config.Instance.Cmdr}\nUGC App Version: {Config.Instance.Version}{Config.Instance.VersionMeta}\nGame Version: {Config.Instance.GameVersion}-{Config.Instance.GameBuild}\nOS: {Environment.OSVersion.VersionString}\nContent:\n{additional}";
         message.Body = bodyBuilder.ToMessageBody();
 
 
@@ -57,10 +56,13 @@ public static class MailClient
             multipart.Add(attachment2);
         }
 
-        message.Body = multipart;
+        try
+        {
+            message.Body = multipart;
             using var client = new SmtpClient();
-            client.Connect("ugc-tools.de", 465, true);
-            client.Authenticate("support", "%kC2Ak9Q3@0&C%GXrf!F1J3Puh3h4$etv%7STS^04VzTR*005!Zw0Il$13@iY2J52!N7wk4770LKl!giJ1R*0IIPfZx&e8Wx0TYUSLZi%MpUSr@&qYBL*!gZQc&!Gm%#");
+            client.Connect("mail.united-german-commanders.de", 465, true);
+            client.Authenticate("support",
+                "%kC2Ak9Q3@0&C%GXrf!F1J3Puh3h4$etv%7STS^04VzTR*005!Zw0Il$13@iY2J52!N7wk4770LKl!giJ1R*0IIPfZx&e8Wx0TYUSLZi%MpUSr@&qYBL*!gZQc&!Gm%#");
             var res = client.Send(message);
             client.Disconnect(true);
             Program.Log(res);
@@ -75,5 +77,11 @@ public static class MailClient
             IsDelLog = false;
             IsDelError = false;
             return true;
+        }
+        catch (Exception ex)
+        {
+            Program.LogException(ex);
+            return false;
+        }
     }
 }

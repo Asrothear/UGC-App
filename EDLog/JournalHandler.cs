@@ -244,6 +244,10 @@ namespace UGC_App.EDLog
             }
         }
 
+        /// <summary>
+        /// Updates Displayed Information: Pos, Docked, etc.
+        /// </summary>
+        /// <param name="jsonObject"></param>
         private static void CheckMeta(JObject jsonObject)
         {
             if (jsonObject.TryGetValue("StarSystem", out var starSystem))

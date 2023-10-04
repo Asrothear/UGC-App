@@ -141,14 +141,18 @@ public partial class Konfiguration : Form
                 {
                     textBox_Support.Enabled = false;
                     button_Report_Senden.Enabled = false;
+                    MessageBox.Show(this, "Report gesendet!", "Reporter");
                 });
-                MessageBox.Show(this, "Report gesendet!", "Reporter");
+                
             }
             else
             {
+                Invoke(() =>
+                {
                 textBox_Support.Enabled = true;
                 button_Report_Senden.Enabled = true;
                 MessageBox.Show(this, "Es konnte kein Report gesendet werden!", "Reporter");
+                });
             }
         });
 
