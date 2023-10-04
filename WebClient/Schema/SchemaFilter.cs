@@ -127,24 +127,33 @@ public class SchemaFilter
     }
     internal void GetCoords(JObject inp)
     {
+        var post = Data["message"]!["StarPos"]?.ToString().Split(",").ToList();
+        if (post != null)
+        {
+            foreach (var cord in post.Where(string.IsNullOrWhiteSpace))
+            {
+                DontSend = true;
+            }
+            return;
+        }
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
+        if(string.IsNullOrWhiteSpace(datas[0]))DontSend = true;
         var pos = JsonConvert.DeserializeObject<double[]>(datas[1]);
         if (pos == null) DontSend = true;
-        Data["message"]!["StarPos"] = JToken.FromObject(pos ?? Array.Empty<double>());
+        Data["message"]!["StarPos"] = JToken.FromObject(pos);
     }
     internal void GetStarSystem(JObject inp)
     {
+        var syst = Data["message"]!["StarSystem"]?.ToString();
+        if(!string.IsNullOrWhiteSpace(syst))return;
         var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
         if (string.IsNullOrWhiteSpace(datas[0])) DontSend = true;
         Data["message"]!["StarSystem"] = datas?[0];
     }
     internal void GetSystemMeta(JObject inp)
     {
-        var datas = StateReceiver.GetSystemData(Convert.ToUInt64(inp["SystemAddress"]));
-        Data["message"]!["StarSystem"] = datas[0];
-        var pos = JsonConvert.DeserializeObject<double[]>(datas[1]);
-        if (pos == null || string.IsNullOrWhiteSpace(datas[0])) DontSend = true;
-        Data["message"]!["StarPos"] = JToken.FromObject(pos ?? Array.Empty<double>());
+        GetStarSystem(inp);
+        GetCoords(inp);
     }
     internal void CheckBodyMeta(JObject inp)
     {
