@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
 using UGC_App.LocalCache;
-using UGC_App.Order.Model;
-using UGC_App.WebClient;
 
 namespace UGC_App.Order.DashViews
 {

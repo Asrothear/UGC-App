@@ -140,10 +140,12 @@ namespace UGC_App.EDLog
                             EDDN.Send(new Journal(jsonObject), _parent);
                             break;
                         case "Undocked":
+                            Config.Instance.LastDocked = "-";
                             CheckMeta(jsonObject);
                             break;
                         case "CarrierJump":
                         case "FSDJump":
+                            Config.Instance.LastDocked = "-";
                             CheckMeta(jsonObject);
                             EDDN.JournalBodyName = "";
                             EDDN.JournalBodyId = 0;
@@ -255,14 +257,10 @@ namespace UGC_App.EDLog
                 Config.Instance.LastSystem = ToString(starSystem);
                 _parent?.SetSystemText(Config.Instance.LastSystem);
             }
-            if (jsonObject.TryGetValue("Docked", out var docked))
+            if (!jsonObject.TryGetValue("event", out var docked) || docked.ToString() == "Docked")
             {
-                Config.Instance.LastDocked = Convert.ToBoolean(docked) ? ToString(jsonObject["StationName"]) : "-";
-                _parent?.SetDockedText(Config.Instance.LastDocked);
-            }
-            else
-            {
-                Config.Instance.LastDocked = "-";
+                
+                Config.Instance.LastDocked = ToString(jsonObject["StationName"]);
                 _parent?.SetDockedText(Config.Instance.LastDocked);
             }
         }

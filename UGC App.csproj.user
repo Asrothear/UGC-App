@@ -4,37 +4,40 @@
     <_LastSelectedProfileId>S:\Cloud\GitHub\UGC App\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="About.cs">
+    <Compile Update="Forms\About\About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Design.cs">
+    <Compile Update="Forms\Design\Design.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Konfiguration.cs">
+    <Compile Update="Forms\Konfiguration\Konfiguration.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Mainframe.cs">
+    <Compile Update="Forms\Mainframe.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Order\Dashboard.cs">
+    <Compile Update="Forms\Order\Dashboard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Order\DashViews\OrderList.cs">
+    <Compile Update="Forms\Order\DashViews\OrderList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Order\DashViews\SystemList.cs">
+    <Compile Update="Forms\Order\DashViews\SystemList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Order\OrderEditor.cs">
+    <Compile Update="Forms\Order\OrderEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Order\SystemEditor.cs">
+    <Compile Update="Forms\Order\SystemEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Overlay.cs">
+    <Compile Update="Forms\Overlay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Updater.cs">
+    <Compile Update="Forms\Support\Support.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Updater\Updater.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

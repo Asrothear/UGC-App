@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.Http.Json;
-using Org.BouncyCastle.Math.EC;
+﻿using System.Net.Http.Json;
 
 namespace UGC_App.WebClient;
 

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using UGC_App.LocalCache;
+﻿using UGC_App.LocalCache;
 using UGC_App.Order.DashViews;
 
 namespace UGC_App.Order

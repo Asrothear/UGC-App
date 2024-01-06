@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Newtonsoft.Json;
-using UGC_App.Order.DashViews;
-using UGC_App.Order.Model;
+using UGC_App.Forms.Order.Model;
 
 namespace UGC_App.WebClient;
 

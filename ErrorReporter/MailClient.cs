@@ -1,13 +1,11 @@
-﻿using System.Diagnostics;
-
-namespace UGC_App.ErrorReporter;
+﻿namespace UGC_App.ErrorReporter;
 using MailKit.Net.Smtp;
 using MimeKit;
 
 public static class MailClient
 {
-    internal static bool IsDelLog { get; private set; }
-    internal static bool IsDelError { get; private set; }
+    public static bool IsDelLog { get; private set; }
+    public static bool IsDelError { get; private set; }
 
     internal static bool Send(string additional)
     {
@@ -69,13 +67,8 @@ public static class MailClient
             file?.Close();
             file2?.Close();
             if (!res.Contains("Ok:")) return false;
-            IsDelLog = true;
-            IsDelError = true;
             Thread.Sleep(1000);
-            File.Delete(Path.Combine(Config.Instance.PathLogs, "log.json"));
-            File.Delete(Path.Combine(Config.Instance.PathLogs, "error_log.json"));
-            IsDelLog = false;
-            IsDelError = false;
+            DelLog();
             return true;
         }
         catch (Exception ex)
@@ -83,5 +76,15 @@ public static class MailClient
             Program.LogException(ex);
             return false;
         }
+    }
+
+    internal static void DelLog()
+    {
+        IsDelLog = true;
+        IsDelError = true;
+        File.Delete(Path.Combine(Config.Instance.PathLogs, "log.json"));
+        File.Delete(Path.Combine(Config.Instance.PathLogs, "error_log.json"));
+        IsDelLog = false;
+        IsDelError = false;
     }
 }

@@ -63,6 +63,26 @@ namespace UGC_App.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap password_eye_hide {
+            get {
+                object obj = ResourceManager.GetObject("password-eye-hide", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap password_eye_vis {
+            get {
+                object obj = ResourceManager.GetObject("password-eye-vis", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap UGC_Logo {
             get {
                 object obj = ResourceManager.GetObject("UGC_Logo", resourceCulture);

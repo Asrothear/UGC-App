@@ -48,13 +48,23 @@ partial class Mainframe
         toolStripMenuItem_Menu = new ToolStripMenuItem();
         toolStripMenuItem_Overlay = new ToolStripMenuItem();
         toolStripMenuItem_Settings = new ToolStripMenuItem();
-        toolStripMenuItem_CheckForUpdates = new ToolStripMenuItem();
-        toolStripMenuItem_About = new ToolStripMenuItem();
         toolStripSeparator1 = new ToolStripSeparator();
         toolStripMenuItem_Exit = new ToolStripMenuItem();
         anweisungenToolStripMenuItem = new ToolStripMenuItem();
         dashboardOrderToolStripMenuItem = new ToolStripMenuItem();
         dashboardSystemsToolStripMenuItem = new ToolStripMenuItem();
+        hilfeToolStripMenuItem = new ToolStripMenuItem();
+        toolStripMenuItem_help_update = new ToolStripMenuItem();
+        toolStripSeparator2 = new ToolStripSeparator();
+        toolStripTextBox1 = new ToolStripMenuItem();
+        toolStripMenuItem_help_posreset = new ToolStripMenuItem();
+        toolStripMenuItem_help_cachedel = new ToolStripMenuItem();
+        toolStripMenuItem_help_prgstate = new ToolStripMenuItem();
+        toolStripSeparator3 = new ToolStripSeparator();
+        toolStripMenuItem_help_logSenden = new ToolStripMenuItem();
+        toolStripSeparator4 = new ToolStripSeparator();
+        toolStripMenuItem_help_buyMeACoffe = new ToolStripMenuItem();
+        toolStripMenuItem_help_About = new ToolStripMenuItem();
         statusStrip_Main = new StatusStrip();
         toolStripStatusLabel_Status = new ToolStripStatusLabel();
         toolStripStatusLabel_Spacer = new ToolStripStatusLabel();
@@ -124,7 +134,7 @@ partial class Mainframe
         // menuStrip1
         // 
         menuStrip1.BackColor = Color.LightGray;
-        menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem_Menu, anweisungenToolStripMenuItem });
+        menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem_Menu, anweisungenToolStripMenuItem, hilfeToolStripMenuItem });
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
         menuStrip1.RenderMode = ToolStripRenderMode.Professional;
@@ -134,7 +144,7 @@ partial class Mainframe
         // 
         // toolStripMenuItem_Menu
         // 
-        toolStripMenuItem_Menu.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_Overlay, toolStripMenuItem_Settings, toolStripMenuItem_CheckForUpdates, toolStripMenuItem_About, toolStripSeparator1, toolStripMenuItem_Exit });
+        toolStripMenuItem_Menu.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_Overlay, toolStripMenuItem_Settings, toolStripSeparator1, toolStripMenuItem_Exit });
         toolStripMenuItem_Menu.Name = "toolStripMenuItem_Menu";
         toolStripMenuItem_Menu.Size = new Size(50, 20);
         toolStripMenuItem_Menu.Text = "Menu";
@@ -142,36 +152,24 @@ partial class Mainframe
         // toolStripMenuItem_Overlay
         // 
         toolStripMenuItem_Overlay.Name = "toolStripMenuItem_Overlay";
-        toolStripMenuItem_Overlay.Size = new Size(177, 22);
+        toolStripMenuItem_Overlay.Size = new Size(152, 22);
         toolStripMenuItem_Overlay.Text = "Toggle Overlay";
         // 
         // toolStripMenuItem_Settings
         // 
         toolStripMenuItem_Settings.Name = "toolStripMenuItem_Settings";
-        toolStripMenuItem_Settings.Size = new Size(177, 22);
+        toolStripMenuItem_Settings.Size = new Size(152, 22);
         toolStripMenuItem_Settings.Text = "Einstellungen";
-        // 
-        // toolStripMenuItem_CheckForUpdates
-        // 
-        toolStripMenuItem_CheckForUpdates.Name = "toolStripMenuItem_CheckForUpdates";
-        toolStripMenuItem_CheckForUpdates.Size = new Size(177, 22);
-        toolStripMenuItem_CheckForUpdates.Text = "Auf Updates prüfen";
-        // 
-        // toolStripMenuItem_About
-        // 
-        toolStripMenuItem_About.Name = "toolStripMenuItem_About";
-        toolStripMenuItem_About.Size = new Size(177, 22);
-        toolStripMenuItem_About.Text = "Über";
         // 
         // toolStripSeparator1
         // 
         toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(174, 6);
+        toolStripSeparator1.Size = new Size(149, 6);
         // 
         // toolStripMenuItem_Exit
         // 
         toolStripMenuItem_Exit.Name = "toolStripMenuItem_Exit";
-        toolStripMenuItem_Exit.Size = new Size(177, 22);
+        toolStripMenuItem_Exit.Size = new Size(152, 22);
         toolStripMenuItem_Exit.Text = "Beenden";
         toolStripMenuItem_Exit.Click += ExitMenuItem_Click;
         // 
@@ -185,14 +183,86 @@ partial class Mainframe
         // dashboardOrderToolStripMenuItem
         // 
         dashboardOrderToolStripMenuItem.Name = "dashboardOrderToolStripMenuItem";
-        dashboardOrderToolStripMenuItem.Size = new Size(146, 22);
+        dashboardOrderToolStripMenuItem.Size = new Size(180, 22);
         dashboardOrderToolStripMenuItem.Text = "Anweisungen";
         // 
         // dashboardSystemsToolStripMenuItem
         // 
         dashboardSystemsToolStripMenuItem.Name = "dashboardSystemsToolStripMenuItem";
-        dashboardSystemsToolStripMenuItem.Size = new Size(146, 22);
+        dashboardSystemsToolStripMenuItem.Size = new Size(180, 22);
         dashboardSystemsToolStripMenuItem.Text = "System Liste";
+        // 
+        // hilfeToolStripMenuItem
+        // 
+        hilfeToolStripMenuItem.Alignment = ToolStripItemAlignment.Right;
+        hilfeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem_help_update, toolStripSeparator2, toolStripTextBox1, toolStripMenuItem_help_posreset, toolStripMenuItem_help_cachedel, toolStripMenuItem_help_prgstate, toolStripSeparator3, toolStripMenuItem_help_logSenden, toolStripSeparator4, toolStripMenuItem_help_buyMeACoffe, toolStripMenuItem_help_About });
+        hilfeToolStripMenuItem.Name = "hilfeToolStripMenuItem";
+        hilfeToolStripMenuItem.Size = new Size(44, 20);
+        hilfeToolStripMenuItem.Text = "Hilfe";
+        // 
+        // toolStripMenuItem_help_update
+        // 
+        toolStripMenuItem_help_update.Name = "toolStripMenuItem_help_update";
+        toolStripMenuItem_help_update.Size = new Size(180, 22);
+        toolStripMenuItem_help_update.Text = "auf Updates Prüfen";
+        // 
+        // toolStripSeparator2
+        // 
+        toolStripSeparator2.Name = "toolStripSeparator2";
+        toolStripSeparator2.Size = new Size(177, 6);
+        // 
+        // toolStripTextBox1
+        // 
+        toolStripTextBox1.Enabled = false;
+        toolStripTextBox1.Name = "toolStripTextBox1";
+        toolStripTextBox1.Size = new Size(180, 22);
+        toolStripTextBox1.Text = "- Debug -";
+        // 
+        // toolStripMenuItem_help_posreset
+        // 
+        toolStripMenuItem_help_posreset.Name = "toolStripMenuItem_help_posreset";
+        toolStripMenuItem_help_posreset.Size = new Size(180, 22);
+        toolStripMenuItem_help_posreset.Text = "Position Reset";
+        // 
+        // toolStripMenuItem_help_cachedel
+        // 
+        toolStripMenuItem_help_cachedel.Name = "toolStripMenuItem_help_cachedel";
+        toolStripMenuItem_help_cachedel.Size = new Size(180, 22);
+        toolStripMenuItem_help_cachedel.Text = "Cache löschen";
+        // 
+        // toolStripMenuItem_help_prgstate
+        // 
+        toolStripMenuItem_help_prgstate.Name = "toolStripMenuItem_help_prgstate";
+        toolStripMenuItem_help_prgstate.Size = new Size(180, 22);
+        toolStripMenuItem_help_prgstate.Text = "Program State";
+        // 
+        // toolStripSeparator3
+        // 
+        toolStripSeparator3.Name = "toolStripSeparator3";
+        toolStripSeparator3.Size = new Size(177, 6);
+        // 
+        // toolStripMenuItem_help_logSenden
+        // 
+        toolStripMenuItem_help_logSenden.Name = "toolStripMenuItem_help_logSenden";
+        toolStripMenuItem_help_logSenden.Size = new Size(180, 22);
+        toolStripMenuItem_help_logSenden.Text = "Log Senden";
+        // 
+        // toolStripSeparator4
+        // 
+        toolStripSeparator4.Name = "toolStripSeparator4";
+        toolStripSeparator4.Size = new Size(177, 6);
+        // 
+        // toolStripMenuItem_help_buyMeACoffe
+        // 
+        toolStripMenuItem_help_buyMeACoffe.Name = "toolStripMenuItem_help_buyMeACoffe";
+        toolStripMenuItem_help_buyMeACoffe.Size = new Size(180, 22);
+        toolStripMenuItem_help_buyMeACoffe.Text = "Buy me a coffe";
+        // 
+        // toolStripMenuItem_help_About
+        // 
+        toolStripMenuItem_help_About.Name = "toolStripMenuItem_help_About";
+        toolStripMenuItem_help_About.Size = new Size(180, 22);
+        toolStripMenuItem_help_About.Text = "About";
         // 
         // statusStrip_Main
         // 
@@ -380,7 +450,6 @@ partial class Mainframe
     private MenuStrip menuStrip1;
     private ToolStripMenuItem toolStripMenuItem_Menu;
     private ToolStripMenuItem toolStripMenuItem_Settings;
-    private ToolStripMenuItem toolStripMenuItem_About;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem toolStripMenuItem_Exit;
     private StatusStrip statusStrip_Main;
@@ -396,11 +465,23 @@ partial class Mainframe
     private ToolStripMenuItem toolStripMenuItem_Overlay;
     private ToolStripStatusLabel toolStripStatusLabel_Spacer;
     private Label label_Tick;
-    private ToolStripMenuItem toolStripMenuItem_CheckForUpdates;
     private ToolStripMenuItem anweisungenToolStripMenuItem;
     private ToolStripMenuItem dashboardOrderToolStripMenuItem;
     private GroupBox groupBox_Orders;
     private Label label_Orders;
     private ToolStripMenuItem dashboardSystemsToolStripMenuItem;
     private Label label_Suit;
+    private ToolStripMenuItem hilfeToolStripMenuItem;
+    private ToolStripMenuItem toolStripMenuItem_help_update;
+    private ToolStripMenuItem toolStripMenuItem_help_posreset;
+    private ToolStripMenuItem toolStripMenuItem_help_cachedel;
+    private ToolStripSeparator toolStripSeparator2;
+    private ToolStripMenuItem toolStripMenuItem_help_prgstate;
+    private ToolStripSeparator toolStripSeparator3;
+    private ToolStripMenuItem toolStripMenuItem_help_logSenden;
+    private ToolStripMenuItem toolStripMenuItem_help_buyMeACoffe;
+    private ToolStripTextBox toolStripTextBox2;
+    private ToolStripMenuItem toolStripTextBox1;
+    private ToolStripSeparator toolStripSeparator4;
+    private ToolStripMenuItem toolStripMenuItem_help_About;
 }

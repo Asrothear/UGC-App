@@ -29,11 +29,13 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Konfiguration));
             button_Save = new Button();
             toolTip_Konfig = new ToolTip(components);
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            token_vis_button = new Button();
+            numericUpDown_CustomState = new NumericUpDown();
+            checkBox_CustomState = new CheckBox();
             checkBox_EDMC = new CheckBox();
             checkBox_CloseMini = new CheckBox();
             numericUpDown_ListCount = new NumericUpDown();
@@ -90,18 +92,12 @@
             textBox_path_journal = new TextBox();
             textBox_path_config = new TextBox();
             textBox_path_logs = new TextBox();
-            tabPage4 = new TabPage();
-            label11 = new Label();
-            textBox_Support = new TextBox();
-            button_Report_Senden = new Button();
-            label12 = new Label();
             colorDialog1 = new ColorDialog();
             folderBrowserDialog1 = new FolderBrowserDialog();
             openFileDialog1 = new OpenFileDialog();
-            checkBox_CustomState = new CheckBox();
-            numericUpDown_CustomState = new NumericUpDown();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).BeginInit();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_AutoKontrast).BeginInit();
@@ -117,8 +113,6 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Infos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).BeginInit();
             tabPage3.SuspendLayout();
-            tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).BeginInit();
             SuspendLayout();
             // 
             // button_Save
@@ -135,7 +129,6 @@
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
             tabControl1.Controls.Add(tabPage3);
-            tabControl1.Controls.Add(tabPage4);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
@@ -145,6 +138,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(token_vis_button);
             tabPage1.Controls.Add(numericUpDown_CustomState);
             tabPage1.Controls.Add(checkBox_CustomState);
             tabPage1.Controls.Add(checkBox_EDMC);
@@ -170,6 +164,38 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Main";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // token_vis_button
+            // 
+            token_vis_button.BackgroundImage = Properties.Resources.password_eye_vis;
+            token_vis_button.BackgroundImageLayout = ImageLayout.Zoom;
+            token_vis_button.Location = new Point(42, 64);
+            token_vis_button.Name = "token_vis_button";
+            token_vis_button.Size = new Size(29, 23);
+            token_vis_button.TabIndex = 37;
+            token_vis_button.TextImageRelation = TextImageRelation.ImageAboveText;
+            token_vis_button.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown_CustomState
+            // 
+            numericUpDown_CustomState.Location = new Point(164, 227);
+            numericUpDown_CustomState.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
+            numericUpDown_CustomState.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
+            numericUpDown_CustomState.Name = "numericUpDown_CustomState";
+            numericUpDown_CustomState.Size = new Size(86, 23);
+            numericUpDown_CustomState.TabIndex = 36;
+            numericUpDown_CustomState.Value = new decimal(new int[] { 2000, 0, 0, 0 });
+            numericUpDown_CustomState.Visible = false;
+            // 
+            // checkBox_CustomState
+            // 
+            checkBox_CustomState.AutoSize = true;
+            checkBox_CustomState.Location = new Point(7, 228);
+            checkBox_CustomState.Name = "checkBox_CustomState";
+            checkBox_CustomState.Size = new Size(97, 19);
+            checkBox_CustomState.TabIndex = 35;
+            checkBox_CustomState.Text = "Custom State";
+            checkBox_CustomState.UseVisualStyleBackColor = true;
             // 
             // checkBox_EDMC
             // 
@@ -261,21 +287,24 @@
             // 
             textBox_Token.Location = new Point(70, 64);
             textBox_Token.Name = "textBox_Token";
-            textBox_Token.Size = new Size(180, 23);
+            textBox_Token.PasswordChar = '*';
+            textBox_Token.Size = new Size(254, 23);
             textBox_Token.TabIndex = 24;
+            textBox_Token.Text = "tokvis";
+            textBox_Token.UseSystemPasswordChar = true;
             // 
             // textBox_State
             // 
             textBox_State.Location = new Point(70, 35);
             textBox_State.Name = "textBox_State";
-            textBox_State.Size = new Size(180, 23);
+            textBox_State.Size = new Size(254, 23);
             textBox_State.TabIndex = 23;
             // 
             // textBox_Send
             // 
             textBox_Send.Location = new Point(70, 6);
             textBox_Send.Name = "textBox_Send";
-            textBox_Send.Size = new Size(180, 23);
+            textBox_Send.Size = new Size(254, 23);
             textBox_Send.TabIndex = 22;
             // 
             // checkBox_AutoUpdate
@@ -725,57 +754,6 @@
             textBox_path_logs.Size = new Size(269, 23);
             textBox_path_logs.TabIndex = 0;
             // 
-            // tabPage4
-            // 
-            tabPage4.Controls.Add(label11);
-            tabPage4.Controls.Add(textBox_Support);
-            tabPage4.Controls.Add(button_Report_Senden);
-            tabPage4.Controls.Add(label12);
-            tabPage4.Location = new Point(4, 24);
-            tabPage4.Name = "tabPage4";
-            tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(332, 425);
-            tabPage4.TabIndex = 3;
-            tabPage4.Text = "Support";
-            tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Location = new Point(6, 3);
-            label11.Name = "label11";
-            label11.Size = new Size(87, 15);
-            label11.TabIndex = 2;
-            label11.Text = "Report Senden:";
-            // 
-            // textBox_Support
-            // 
-            textBox_Support.AcceptsTab = true;
-            textBox_Support.HideSelection = false;
-            textBox_Support.Location = new Point(6, 21);
-            textBox_Support.Multiline = true;
-            textBox_Support.Name = "textBox_Support";
-            textBox_Support.ScrollBars = ScrollBars.Horizontal;
-            textBox_Support.Size = new Size(318, 148);
-            textBox_Support.TabIndex = 1;
-            // 
-            // button_Report_Senden
-            // 
-            button_Report_Senden.Location = new Point(249, 316);
-            button_Report_Senden.Name = "button_Report_Senden";
-            button_Report_Senden.Size = new Size(75, 23);
-            button_Report_Senden.TabIndex = 0;
-            button_Report_Senden.Text = "Senden";
-            button_Report_Senden.UseVisualStyleBackColor = true;
-            // 
-            // label12
-            // 
-            label12.Location = new Point(8, 175);
-            label12.Name = "label12";
-            label12.Size = new Size(316, 164);
-            label12.TabIndex = 3;
-            label12.Text = resources.GetString("label12.Text");
-            // 
             // colorDialog1
             // 
             colorDialog1.SolidColorOnly = true;
@@ -787,27 +765,6 @@
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // checkBox_CustomState
-            // 
-            checkBox_CustomState.AutoSize = true;
-            checkBox_CustomState.Location = new Point(7, 228);
-            checkBox_CustomState.Name = "checkBox_CustomState";
-            checkBox_CustomState.Size = new Size(97, 19);
-            checkBox_CustomState.TabIndex = 35;
-            checkBox_CustomState.Text = "Custom State";
-            checkBox_CustomState.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown_CustomState
-            // 
-            numericUpDown_CustomState.Location = new Point(164, 227);
-            numericUpDown_CustomState.Maximum = new decimal(new int[] { 60000, 0, 0, 0 });
-            numericUpDown_CustomState.Minimum = new decimal(new int[] { 50, 0, 0, 0 });
-            numericUpDown_CustomState.Name = "numericUpDown_CustomState";
-            numericUpDown_CustomState.Size = new Size(86, 23);
-            numericUpDown_CustomState.TabIndex = 36;
-            numericUpDown_CustomState.Value = new decimal(new int[] { 2000, 0, 0, 0 });
-            numericUpDown_CustomState.Visible = false;
             // 
             // Konfiguration
             // 
@@ -827,6 +784,7 @@
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDown_ListCount).EndInit();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
@@ -846,9 +804,6 @@
             ((System.ComponentModel.ISupportInitialize)ColorPick_MainFrame_Background).EndInit();
             tabPage3.ResumeLayout(false);
             tabPage3.PerformLayout();
-            tabPage4.ResumeLayout(false);
-            tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown_CustomState).EndInit();
             ResumeLayout(false);
         }
 
@@ -915,14 +870,10 @@
         private Label label7;
         private Label label_AutoKontrast;
         private NumericUpDown numericUpDown_AutoKontrast;
-        private TabPage tabPage4;
-        private Button button_Report_Senden;
-        private Label label11;
-        private TextBox textBox_Support;
-        private Label label12;
         private CheckBox checkBox_EDMC;
         private CheckBox checkBox_RemoteMode;
         private NumericUpDown numericUpDown_CustomState;
         private CheckBox checkBox_CustomState;
+        private Button token_vis_button;
     }
 }

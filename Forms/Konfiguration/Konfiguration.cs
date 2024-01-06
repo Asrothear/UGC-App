@@ -6,17 +6,18 @@ namespace UGC_App;
 public partial class Konfiguration : Form
 {
     private readonly Mainframe _parent;
+    private static bool tokvis;
     public Konfiguration(Mainframe parrent)
     {
         _parent = parrent;
         InitializeComponent();
-        button_Report_Senden.Click += (_, _) => SendReport();
         tabControl1.SelectedIndex = 0;
         button_Save.Left = (ClientSize.Width - button_Save.Width) / 2;
         button_Save.Top = ClientSize.Height - 30;
         TopMost = Config.Instance.AlwaysOnTop;
         Load += (_, _) => { LoadKonfigs(); };
-
+        Closed += (_, _) => HideToken();
+        tabControl1.SelectedIndexChanged += (_, _) => HideToken();
         button_Save.Click += (_, _) =>
         {
             SaveChanges();
@@ -73,8 +74,6 @@ public partial class Konfiguration : Form
         toolTip_Konfig.SetToolTip(numericUpDown_CustomState, "Stellt die Zeitliche Verzögerung in Millisekunden, für das abfragen der System Liste, ein.");
         toolTip_Konfig.SetToolTip(checkBox_CustomState, "Stellt die Zeitliche Verzögerung in Millisekunden, für das abfragen der System Liste, ein.");
 
-
-
         foreach (Control grp in tabPage2.Controls)
         {
             if (grp is not GroupBox) continue;
@@ -127,36 +126,47 @@ public partial class Konfiguration : Form
         };
         button_ResetToLight.Click += (_, _) => { ResetColors(true); };
         button_ResetToDark.Click += (_, _) => { ResetColors(false); };
-    }
-
-    private void SendReport()
-    {
-        button_Report_Senden.Enabled = false;
-        Task.Run(() =>
+        
+        token_vis_button.Click += ToggleTokenVis;
+        if (string.IsNullOrWhiteSpace(Config.Instance.Token))
         {
-
-            if (MailClient.Send(textBox_Support.Text))
-            {
-                Invoke(() =>
-                {
-                    textBox_Support.Enabled = false;
-                    button_Report_Senden.Enabled = false;
-                    MessageBox.Show(this, "Report gesendet!", "Reporter");
-                });
-                
-            }
-            else
-            {
-                Invoke(() =>
-                {
-                textBox_Support.Enabled = true;
-                button_Report_Senden.Enabled = true;
-                MessageBox.Show(this, "Es konnte kein Report gesendet werden!", "Reporter");
-                });
-            }
-        });
-
+            tokvis = true;
+            textBox_Token.PasswordChar = '\0';
+        }
+        else
+        {
+            tokvis = false;
+            textBox_Token.PasswordChar = '*';
+            
+        }
     }
+
+    private void HideToken()
+    {
+        tokvis = false;
+        textBox_Token.PasswordChar = '*';
+        textBox_Token.UseSystemPasswordChar = true;
+        token_vis_button.BackgroundImage = Properties.Resources.password_eye_hide;
+    }
+
+    private void ToggleTokenVis(object? sender, EventArgs e)
+    {
+        if (!tokvis)
+        {
+            tokvis = true;
+            textBox_Token.PasswordChar = '\0';
+            textBox_Token.UseSystemPasswordChar = false;
+            token_vis_button.BackgroundImage = Properties.Resources.password_eye_vis;
+        }
+        else
+        {
+            tokvis = false;
+            textBox_Token.PasswordChar = '*';
+            textBox_Token.UseSystemPasswordChar = true;
+            token_vis_button.BackgroundImage = Properties.Resources.password_eye_hide;
+        }
+    }
+
     private void OpenFileSelect(Control text)
     {
         folderBrowserDialog1.InitialDirectory = text.Text;
@@ -171,9 +181,6 @@ public partial class Konfiguration : Form
 
     private void LoadKonfigs()
     {
-        if (!textBox_Support.Enabled) textBox_Support.Text = "";
-        textBox_Support.Enabled = true;
-        button_Report_Senden.Enabled = true;
         tabControl1.SelectedIndex = 0;
         numericUpDown_AutoKontrast.Value = Config.Instance.CheckBackgroundIntervall;
         textBox_Send.Text = Config.Instance.SendUrl;

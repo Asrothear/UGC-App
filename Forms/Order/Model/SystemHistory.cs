@@ -1,4 +1,4 @@
-﻿namespace UGC_App.Order.Model;
+﻿namespace UGC_App.Forms.Order.Model;
 
 public class SystemHistoryData
 {
@@ -75,5 +75,5 @@ public class SystemListing
     public ulong SystemAddress { get; set; }
     public DateTime LastBgsData { get; set; }
     public int Count { get; set; }
-        
+
 }

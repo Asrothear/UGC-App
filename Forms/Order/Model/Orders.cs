@@ -1,4 +1,4 @@
-﻿namespace UGC_App.Order.Model;
+﻿namespace UGC_App.Forms.Order.Model;
 
 public class Orders
 {

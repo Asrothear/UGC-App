@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
+using UGC_App.Forms.Order.Model;
 using UGC_App.LocalCache;
-using UGC_App.Order.Model;
 
 namespace UGC_App.Order
 {
@@ -11,6 +12,12 @@ namespace UGC_App.Order
     {
         private ulong SystemAddress = 0;
         private readonly dynamic _parrent;
+
+        internal class FacDressing
+        {
+            internal string Name;
+            internal int Adress;
+        }
         public SystemEditor(ulong systemAddress, dynamic systemList)
         {
             InitializeComponent();
@@ -135,7 +142,6 @@ namespace UGC_App.Order
                     table.Rows.Add(facorder.Priority, fraction.name, facorder.Type, facorder.Order);
                 }
             }
-
             dataGridView_Orders.DataSource = table;
             dataGridView_Orders.Sort(dataGridView_Orders.Columns["Prio"], ListSortDirection.Ascending);
         }
@@ -164,6 +170,8 @@ namespace UGC_App.Order
                 var a = 0.0;
                 for (var ii = 2; ii < dataGridView_BgsHistory.Columns.Count; ii++)
                 {
+                    if (string.IsNullOrWhiteSpace(dataGridView_BgsHistory.Rows[i].Cells[ii].Value.ToString()))
+                        dataGridView_BgsHistory.Rows[i].Cells[ii].Value = "-1";
                     if (first)
                     {
                         a = Math.Round(Convert.ToDouble(dataGridView_BgsHistory.Rows[i].Cells[ii].Value), 3, MidpointRounding.AwayFromZero);
@@ -181,6 +189,7 @@ namespace UGC_App.Order
                     }
                     a = b;
                     if(ii == dataGridView_BgsHistory.Columns.Count-1) dataGridView_BgsHistory.Rows[i].Cells[ii].Style.Font = new Font(dataGridView_BgsHistory.Font, FontStyle.Bold);
+                    if (dataGridView_BgsHistory.Rows[i].Cells[ii].Value == "-1") dataGridView_BgsHistory.Rows[i].Cells[ii].Value = "-";
                 }
             }
         }
@@ -224,21 +233,39 @@ namespace UGC_App.Order
                     data.systemHistory.Remove(history);
                 }
             }
+
+            var FacDress = new List<FacDressing>();
+            var dress = 0;
             foreach (var systemFaction in data.systemHistory.Last().factions)
             {
+                FacDress.Add(new FacDressing{Name = systemFaction.name, Adress = dress});
+                dress++;
                 table.Rows.Add(systemFaction.name, systemFaction.allegiance);
             }
 
             dataGridView_BgsHistory.DataSource = table;
+            Debug.WriteLine(dataGridView_BgsHistory.Rows.Count);
+            Debug.WriteLine(dataGridView_BgsHistory.Columns.Count);
             var vday = 2;
             foreach (var hisory in data.systemHistory)
             {
-
                 var vfac = 0;
                 foreach (var fraction in hisory.factions)
                 {
-                    dataGridView_BgsHistory[vday, vfac].Value = Math.Round(100 * fraction.influence, 3).ToString();
-                    vfac++;
+                    try
+                    {
+                        var fdress = FacDress.Find(x => string.Equals(x.Name, fraction.name, StringComparison.CurrentCultureIgnoreCase));
+                        if(fdress == null)continue;
+                        dataGridView_BgsHistory[vday, fdress.Adress].Value = Math.Round(100 * fraction.influence, 3);
+                    }
+                    catch
+                    {
+                        Program.Log($"Das System {data.starSystem}:{data.systemAddress} hat {hisory.factions.Count-dataGridView_BgsHistory.Rows.Count} Fraktionen zu viel.");
+                    }
+                    finally
+                    {
+                        vfac++;
+                    }
                 }
                 vday++;
             }

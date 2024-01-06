@@ -9,6 +9,8 @@ using UGC_App.Order;
 using UGC_App.Order.DashViews;
 using UGC_App.WebClient;
 using NonInvasiveKeyboardHookLibrary;
+using UGC_App.ErrorReporter;
+using UGC_App.Forms.Support;
 using UGC_App.LocalCache;
 using Timer = System.Timers.Timer;
 
@@ -18,6 +20,7 @@ public partial class Mainframe : Form
 {
     private Konfiguration? _conf;
     private About? _about;
+    private Support? _support;
     private Dashboard? _dashboard;
     private const int LabelSpacing = 35;
     private bool _closing;
@@ -69,8 +72,11 @@ public partial class Mainframe : Form
             CreateToolStripMenuItem("Einstellungen", ShowKonfig),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("About", ShowAbout),
-            CreateToolStripMenuItem("auf Updates Prüfen", CheckUpdates),
+            CreateToolStripMenuItem("Auf Updates Prüfen", CheckUpdates),
+            new ToolStripSeparator(),
             CreateToolStripMenuItem("Position Reset (Debug)", ResetPos),
+            CreateToolStripMenuItem("Cache löschen (Debug)", ResetChache),
+            CreateToolStripMenuItem("Program State (Debug)", MessageState),
             new ToolStripSeparator(),
             CreateToolStripMenuItem("Beenden", ExitMenuItem_Click)
         });
@@ -78,11 +84,17 @@ public partial class Mainframe : Form
         notifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
         label_SystemList.SizeChanged += SystemListChanged;
         toolStripMenuItem_Overlay.Click += ToogleOverlayClick;
-        toolStripMenuItem_About.Click += ShowAbout;
         toolStripMenuItem_Settings.Click += ShowKonfig;
-        toolStripMenuItem_CheckForUpdates.Click += CheckUpdates;
         dashboardOrderToolStripMenuItem.Click += ShowOrderDashboard;
         dashboardSystemsToolStripMenuItem.Click += ShowSystemDashboard;
+        toolStripMenuItem_help_update.Click += CheckUpdates ;
+        toolStripMenuItem_help_posreset.Click += ResetPos ;
+        toolStripMenuItem_help_cachedel.Click += ResetChache ;
+        toolStripMenuItem_help_prgstate.Click += MessageState ;
+        toolStripMenuItem_help_logSenden.Click += SendLogs ;
+        toolStripMenuItem_help_buyMeACoffe.Click += buyMeACoffek;
+        toolStripMenuItem_help_About.Click += ShowAbout;
+            
         SetCircles();
         CenterObjectHorizontally(label_SystemList);
         toolStripStatusLabel_Version.Text = $"{Properties.language.Version} {Config.Instance.Version}";
@@ -102,14 +114,66 @@ public partial class Mainframe : Form
             }, (int)Keys.C, FisrtToClip);
     }
 
+    private void SendLogs(object? sender, EventArgs e)
+    {
+        if (_closing) return;
+        if (_support == null || _support.IsDisposed) _support = new Support();
+        _support.ShowDialog(this);
+    }
+
+    private void ResetChache(object? sender, EventArgs e)
+    {
+        var res = ShowWarn("Cache löschen",
+            "Hiermit wird der lokale Daten-Cache der UGC-App gelöscht.\nDies betrieft die Daten für die Anweisungen und der System-History.\nNach dem Löschen wird der Cache neu aufgebaut.\nFortfahren?");
+        if (!res) return;
+        var debg = true;
+        CacheTimer.Stop();
+        _closing = true;
+        SetLightActive(redLight, false, true);
+        SetLightActive(yellowLight, true, true);
+        SetLightActive(greenLight, false, true);
+        CacheHandler.DeleteAll();
+        MailClient.DelLog();
+        Task.Run(() =>
+        {
+            var i = 0;
+            while (debg)
+            {
+                i++;
+                SetStatus($"DEBUG: {Convert.ToString(i).ToCharArray().AsMemory().GetHashCode().ToString().Substring(0, 5)}");
+            }
+        });
+        Thread.Sleep(5000);
+        Task.Run(() =>
+        {
+            _closing = false;
+            Thread.Sleep(500);
+            Program.Log("Caching");
+            anweisungenToolStripMenuItem.Text = "warte auf Cache...";
+            anweisungenToolStripMenuItem.Enabled = false;
+            CacheHandler.InitAll();
+            anweisungenToolStripMenuItem.Text = "BGS";
+            anweisungenToolStripMenuItem.Enabled = true;
+            CacheTimer.Start();
+            debg = false;
+            StartWorker();
+            Task.Run(SetUpEdSpy);
+        });
+
+    }
+    private void MessageState(object? sender, EventArgs e)
+    {
+        string inf = $"{Disposing},{_closing},{CacheTimer.Enabled},{Location}";
+        MessageBox.Show(this, $"Copied to Clipboard: {inf}", "Debug");
+        Clipboard.SetText(inf);
+
+    }
+
     private void ResetPos(object? sender, EventArgs e)
     {
-        var res = MessageBox.Show(
-            "Hiermit werden die Positionen des Hauptfensters und des Overlays der UGC-App zurückgesetzt.\nDies ist für den fall das die UGC-App nicht mehr sichtbar ist.\nFortfahren?",
-            "Position Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2,
-            MessageBoxOptions.ServiceNotification
-        );
-        if (res != DialogResult.Yes) return;
+        var res = ShowWarn("Position Reset",
+            "Hiermit werden die Positionen des Hauptfensters und des Overlays der UGC-App zurückgesetzt.\nDies ist für den fall das die UGC-App nicht mehr sichtbar ist.\nFortfahren?");
+        if (!res) return;
         Config.Instance.MainLocation = new Point(50, 50);
         Config.Instance.OverlayLocation = new Point(50, 50);
         Config.Save();
@@ -120,6 +184,7 @@ public partial class Mainframe : Form
 
     private void FisrtToClip()
     {
+        if (_closing) return;
         var regex = SystemListRegex();
         var text = label_SystemList.Text.Split(",").First();
         if (string.IsNullOrWhiteSpace(text) || text == "Alles Aktuell!") return;
@@ -132,16 +197,19 @@ public partial class Mainframe : Form
 
     private void ShowOrderDashboard(object? sender, EventArgs e)
     {
+        if (_closing) return;
         ShowDashboard(1);
     }
 
     private void ShowSystemDashboard(object? sender, EventArgs e)
     {
+        if (_closing) return;
         ShowDashboard(2);
     }
 
     private void ShowDashboard(int type)
     {
+        if (_closing) return;
         var def = Cursor.Current;
         Cursor.Current = Cursors.WaitCursor;
         if (_dashboard == null || _dashboard.IsDisposed)
@@ -167,6 +235,7 @@ public partial class Mainframe : Form
 
     private async void CheckUpdates(object? sender, EventArgs e)
     {
+        if (_closing) return;
         using var mgr = new UpdateManager(Config.Instance.UpdateUrl, "UGC-App");
         var infos = await mgr.CheckForUpdate();
         if (infos.CurrentlyInstalledVersion.Version >= infos.FutureReleaseEntry.Version &&
@@ -195,26 +264,31 @@ public partial class Mainframe : Form
 
     internal void SetCmDrText(string? text)
     {
+        if (_closing) return;
         Invoke(() => label_CMDr.Text = $"CMDr: {text}");
     }
 
     internal void SetSystemText(string? text)
     {
+        if (_closing) return;
         Invoke(() => label_System.Text = $"System: {text}");
     }
 
     internal void SetSuitText(string? text)
     {
+        if (_closing) return;
         Invoke(() => label_Suit.Text = $"Anzug: {text}");
     }
 
     internal void SetDockedText(string? text)
     {
+        if (_closing) return;
         Invoke(() => label_Docked.Text = $"Angedockt: {text}");
     }
 
     private void StartWorker()
     {
+        if (_closing) return;
         Task.Run(() =>
         {
             while (!IsDisposed && !_closing)
@@ -320,7 +394,7 @@ public partial class Mainframe : Form
                 }
 
                 if (IsDisposed || _closing) return;
-            } 
+            }
         });
         Task.Run(() =>
         {
@@ -335,6 +409,7 @@ public partial class Mainframe : Form
 
     private void SetUpEdSpy()
     {
+        if (_closing) return;
         FixLayout();
         var warn = false;
         var p0 = false;
@@ -361,14 +436,14 @@ public partial class Mainframe : Form
             {
                 if (warn || p0) continue;
                 if (wrn >= 2) p0 = true;
-                if(Config.Instance.EdmcAutoStart == 1 && !string.IsNullOrWhiteSpace(Config.Instance.EdmcPath))
+                if (Config.Instance.EdmcAutoStart == 1 && !string.IsNullOrWhiteSpace(Config.Instance.EdmcPath))
                 {
                     warn = true;
                     Process.Start(Config.Instance.EdmcPath);
                     SetStatus("Start Up");
                     continue;
                 }
-                if (Config.Instance.AlertEdmc)                    
+                if (Config.Instance.AlertEdmc)
                     Invoke(() => MessageBox.Show(this, "Bitte starte noch EDMC", "Reminder", MessageBoxButtons.OK,
                         MessageBoxIcon.Warning));
                 wrn++;
@@ -413,6 +488,7 @@ public partial class Mainframe : Form
 
     private void FixLayout()
     {
+        if (_closing) return;
         try
         {
             Invoke(() =>
@@ -441,30 +517,35 @@ public partial class Mainframe : Form
 
     private void ShowKonfig(object? sender, EventArgs e)
     {
+        if (_closing) return;
         if (_conf == null || _conf.IsDisposed) _conf = new Konfiguration(this);
         _conf.ShowDialog(this);
     }
 
     private void ShowAbout(object? sender, EventArgs e)
     {
+        if (_closing) return;
         if (_about == null || _about.IsDisposed) _about = new About();
         _about.ShowDialog(this);
     }
 
     private void SystemListChanged(object? sender, EventArgs e)
     {
+        if (_closing) return;
         if (IsDisposed || _closing) return;
         FixLayout();
     }
 
     private void CenterObjectHorizontally(dynamic label)
     {
+        if (_closing) return;
         if (IsDisposed || _closing) return;
         label.Left = (ClientSize.Width - label.Width) / 2;
     }
 
     internal void RefreshListOnKonfigChange()
     {
+        if (_closing) return;
         var list = string.Join(", ",
             Config.Instance.ShowAll
                 ? StateReceiver.SystemList
@@ -475,9 +556,9 @@ public partial class Mainframe : Form
         overlayForm.FillList(list, tick);
     }
 
-    internal void SetLightActive(PictureBox light, bool active)
+    internal void SetLightActive(PictureBox light, bool active, bool force = false)
     {
-        if (IsDisposed || _closing) return;
+        if (!force && (IsDisposed || _closing)) return;
         light.BackColor = active ? (Color)(light.Tag ?? "Color [Magenta]") : Color.Gray;
         if (overlayForm is { IsDisposed: false }) overlayForm.SetLightActive(light.Tag!.ToString(), active);
 
@@ -485,6 +566,7 @@ public partial class Mainframe : Form
 
     private void ToogleOverlayClick(object? sender, EventArgs e)
     {
+        if (_closing) return;
         if (overlayForm == null || overlayForm.IsDisposed) overlayForm = new Overlay(this);
         overlayForm.Visible = !overlayForm.Visible;
         if (!string.IsNullOrWhiteSpace(groupBox_Orders.Text))
@@ -494,6 +576,7 @@ public partial class Mainframe : Form
 
     private void SetCircles()
     {
+        if (_closing) return;
         using var path = new GraphicsPath();
         path.AddEllipse(new Rectangle(Point.Empty, redLight.Size));
         path.AddEllipse(new Rectangle(Point.Empty, yellowLight.Size));
@@ -515,6 +598,7 @@ public partial class Mainframe : Form
 
     private void NotifyIcon_MouseDoubleClick(object? sender, MouseEventArgs e)
     {
+        if (_closing) return;
         if (e.Button != MouseButtons.Left) return;
         WindowState = FormWindowState.Normal;
         ShowInTaskbar = true;
@@ -523,6 +607,7 @@ public partial class Mainframe : Form
 
     private void Form1_FormClosing(object sender, FormClosingEventArgs e)
     {
+        if (_closing) return;
         if (e.CloseReason == CloseReason.WindowsShutDown)
         {
             StopAll();
@@ -575,6 +660,7 @@ public partial class Mainframe : Form
 
     private void RestoreClick(object? sender, EventArgs e)
     {
+        if (_closing) return;
         RestoreClick();
     }
 
@@ -604,6 +690,7 @@ public partial class Mainframe : Form
 
     private void StartIpc()
     {
+        if (_closing) return;
         _pipeServer ??= new NamedPipeServerStream("UGC App", PipeDirection.In);
         _pipeServer.WaitForConnection();
         while (_pipeServer != null)
@@ -622,6 +709,7 @@ public partial class Mainframe : Form
 
     internal void SetDesign()
     {
+        if (_closing) return;
         var p0 = Config.Instance.DesignSel;
         if (_conf is { IsDisposed: false }) _conf.SetDesign(p0);
         if (overlayForm is { IsDisposed: false }) overlayForm.SetDesign(p0);
@@ -704,8 +792,10 @@ public partial class Mainframe : Form
 
     internal void GetSystemOrder(ulong systemAddress)
     {
+        if (_closing) return;
         Task.Run(() =>
         {
+            if (_closing) return;
             var orders = OrderAPI.GetSystemOrders(systemAddress);
             if (!orders.Any())
             {
@@ -750,6 +840,7 @@ public partial class Mainframe : Form
 
     public void SetStatus(HttpResponseMessage response)
     {
+        if (_closing) return;
         try
         {
             toolStripStatusLabel_Status.Text = $"Status: {response.StatusCode}";
@@ -770,5 +861,24 @@ public partial class Mainframe : Form
     internal void SetStatus(string response)
     {
         Invoke(() => { toolStripStatusLabel_Status.Text = $"Status: {response}"; });
+    }
+
+    private void buyMeACoffek(object sender, EventArgs e)
+    {
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = "https://united-german-commanders.de/donation-add/",
+            UseShellExecute = true
+        });
+    }
+
+    private bool ShowWarn(string title = "DEBUG", string mesg = "Test")
+    {
+        var res = MessageBox.Show(
+            mesg,
+            title, MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2,
+            MessageBoxOptions.ServiceNotification
+        );
+        return res == DialogResult.Yes;
     }
 }

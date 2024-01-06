@@ -1,4 +1,4 @@
-﻿using UGC_App.Order.Model;
+﻿using UGC_App.Forms.Order.Model;
 
 namespace UGC_App.LocalCache;
 public class OrdersCacheModel

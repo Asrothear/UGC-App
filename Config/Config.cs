@@ -9,12 +9,12 @@ public class Config
 {
     [AttributeUsage(AttributeTargets.Property)]
     private class DisallowDeviationAttribute : Attribute {}
-    [DisallowDeviation] public string Version { get; private set; } = "0.7.6";
+    [DisallowDeviation] public string Version { get; private set; } = "0.8.1";
     [DisallowDeviation] public string VersionMeta { get; private set; } = "-alpha";
     public static Config Instance { get; }
     public Point MainLocation { get; set; } = new (50, 50);
     public Point OverlayLocation { get; set; } = new (50, 50);
-    public string Cmdr { get; set; } = "";    
+    public string Cmdr { get; set; } = "";
     public string Suit { get; set; } = "";
     public string Token { get; set; } = "";
     public string SendUrl { get; set; } = "https://api.ugc-tools.de/api/v1/QLS";

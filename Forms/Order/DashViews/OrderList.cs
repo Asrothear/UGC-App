@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using UGC_App.LocalCache;
-using UGC_App.Order.Model;
+using UGC_App.Forms.Order.Model;
 using UGC_App.WebClient;
 
 namespace UGC_App.Order.DashViews

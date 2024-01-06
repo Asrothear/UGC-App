@@ -237,7 +237,7 @@
             dataGridView_Factions.Name = "dataGridView_Factions";
             dataGridView_Factions.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridView_Factions.RowTemplate.Height = 25;
-            dataGridView_Factions.ScrollBars = ScrollBars.None;
+            dataGridView_Factions.ScrollBars = ScrollBars.Vertical;
             dataGridView_Factions.ShowCellErrors = false;
             dataGridView_Factions.ShowEditingIcon = false;
             dataGridView_Factions.ShowRowErrors = false;
@@ -289,15 +289,15 @@
             dataGridView_BgsHistory.AllowUserToDeleteRows = false;
             dataGridView_BgsHistory.AllowUserToResizeColumns = false;
             dataGridView_BgsHistory.AllowUserToResizeRows = false;
-            dataGridView_BgsHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridView_BgsHistory.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridView_BgsHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView_BgsHistory.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView_BgsHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView_BgsHistory.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView_BgsHistory.Location = new Point(12, 504);
             dataGridView_BgsHistory.Name = "dataGridView_BgsHistory";
             dataGridView_BgsHistory.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridView_BgsHistory.RowTemplate.Height = 25;
-            dataGridView_BgsHistory.ScrollBars = ScrollBars.None;
+            dataGridView_BgsHistory.ScrollBars = ScrollBars.Vertical;
             dataGridView_BgsHistory.ShowCellErrors = false;
             dataGridView_BgsHistory.ShowEditingIcon = false;
             dataGridView_BgsHistory.ShowRowErrors = false;
@@ -318,7 +318,7 @@
             dataGridView_Orders.Name = "dataGridView_Orders";
             dataGridView_Orders.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridView_Orders.RowTemplate.Height = 25;
-            dataGridView_Orders.ScrollBars = ScrollBars.None;
+            dataGridView_Orders.ScrollBars = ScrollBars.Vertical;
             dataGridView_Orders.ShowCellErrors = false;
             dataGridView_Orders.ShowEditingIcon = false;
             dataGridView_Orders.ShowRowErrors = false;
@@ -339,7 +339,7 @@
             dataGridView_Conflicts.Name = "dataGridView_Conflicts";
             dataGridView_Conflicts.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridView_Conflicts.RowTemplate.Height = 25;
-            dataGridView_Conflicts.ScrollBars = ScrollBars.None;
+            dataGridView_Conflicts.ScrollBars = ScrollBars.Vertical;
             dataGridView_Conflicts.ShowCellErrors = false;
             dataGridView_Conflicts.ShowEditingIcon = false;
             dataGridView_Conflicts.ShowRowErrors = false;

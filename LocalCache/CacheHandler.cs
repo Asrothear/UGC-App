@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using UGC_App.Order.Model;
 using System.Security.Cryptography;
 using System.Text;
 using UGC_App.WebClient;
+using UGC_App.Forms.Order.Model;
 
 namespace UGC_App.LocalCache;
 
@@ -18,32 +18,48 @@ public static class CacheHandler
     private static string OrderCacheDataPath { get; set; } = Path.Combine(cahcefolder, "Order.ugc");
     private static string UserCacheDataPath { get; set; } = Path.Combine(cahcefolder, "User.ugc");
     private static string HistoryCacheDataPath { get; set; } = Path.Combine(cahcefolder, "History.ugc");
+    private static bool Block;
     internal static void InitAll(bool force = false)
     {
+        if(Block)return;
         File.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "UGC-App", "cache.ugc"));
         if(Config.Instance.Debug)Program.Log($"Update Cache, Forced = {force}");
         CacheOrder(force);
         CacheHistory(force);
         CacheSystemList(force);
         CacheUser(force);
-    } 
+    }
+
+    internal static void DeleteAll()
+    {
+        Block = true;
+        File.Delete(SystemListCacheDataPath);
+        File.Delete(OrderCacheDataPath);
+        File.Delete(UserCacheDataPath);
+        File.Delete(HistoryCacheDataPath);
+        Block = false;
+    }
     internal static HashSet<Orders> GetOrderFromCache()
     {
+        if(Block)return new HashSet<Orders>();
         var cache = GetCache<OrdersCacheModel>(OrderCacheDataPath);
         return cache.Order;
     }
     internal static HashSet<SystemHistoryData> GetHistoryFromCache()
     {
+        if(Block)return new HashSet<SystemHistoryData>();
         var cache = GetCache<HistoryChacheModel>(HistoryCacheDataPath);
         return cache.SystemHistoryData;
     }
     internal static HashSet<SystemListing> GetSystemListFromCache()
     {
+        if(Block)return new HashSet<SystemListing>();
         var cache = GetCache<SystemListDataCacheModel>(SystemListCacheDataPath);
         return cache.SystemList;
     }
     internal static void CacheOrder(bool force = false)
     {
+        if(Block)return;
         if(Config.Instance.Debug)Program.Log($"Update Order-Cache, Forced = {force}");
         var cache = GetCache<OrdersCacheModel>(OrderCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(0, 30, 0) && !force) return;
@@ -51,6 +67,7 @@ public static class CacheHandler
     }
     internal static void CacheHistory(bool force = false)
     {
+        if(Block)return;
         if(Config.Instance.Debug)Program.Log($"Update History-Cache, Forced = {force}");
         var cache = GetCache<HistoryChacheModel>(HistoryCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
@@ -61,6 +78,7 @@ public static class CacheHandler
     }
     internal static void CacheUser(bool force = false)
     {
+        if(Block)return;
         if(Config.Instance.Debug)Program.Log($"Update User-Cache, Forced = {force}");
         var cache = GetCache<UserDataCacheModel>(UserCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
@@ -69,6 +87,7 @@ public static class CacheHandler
     }
     internal static void CacheSystemList(bool force = false)
     {
+        if(Block)return;
         if(Config.Instance.Debug)Program.Log($"Update SystemList-Cache, Forced = {force}");
         var cache = GetCache<SystemListDataCacheModel>(SystemListCacheDataPath);
         if (DateTime.UtcNow - cache.LastUpdate <= new TimeSpan(1, 0, 0) && !force) return;
@@ -83,6 +102,7 @@ public static class CacheHandler
 
     private static void CreateDataFile<T>(string path) where T : class, new()
     {
+        if(Block)return;
         if (CheckDataExist(path)) return;
         var file = File.Create(path);
         file.Dispose();
@@ -91,6 +111,7 @@ public static class CacheHandler
 
     private static void Save(dynamic data, string path)
     {
+        if(Block)return;
         var encryptedBytes = Encrypt(JsonConvert.SerializeObject(data), Config.Instance.Token);
         File.WriteAllBytes(path, encryptedBytes);
         //File.WriteAllText(path, JsonConvert.SerializeObject(data));
@@ -98,6 +119,7 @@ public static class CacheHandler
 
     private static void SaveOrderCache<T>(OrdersCacheModel cache, HashSet<Orders> ordersSet) where T : class, new()
     {
+        if(Block)return;
         CreateDataFile<T>(OrderCacheDataPath);
         foreach (var order in ordersSet) cache.Order.Add(order);
         cache.LastUpdate = DateTime.UtcNow;
@@ -106,6 +128,7 @@ public static class CacheHandler
 
     private static void SaveHistoryCache<T>(HistoryChacheModel cache, SystemHistoryData historyData) where T : class, new()
     {
+        if(Block)return;
         CreateDataFile<T>(HistoryCacheDataPath);
         var needle = cache.SystemHistoryData.FirstOrDefault(x => x.systemAddress == historyData.systemAddress);
         if (needle != null) cache.SystemHistoryData.Remove(needle);
@@ -116,11 +139,13 @@ public static class CacheHandler
 
     private static void SaveUserCache<T>(UserDataCacheModel ordersSet) where T : class, new()
     {
+        if(Block)return;
         CreateDataFile<T>(UserCacheDataPath);
     }
 
     private static void SaveSystemListCache<T>(SystemListDataCacheModel cache, HashSet<SystemListing> systemListings) where T : class, new()
     {
+        if(Block)return;
         CreateDataFile<T>(SystemListCacheDataPath);
         foreach (var system in systemListings) cache.SystemList.Add(system);
         cache.LastUpdate = DateTime.UtcNow;
