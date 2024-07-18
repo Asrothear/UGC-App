@@ -29,6 +29,12 @@ public class SchemaFilter
     {
         if (jsonObject["message"] is JObject items)
         {
+            if (string.IsNullOrWhiteSpace(Config.Instance.GameVersion) &&
+                string.IsNullOrWhiteSpace(Config.Instance.GameBuild))
+            {
+                items.Remove("horizons");
+                items.Remove("odyssey");
+            }
             items.Remove("ActiveFine");
             items.Remove("BoostUsed");
             items.Remove("FuelLevel");
